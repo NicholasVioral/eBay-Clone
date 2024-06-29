@@ -1,0 +1,22 @@
+@startuml
+title Watchlist activity diagram
+
+start
+if (Page?) then (Browse listings)
+ 	:Display market listings;
+else (View watchlist)
+  	:Display watchlist listings;
+endif
+
+:View market listing;
+if (Placing bid?) then (yes)
+  	:Add to watchlist;
+else (no)
+  	if (Listing in watchlist already?) then (yes)
+    	:Remove from watchlist;
+ 	else (no)
+    	:Add to watchlist;
+  	endif
+endif
+stop
+@enduml

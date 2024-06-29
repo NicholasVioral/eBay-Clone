@@ -1,0 +1,22 @@
+@startuml
+class ViewUserProfilePageController [[java:edu.sru.cpsc.webshopping.controller.ViewUserProfilePageController]] {
+	-listingController: MarketListingDomainController
+	-emailController: EmailController
+	-userService: UserService
+	-categoryService: CategoryService
+	-selectedUser: User
+	-soldItems: MarketListing[]
+	-itemsEachPage: Vector<Vector<MarketListing>>
+	-rating: SellerRating
+	-pageNumber: int
+	-messagePaneOpen: boolean
+	-NUM_LISTINGS_PER_PAGE: int
+	~ViewUserProfilePageController(listingController: MarketListingDomainController, emailController: EmailController)
+	-reloadPageModel(model: Model, user: User): void
+	+openUserProfile(userId: long, model: Model, principal: Principal): String
+	+changePageNumber(pageNumber: int, model: Model, principal: Principal): String
+	+openListing(listingId: long, model: Model, principal: Principal): String
+	+openMessagePane(model: Model, principal: Principal): String
+	+closeMessagePane(model: Model, principal: Principal): String
+}
+@enduml

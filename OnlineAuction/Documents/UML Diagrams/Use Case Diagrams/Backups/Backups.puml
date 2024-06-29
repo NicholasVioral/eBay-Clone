@@ -1,0 +1,22 @@
+@startuml Backups
+title Backups Use Case Diagram
+actor Admin as a
+entity BackupService as bs
+
+package "Backups" {
+    usecase "Schedule Backup" as sb
+    usecase "Generate Backup" as gb
+    usecase "Run Backup Script" as rbs
+    usecase "Drop Corrupted Schema" as dcs
+    usecase "Place Backup in File System" as fs
+}
+
+a -> sb
+sb -> bs : sends schedule info
+bs -> gb : when time arrives
+bs -> fs : send generated backup
+a -> dcs
+a -> rbs
+
+
+@enduml

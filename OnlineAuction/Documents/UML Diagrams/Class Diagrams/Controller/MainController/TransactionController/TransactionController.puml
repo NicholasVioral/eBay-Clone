@@ -1,0 +1,17 @@
+@startuml
+class TransactionController [[java:edu.sru.cpsc.webshopping.controller.TransactionController]] {
+	-repository: TransactionRepository
+	-shippingRepository: ShippingRepository
+	-marketController: MarketListingDomainController
+	-entityManager: EntityManager
+	+TransactionController(repository: TransactionRepository, marketController: MarketListingDomainController, shippingRepository: ShippingRepository)
+	+addTransaction(transaction: Transaction, result: BindingResult): void
+	+addTransaction(transaction: Transaction): Transaction
+	+getUserPurchases(user: User): Iterable<Transaction>
+	+findByPaymentDetails(details: PaymentDetails): List<Transaction>
+	+findByShippingDetails(details: ShippingAddress): List<Transaction>
+	+getUserSoldItems(user: User): Iterable<Transaction>
+	+getTransaction(id: long): Transaction
+	+cancelTransaction(trans: Transaction): boolean
+}
+@enduml

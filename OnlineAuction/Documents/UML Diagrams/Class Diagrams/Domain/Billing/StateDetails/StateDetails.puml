@@ -1,0 +1,10 @@
+@startuml
+class StateDetails [[java:edu.sru.cpsc.webshopping.domain.billing.StateDetails]] {
+	-stateName: String
+	-salesTaxRate: BigDecimal
+	+getStateName(): String
+	+setStateName(stateName: String): void
+	+getSalesTaxRate(): BigDecimal
+	+setSalesTaxRate(salesTaxRate: BigDecimal): void
+}
+@enduml

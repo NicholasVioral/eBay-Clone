@@ -1,0 +1,10 @@
+@startuml
+
+class StateDetailsController {
+    - stateDetailsRepository : StateDetailsRepository
+
+    + getAllStates() : Iterable<StateDetails>
+    + getState(stateId : String) : StateDetails
+}
+
+@enduml

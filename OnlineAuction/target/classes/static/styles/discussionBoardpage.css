@@ -1,0 +1,129 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    color: #333;
+    line-height: 1.6;
+}
+
+h2 {
+    color: #444;
+    margin-bottom: 20px;
+}
+
+button {
+    appearance: none;
+    font-size: 0.875rem;
+    padding: 8px 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+button:hover, button:focus {
+    background-color: #0056b3;
+    cursor: pointer;
+}
+
+.comment-thread, .main-topic {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    margin: 20px auto;
+    padding: 20px;
+    width: auto;
+    max-width: 100%;
+}
+
+.comment, .reply-form, .post-form {
+    margin-top: 20px;
+}
+
+.comment-author, .comment-body p, .main-topic p {
+    margin: 8px 0;
+}
+
+.reply-form textarea, .post-form textarea, #content {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 0.875rem;
+}
+
+.d-none {
+    display: none !important;
+}
+
+.post-content {
+    margin-bottom: 40px; /* Adds more space between each post */
+    padding: 20px; /* Increases padding within each post for better readability */
+    background-color: #f0f0f0; /* Light background for each post */
+    border-radius: 10px; /* Rounded corners for aesthetic */
+    border: 1px solid #ddd; /* Slight border for definition */
+}
+
+.comment-detail {
+    margin-top: 20px; /* Adds space between comments */
+    padding: 15px; /* Padding within each comment for readability */
+    background-color: #ffffff; /* Different background for comments for distinction */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    border-radius: 8px; /* Consistent rounded corners */
+}
+
+.comment-thread > .comment-detail:first-child {
+    margin-top: 30px; /* Additional space above the first comment for clear separation from the post */
+}
+
+.form-container {
+    padding: 20px; /* Spacing within form container for ease of use */
+    margin-top: 20px; /* Space above the form when related to posts/comments */
+    background-color: #e9ecef; /* Slightly different background to distinguish form */
+    border-radius: 8px; /* Keep consistent with other elements */
+}
+
+button[type="submit"], button[type="button"] {
+    margin-right: 10px; /* Space between buttons */
+}
+
+textarea {
+    width: 100%; /* Makes the textarea take up the full width of its container */
+    height: 81px; /* Optional: Adjust this value to fit your design needs */
+    box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+    padding: 10px; /* Adds internal space between the text and the borders of the textarea */
+    border: 1px solid #ccc; /* Defines a border for the textarea */
+    border-radius: 4px; /* Rounds the corners of the textarea */
+    font-size: 0.875rem; /* Adjust font size for better readability */
+    margin-top: 10px; /* Ensure space above textareas */
+    margin-bottom: 10px; /* Ensure space below textareas */
+}
+
+.scrollable-list {
+            overflow-y: auto;
+            height: 600px; /* Adjust based on your needs */
+            width: 300px;
+        }
+
+.scrollable-content {
+            overflow-y: auto;
+            height: 600px; /* Adjust based on your needs */
+            width:300px;
+        }
+
+.post-content {
+            display: none; /* Hide all post contents initially */
+        }
+
+.active-post {
+            display: block; /* Only the active post content will be shown */
+        }
+        
+.scrollable-titles {
+  height: 600px; /* Or 100vh for full viewport height */
+  overflow-y: auto; /* Shows scrollbar only when necessary */
+}       

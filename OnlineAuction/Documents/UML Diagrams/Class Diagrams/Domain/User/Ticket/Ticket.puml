@@ -1,0 +1,41 @@
+@startuml
+class Ticket [[java:edu.sru.cpsc.webshopping.domain.user.Ticket]] {
+	-id: Long
+	-createdBy: User
+	-subject: String
+	-state: TicketState
+	-createdAt: String
+	-assignedAt: String
+	-resolvedAt: String
+	-updatedAt: String
+	-assignedTo: User
+	-messages: List<Message>
+	+addMessage(message: Message): void
+	+isResolved(): boolean
+	+toString(): String
+	+getId(): Long
+	+getCreatedBy(): User
+	+getSubject(): String
+	+getState(): TicketState
+	+getCreatedAt(): String
+	+getAssignedAt(): String
+	+getResolvedAt(): String
+	+getUpdatedAt(): String
+	+getAssignedTo(): User
+	+getMessages(): List<Message>
+	+setId(id: Long): void
+	+setCreatedBy(createdBy: User): void
+	+setSubject(subject: String): void
+	+setState(state: TicketState): void
+	+setCreatedAt(createdAt: String): void
+	+setAssignedAt(assignedAt: String): void
+	+setResolvedAt(resolvedAt: String): void
+	+setUpdatedAt(updatedAt: String): void
+	+setAssignedTo(assignedTo: User): void
+	+setMessages(messages: List<Message>): void
+	+equals(o: Object): boolean
+	#canEqual(other: Object): boolean
+	+hashCode(): int
+	+Ticket()
+}
+@enduml

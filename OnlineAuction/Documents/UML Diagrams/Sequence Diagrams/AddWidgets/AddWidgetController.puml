@@ -1,0 +1,75 @@
+@startuml
+title AddWidgetController Sequence Diagram
+
+participant "Client" as C
+participant "AddWidgetController" as AWC
+participant "Model" as M
+participant "userController" as UC
+participant "categories" as CAT
+participant "categoryRepository" as CR
+participant "categoryService" as CS
+participant "attributeService" as AS
+participant "widgetService" as WS
+participant "marketListingController" as MLC
+participant "widgetImageController" as WIC
+
+note over AWC: RequestMapping: /addWidget
+C -> AWC: addWidget(model)
+AWC -> UC: getCurrently_Logged_In()
+UC --> AWC: user
+alt user is null
+    AWC --> C: IllegalStateException
+else
+    AWC -> AWC: setPage("widgets")
+    AWC -> CAT: getAllCategories()
+    CAT --> AWC: categoriesList
+    AWC -> M: addAttribute("categories", categoriesList)
+    AWC -> M: addAttribute("user", user)
+    AWC -> M: addAttribute("page", "addWidget")
+end
+
+note over AWC: RequestMapping: /createWidget
+C -> AWC: createWidget(categoryId, model)
+AWC -> CR: findById(categoryId)
+CR --> AWC: Optional<Category>
+AWC -> CS: getTopRecommendedAttributes(category, 0)
+CS --> AWC: attributesList
+loop for each attribute in attributesList
+    AWC -> AWC: new WidgetForm.AttributeFormEntry(attribute, new WidgetAttribute(attribute))
+end
+AWC -> M: addAttribute("category", category)
+AWC -> M: addAttribute("entries", widgetForm.getEntries())
+AWC -> M: addAttribute("user", user)
+
+note over AWC: RequestMapping: /createWidgetListing
+C -> AWC: createWidgetListing(model, widgetForm, result)
+alt result hasErrors()
+    AWC --> C: createWidgetTemplate
+else
+    loop for each entry in widgetForm.getEntries()
+        AWC -> AS: associateAttributeWithCategory(attributeKey, dataType, category)
+        AS --> AWC
+        AWC -> AWC: set attributes and widgetAttributes for widget
+    end
+    AWC -> WS: addWidget(widget)
+    WS --> AWC
+end
+
+note over AWC: RequestMapping: /createListing
+C -> AWC: createListing(model)
+AWC -> M: addAttributes...
+
+note over AWC: RequestMapping: /addListing
+C -> AWC: addListing(...)
+AWC -> M: addAttributes...
+AWC -> MLC: addMarketListing(marketListing)
+MLC --> AWC
+AWC -> WIC: addWidgetImage(tempImage)
+WIC --> AWC
+...[checks and validations for listing details]...
+alt result hasErrors()
+    AWC -> AWC: deleteWidget(widgetId)
+    AWC -> M: addAttributes...
+    AWC --> C: createListing
+end
+@enduml

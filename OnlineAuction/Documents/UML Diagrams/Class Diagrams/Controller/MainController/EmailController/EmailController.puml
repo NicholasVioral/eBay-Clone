@@ -1,0 +1,16 @@
+@startuml
+class EmailController [[java:edu.sru.cpsc.webshopping.controller.EmailController]] {
+	-port: String
+	-servletContext: ServletContext
+	+getJavaMailSender(): JavaMailSender
+	+sendTwoFactorAuthEmail(user: User, code: String): void
+	+verificationEmail(recipient: User, code: String): void
+	+messageEmail(recipient: User, sender: User, theMessage: Message): void
+	+usernameRecovery(user: User): void
+	+sendHelpDeskTicket(id: long): void
+	+applicationAccepted(applicantEmail: String, firstName: String, lastName: String, phoneNumber: String, roleAppliedFor: String): void
+	+applicationRejected(applicantEmail: String, firstName: String, lastName: String): void
+	+updateTicketStatus(recipient: User, ticket: Ticket, activity: String): void
+	+EmailController()
+}
+@enduml

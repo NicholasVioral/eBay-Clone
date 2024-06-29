@@ -1,0 +1,22 @@
+@startuml
+
+title          Adding Item to Watchlist \nSequence Diagram
+
+actor          Actor                            as actor
+participant    viewMarketListing                as viewMarketListing
+entity         MarketListingPageController      as marketListController
+entity         UserController                   as userController
+entity         WatchlistService                 as watchlistService
+entity         User                             as user
+database       Database                         as database
+
+actor                  ->     viewMarketListing       : Click "Add to Watchlist"
+viewMarketListing      ->     marketListController    : POST: /viewMarketListing/wishlistItem/{productId}
+marketListController   ->     userController          : userController.addToWishlist(product)
+userController         ->     watchlistService        : watchlistService.watchlistAdd(addedWidget, user)
+watchlistService       ->     user                    : user.getWishlistedWidgets().add(addedWidget);
+user                   ->     database                : add(userId, productId) to widget_wishlist_entry
+marketListController   -->    viewMarketListing       : redirect:/viewMarketListing/{productId}
+viewMarketListing      -->    actor                   : "Add to Watchlist" button becomes "Remove from Watchlist"
+
+@enduml

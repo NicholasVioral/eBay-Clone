@@ -1,0 +1,30 @@
+@startuml
+title      Login Sequence Diagram
+
+actor         Actor                    as actor
+participant   index                    as index
+participant   homePage                 as homePage
+participant    login                    as login
+entity        LandingPageContoller     as landingPageController
+entity        WebSecurityConfig        as webSecurity
+entity        UserDetailsServiceImpl   as userDetailsService
+entity        UserController           as userController
+entity        UserRepositoy            as userRepository
+database      Database                 as database
+
+actor                 -> index              : Click "Log In"
+index                 -> homePage           : redirect:/homePage
+homePage              -> webSecurity        : User attempts to view home page while\n unauthenticated
+webSecurity           -> webSecurity        : anyRequest().authenticated()
+webSecurity           --> login             : .loginPage("/login")
+login                 -> userDetailsService
+login                 -> login              : not authenticated
+userDetailsService    -> userController     : userController.getUserByUsername(username)
+userController        -> userRepository     : userRepository.findByUsername(name)
+userRepository        -> database           : get username from user table
+database              --> userDetailsService
+userDetailsService    -> userController     : userController.setCurrently_Logged_In(user)
+userController        --> homePage
+homePage              -> actor              : display home page
+
+@enduml

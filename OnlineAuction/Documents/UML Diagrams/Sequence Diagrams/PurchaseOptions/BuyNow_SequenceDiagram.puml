@@ -1,0 +1,15 @@
+@startuml
+
+actor "User"
+participant "viewMarketListing.html"
+participant "attemptPurchase.html"
+
+User -> viewMarketListing.html: select number to buy
+User -> viewMarketListing.html: Buy Now for $X
+viewMarketListing.html -> "attemptPurchase.html": request
+viewMarketListing.html -> "attemptPurchase.html": post(newTransaction)
+attemptPurchase.html -> viewMarketListing.html: response
+viewMarketListing.html -> "User": display("Buy now for $X")
+viewMarketListing.html -> "User": redirect to viewMarketListing{listingID}
+
+@enduml

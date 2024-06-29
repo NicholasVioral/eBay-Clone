@@ -1,0 +1,150 @@
+#order-info {
+	margin: auto;
+	width: 60%;
+	border: 3px solid #00bfff;
+	border-radius: 6px;
+	padding: 10px;
+	background-color: #e6ffff;
+}
+
+.order-info-subsection {
+	border-top: 1px solid black;
+}
+
+.header-text {
+	text-align: center;
+}
+
+.button-row {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 10px;
+}
+
+.button-row > button {
+	margin: 5px;
+}
+
+.styled-button {
+	background-color: #00ffbf;
+	color: black;
+	width: 120px;
+	border-radius: 4px;
+}
+
+form {
+	margin: auto;
+	width: 50%;
+}
+
+.button-row {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.button-row > div {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.ui-datepicker-calendar {
+	display: none;
+}
+
+.ui-datepicker {
+	z-index: 1500 !important;
+}
+
+.radio-button input[type="radio"]:checked+label {
+	background-color: #FBD8B4;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type=number] {
+	-moz-appearance: textfield;
+}
+
+#page {
+	display: flex;
+	/*height: calc(92vh - 60px);*/
+}
+
+#website-title {
+	margin-left: 8px;
+	margin-right: 8px;
+	font-size: 12px;
+}
+
+label {
+	display: inline-block;
+}
+
+#shippingHeading .btn-link,
+#purchaseDetailsAccordion .btn-link,
+#paymentAccordion .btn-link {
+	color: #0d6efd !important;
+	/* Using !important to ensure our color is applied */
+	text-decoration: none;
+	/* To remove the underline */
+}
+
+/* Change color of accordion header on hover for better UX */
+#shippingHeading .btn-link:hover,
+#purchaseDetailsAccordion .btn-link:hover,
+#paymentAccordion .btn-link:hover {
+	color: #0b5cda !important;
+	/* Slightly darker shade for hover, using !important for override */
+}
+
+.custom-font-style {
+	font-family: 'Poppins', sans-serif;
+	font-size: 1.5em;
+}
+
+#shippingModal{
+	z-index: 2000 !important;
+}
+
+.custom-alert-modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.custom-alert-modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.custom-alert-close-btn {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.custom-alert-close-btn:hover,
+.custom-alert-close-btn:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}

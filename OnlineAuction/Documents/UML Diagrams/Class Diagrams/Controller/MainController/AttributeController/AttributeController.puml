@@ -1,0 +1,9 @@
+@startuml
+class AttributeController [[java:edu.sru.cpsc.webshopping.controller.AttributeController]] {
+	-attributeService: AttributeService
+	-attributeRepository: AttributeRepository
+	+addAttribute(name: String, dataType: String, category: Category, result: BindingResult): Attribute
+	+getAttribute(id: long): Attribute
+	+getAllAttributes(): Iterable<Attribute>
+}
+@enduml

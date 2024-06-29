@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+	<head>
+		<meta charset="ISO-8859-1">
+		<title>Search Results</title>
+		
+		<!-- font import -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+				
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+	  	
+	  	<link th:href="@{/styles/button.css}" rel="stylesheet" />
+		<link th:href="@{/styles/landing.css}" rel="stylesheet" />
+		<link th:href="@{/styles/employee_page.css}" rel="stylesheet"/>
+	  	
+	  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	  	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+	  	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	  	
+		<style>
+			#page {
+				display:flex;
+				height: 100vh;
+			}
+			
+			#website-title {
+				margin-left: 8px;
+				margin-right: 8px;
+				font-size: 12px;
+			}
+			
+			/*th {
+			  	border: 2px solid #002147;
+			  	background-color: #faf0e6;
+			  	height: 20px;
+			  	text-align: center;
+			}
+			
+			td {
+				text-align: center;
+			  	overflow: hidden;
+			  	text-overflow: ellipsis;
+			  	border: 2px solid #002147;
+			  	margin-bottom: .5em;
+			  	height: 20px;
+			}*/
+				
+		</style>
+	</head>
+	
+	<body class="pageBody">
+	
+		<!-- HEADER BAR -->
+		<div th:insert="~{header :: header}"></div>
+		<!-- END HEADER BAR -->
+	
+	
+		
+		<!--<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<span class="navbar-brand" id="website-title">Pseudo Ebay</span>
+			<div class="container-fluid">
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+						<li class="nav-item">
+							<a class="nav-link" href="/homePage">Homepage</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/userDetails">User Account</a>
+						</li>
+					</ul>
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="/do_the_logout">Logout</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>-->
+		<div id="page">
+			
+			<th:block th:switch="${page}">
+			<div th:case="friends">
+				<form th:action="@{/friend}" method="post" >
+					<table style="height:400px;width:200px;margin-top:20px;margin-bottom:20px;">
+						<tr>
+							<th colspan="2"> Friends List </th>
+						</tr>
+						<tr>
+							<td> username </td>
+							<td> send message</td>
+						</tr>
+							<tr>
+							<td><div><label> Enter Friend Name : <input type="text" name="friend"/> </label></div></td>
+							<td><input id = "addFriendButton" type="submit" value="add friend"/></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+			</th:block>
+	
+		
+	<div class="container">
+	<div style="margin-bottom:5px; margin-top:5px;"  class="d-flex justify-content-center">
+					<h1>Search Results</h1>
+				</div>
+	<form action="search" th:action="@{/search}" th:object="${widget}" method="get" class="form-horizontal">
+		<div class="row">
+		<div class="col-3" style="margin-left:25px">
+			<input class="form-control" type="search" value="" id="SearchBar" placeholder="Search again" name="searchString">
+		</div>
+		<div class="col-1">
+			<input class="btn btn-primary" type = "submit" value="Search" id="SearchButton">
+		</div>
+		<div class="col-2">
+			<a class="btn btn-danger" th:href="@{/homePage}">Cancel Search</a>
+		</div>
+		<div class="col" style="justify-content:right; display:flex; margin-right: 25px">
+			<a class="btn btn-secondary" th:onclick="myFunction()"><span>Filter</span></a>
+		</div>
+		</div>
+	<script>
+						var count = 0;
+						function myFunction() {
+							
+							var element = document.getElementById("subCategories");
+							
+							if(count == 1){
+								document.getElementById("rating").style.display = "none";
+								document.getElementById("pricelable").style.display = "none";
+								document.getElementById("priceFilter").style.display = "none";
+								document.getElementById("numberinput").style.display = "none";
+								document.getElementById("category").style.display = "none";
+								document.getElementById("categories").style.display = "none";
+								document.getElementById("subcategory").style.display = "none";
+								document.getElementById("subCategories").style.display = "none";
+								if(element.value == "blender")
+								{
+									document.getElementById("blenderSelect").style.display = "none";
+								}
+								if(element.value == "dryer")
+								{
+									document.getElementById("dryerSelect").style.display = "none";
+								}
+								if(element.value == "washer")
+								{
+									document.getElementById("washerSelect").style.display = "none";
+								}
+								if(element.value == "microwave")
+								{
+									document.getElementById("microwaveSelect").style.display = "none";
+								}
+								if(element.value == "fridge")
+								{
+									document.getElementById("fridgeSelect").style.display = "none";
+								}
+								if(element.value == "blender_parts")
+								{
+									document.getElementById("blenderPartSelect").style.display = "none";
+								}
+								if(element.value == "dryer_parts")
+								{
+									document.getElementById("dryerPartSelect").style.display = "none";
+								}
+								if(element.value == "washer_parts")
+								{
+									document.getElementById("washerPartSelect").style.display = "none";
+								}
+								if(element.value == "microwave_parts")
+								{
+									document.getElementById("microwavePartSelect").style.display = "none";
+								}
+								if(element.value == "refrigerator_parts")
+								{
+									document.getElementById("refrigeratorPartSelect").style.display = "none";
+								}
+								if(element.value == "computer")
+								{
+									document.getElementById("computerSelect").style.display = "none";
+								}
+								if(element.value == "videoGame")
+								{
+									document.getElementById("videoGameSelect").style.display = "none";
+								}
+								if(element.value == "computer_parts")
+								{
+									document.getElementById("computerPartSelect").style.display = "none";
+								}
+								if(element.value == "videoGame_parts")
+								{
+									document.getElementById("videoGameAccessorySelect").style.display = "none";
+								}
+								if(element.value == "lawnMower")
+								{
+									document.getElementById("lawnMowerSelect").style.display = "none";
+								}
+								if(element.value == "car")
+								{
+									document.getElementById("carSelect").style.display = "none";
+								}
+								if(element.value == "car_parts")
+								{
+									document.getElementById("carPartSelect").style.display = "none";
+								}
+								if(element.value == "mowerPart")
+								{
+									document.getElementById("mowerPartSelect").style.display = "none";
+								}
+							  
+							}
+							if(count != 1){
+								document.getElementById("rating").style.display = "initial";
+								document.getElementById("pricelable").style.display = "initial";
+								document.getElementById("priceFilter").style.display = "initial";
+								document.getElementById("numberinput").style.display = "initial";
+								document.getElementById("category").style.display = "initial";
+								document.getElementById("categories").style.display = "initial";
+								document.getElementById("subcategory").style.display = "initial";
+								document.getElementById("subCategories").style.display = "initial";
+								if(element.value == "blender")
+								{
+									document.getElementById("blenderSelect").style.display = "block";
+								}
+								if(element.value == "dryer")
+								{
+									document.getElementById("dryerSelect").style.display = "block";
+								}
+								if(element.value == "washer")
+								{
+									document.getElementById("washerSelect").style.display = "block";
+								}
+								if(element.value == "microwave")
+								{
+									document.getElementById("microwaveSelect").style.display = "block";
+								}
+								if(element.value == "fridge")
+								{
+									document.getElementById("fridgeSelect").style.display = "block";
+								}
+								if(element.value == "blender_parts")
+								{
+									document.getElementById("blenderPartSelect").style.display = "block";
+								}
+								if(element.value == "dryer_parts")
+								{
+									document.getElementById("dryerPartSelect").style.display = "block";
+								}
+								if(element.value == "washer_parts")
+								{
+									document.getElementById("washerPartSelect").style.display = "block";
+								}
+								if(element.value == "microwave_parts")
+								{
+									document.getElementById("microwavePartSelect").style.display = "block";
+								}
+								if(element.value == "refrigerator_parts")
+								{
+									document.getElementById("refrigeratorPartSelect").style.display = "block";
+								}
+								if(element.value == "computer")
+								{
+									document.getElementById("computerSelect").style.display = "block";
+								}
+								if(element.value == "videoGame")
+								{
+									document.getElementById("videoGameSelect").style.display = "block";
+								}
+								if(element.value == "computer_parts")
+								{
+									document.getElementById("computerPartSelect").style.display = "block";
+								}
+								if(element.value == "videoGame_parts")
+								{
+									document.getElementById("videoGameAccessorySelect").style.display = "block";
+								}
+								if(element.value == "lawnMower")
+								{
+									document.getElementById("lawnMowerSelect").style.display = "block";
+								}
+								if(element.value == "car")
+								{
+									document.getElementById("carSelect").style.display = "block";
+								}
+								if(element.value == "car_parts")
+								{
+									document.getElementById("carPartSelect").style.display = "block";
+								}
+								if(element.value == "mower_parts")
+								{
+									document.getElementById("mowerPartSelect").style.display = "block";
+								}
+								count = 2;
+							}
+							count = count -1;
+					console.log(count)
+					
+					
+							}
+						var subjectObject = {
+								  "appliance": {
+								    "washer": [],
+								    "blender": [],
+								    "dryer":[],
+								    "microwave":[],
+								    "fridge":[]
+								},
+								  "appliance_parts": {
+									"washer_parts": [],
+									"blender_parts": [],
+									"dryer_parts":[],
+									"microwave_parts":[],
+									"refrigerator_parts":[]
+								    },
+								  "electronic": {
+								    "computer":[],
+								    "videoGame":[]
+								    },
+								    "electronic_parts": {
+									    "computer_parts":[],
+									    "videoGame_parts":[]
+									  },
+								  "lawnCare" :{
+									"lawnMower" :[]
+								  },
+								  "lawnCare_parts" :{
+									  "mower_parts" :[]
+								  },
+								  "vehicle" :{
+									"car" :[]
+								  },
+								  "vehicle_parts" :{
+									  "car_parts" :[]
+								  }
+								}
+								
+								window.onload = function() {
+								  var categorySel = document.getElementById("categories");
+								  var subCatSel = document.getElementById("subCategories");
+								  for (var x in subjectObject) {
+									  categorySel.options[categorySel.options.length] = new Option(x, x);
+								  }
+								  categorySel.onchange = function() {
+								    //empty Chapters- and Topics- dropdowns
+								    subCatSel.length = 1;
+								    //display correct values
+								    for (var y in subjectObject[this.value]) {
+								    	subCatSel.options[subCatSel.options.length] = new Option(y, y);
+								    }
+								  }
+								  subCatSel.onchange = function() {
+									  if(subCatSel.value == "dryer")
+										  {
+										  	var dryerOp = document.getElementById('dryerSelect');
+										  	var displaySetting = dryerOp.style.display;
+										  	if (displaySetting == 'none')
+										  		{
+										  			dryerOp.style.display='block';
+										  		}
+										  }
+									  else{
+										 	var dryerOp = document.getElementById('dryerSelect');
+										  	var displaySetting = dryerOp.style.display;
+										  	if (displaySetting == 'block')
+									  		{
+									  			dryerOp.style.display='none';
+									  		}
+									  }
+									  if(subCatSel.value == "blender")
+									  {
+									  	var blenderOp = document.getElementById('blenderSelect');
+									  	var displaySetting = blenderOp.style.display;
+									  	if (displaySetting == 'none')
+									  		{
+									  			blenderOp.style.display='block';
+									  		}
+									  }
+								 	  else{
+									 	var blenderOp = document.getElementById('blenderSelect');
+									  	var displaySetting = blenderOp.style.display;
+									  	if (displaySetting == 'block')
+								  			{
+								  				blenderOp.style.display='none';
+								  			}
+								  	  }
+									  if(subCatSel.value == "microwave")
+									  {
+									  	var microwaveOp = document.getElementById('microwaveSelect');
+									  	var displaySetting = microwaveOp.style.display;
+									  	if (displaySetting == 'none')
+									  		{
+									  			microwaveOp.style.display='block';
+									  		}
+									  }
+									  else{
+										 	var microwaveOp = document.getElementById('microwaveSelect');
+										  	var displaySetting = microwaveOp.style.display;
+										  	if (displaySetting == 'block')
+										  		{
+										  			microwaveOp.style.display='none';
+										  		}
+									  }
+									  if(subCatSel.value == "washer")
+									  {
+										  	var washerOp = document.getElementById('washerSelect');
+										  	var displaySetting = washerOp.style.display;
+										  	if (displaySetting == 'none')
+										  		{
+										  			washerOp.style.display='block';
+										  		}
+									  }
+									  else{
+											var washerOp = document.getElementById('washerSelect');
+										  	var displaySetting = washerOp.style.display;
+										  	if (displaySetting == 'block')
+										  		{
+										  			washerOp.style.display='none';
+										  		}
+									  }
+									  if(subCatSel.value == "fridge")
+									  {
+										 	var fridgeOp = document.getElementById('fridgeSelect');
+										  	var displaySetting = fridgeOp.style.display;
+										  	if (displaySetting == 'none')
+										  		{
+										  			fridgeOp.style.display='block';
+										  		}
+									  }
+									  else{
+										  	var fridgeOp = document.getElementById('fridgeSelect');
+										  	var displaySetting = fridgeOp.style.display;
+										  	if (displaySetting == 'block')
+										  		{
+										  			fridgeOp.style.display='none';
+										  		}
+									  }
+									  if(subCatSel.value == "dryer_parts")
+									  {
+									  	var dryerPartOp = document.getElementById('dryerPartSelect');
+									  	var displaySetting = dryerPartOp.style.display;
+									  	if (displaySetting == 'none')
+									  		{
+									  			dryerPartOp.style.display='block';
+									  		}
+									  }
+								  	else{
+									 	var dryerPartOp = document.getElementById('dryerPartSelect');
+									  	var displaySetting = dryerPartOp.style.display;
+									  	if (displaySetting == 'block')
+								  		{
+								  			dryerPartOp.style.display='none';
+								  		}
+								  }
+								  if(subCatSel.value == "blender_parts")
+								  {
+								  	var blenderPartOp = document.getElementById('blenderPartSelect');
+								  	var displaySetting = blenderPartOp.style.display;
+								  	if (displaySetting == 'none')
+								  		{
+								  			blenderPartOp.style.display='block';
+								  		}
+								  }
+							 	  else{
+								 	var blenderPartOp = document.getElementById('blenderPartSelect');
+								  	var displaySetting = blenderPartOp.style.display;
+								  	if (displaySetting == 'block')
+							  			{
+							  				blenderPartOp.style.display='none';
+							  			}
+							  	  }
+								  if(subCatSel.value == "microwave_parts")
+								  {
+								  	var microwavePartOp = document.getElementById('microwavePartSelect');
+								  	var displaySetting = microwavePartOp.style.display;
+								  	if (displaySetting == 'none')
+								  		{
+								  			microwavePartOp.style.display='block';
+								  		}
+								  }
+								  else{
+									 	var microwavePartOp = document.getElementById('microwavePartSelect');
+									  	var displaySetting = microwavePartOp.style.display;
+									  	if (displaySetting == 'block')
+									  		{
+									  			microwavePartOp.style.display='none';
+									  		}
+								  }
+								  if(subCatSel.value == "washer_parts")
+								  {
+									  	var washerPartOp = document.getElementById('washerPartSelect');
+									  	var displaySetting = washerPartOp.style.display;
+									  	if (displaySetting == 'none')
+									  		{
+									  			washerPartOp.style.display='block';
+									  		}
+								  }
+								  else{
+										var washerPartOp = document.getElementById('washerPartSelect');
+									  	var displaySetting = washerPartOp.style.display;
+									  	if (displaySetting == 'block')
+									  		{
+									  			washerPartOp.style.display='none';
+									  		}
+								  }
+								  if(subCatSel.value == "refrigerator_parts")
+								  {
+									 	var refrigeratorPartOp = document.getElementById('refrigeratorPartSelect');
+									  	var displaySetting = refrigeratorPartOp.style.display;
+									  	if (displaySetting == 'none')
+									  		{
+									  		refrigeratorPartOp.style.display='block';
+									  		}
+								  }
+								  else{
+									  	var refrigeratorPartOp = document.getElementById('refrigeratorPartSelect');
+									  	var displaySetting = refrigeratorPartOp.style.display;
+									  	if (displaySetting == 'block')
+									  		{
+									  		refrigeratorOp.style.display='none';
+									  		}
+								  }
+									  if(subCatSel.value == "computer")
+									  {
+										  	var computerOp = document.getElementById('computerSelect');
+										  	var displaySetting = computerOp.style.display;
+										  	if (displaySetting == 'none')
+										  		{
+										  			computerOp.style.display='block';
+										  		}
+									  }
+									  else {
+											var computerOp = document.getElementById('computerSelect');
+										  	var displaySetting = computerOp.style.display;
+										  	if (displaySetting == 'block')
+										  		{
+										  			computerOp.style.display='none';
+										  		}
+									  }
+									  if(subCatSel.value == "videoGame")
+									  {
+											var videoGameOp = document.getElementById('videoGameSelect');
+										  	var displaySetting = videoGameOp.style.display;
+										  	if (displaySetting == 'none')
+										  		{
+										  			videoGameOp.style.display='block';
+										  		}
+									  }
+									  else{
+										 	var videoGameOp = document.getElementById('videoGameSelect');
+										  	var displaySetting = videoGameOp.style.display;
+										  	if (displaySetting == 'block')
+										  		{
+										  			videoGameOp.style.display='none';
+										  		}
+									  }
+									  if(subCatSel.value == "computer_parts") {
+											var computerPartOp = document.getElementById('computerPartSelect');
+											var displaySetting = computerPartOp.style.display;
+											if (displaySetting == 'none') {
+												computerPartOp.style.display='block';
+											}
+										}
+										else {
+											var computerPartOp = document.getElementById('computerPartSelect');
+											var displaySetting = computerPartOp.style.display;
+											if (displaySetting == 'block') {
+												computerPartOp.style.display='none';
+											}
+										}
+										if(subCatSel.value == "videoGame_parts") {
+											var videoGameAccessoryOp = document.getElementById('videoGameAccessorySelect');
+											var displaySetting = videoGameAccessoryOp.style.display;
+											if (displaySetting == 'none') {
+												videoGameAccessoryOp.style.display='block';
+											}
+										}
+										else {
+											var videoGameAccessoryOp = document.getElementById('videoGameAccessorySelect');
+											var displaySetting = videoGameAccessoryOp.style.display;
+											if (displaySetting == 'block') {
+												videoGameAccessoryOp.style.display='none';
+											}
+										}
+									  if(subCatSel.value == "lawnMower")
+									  {
+										 	var lawnMowerOp = document.getElementById('lawnMowerSelect');
+										  	var displaySetting = lawnMowerOp.style.display;
+										  	if (displaySetting == 'none')
+										  		{
+										  			lawnMowerOp.style.display='block';
+										  		}
+									  }
+									  else
+										  {
+											var lawnMowerOp = document.getElementById('lawnMowerSelect');
+										  	var displaySetting = lawnMowerOp.style.display;
+										  	if (displaySetting == 'block')
+										  		{
+										  			lawnMowerOp.style.display='none';
+										  		}
+										  }
+									  if(subCatSel.value == "car")
+									  {
+										 	var carOp = document.getElementById('carSelect');
+										  	var displaySetting = carOp.style.display;
+										  	if (displaySetting == 'none')
+										  		{
+										  			carOp.style.display='block';
+										  		}
+									  }
+									  else
+										  {
+										 	var carOp = document.getElementById('carSelect');
+										  	var displaySetting = carOp.style.display;
+										  	if (displaySetting == 'block')
+										  		{
+										  			carOp.style.display='none';
+										  		}
+										  }
+									  if(subCatSel.value == "car_parts")
+									  {
+										 	var carPartOp = document.getElementById('carPartSelect');
+										  	var displaySetting = carPartOp.style.display;
+										  	if (displaySetting == 'none')
+										  		{
+										  			carPartOp.style.display='block';
+										  		}
+									  }
+									  else
+										  {
+										 	var carPartOp = document.getElementById('carPartSelect');
+										  	var displaySetting = carPartOp.style.display;
+										  	if (displaySetting == 'block')
+										  		{
+										  			carPartOp.style.display='none';
+										  		}
+										  }
+									  if(subCatSel.value == "mower_parts") {
+											var mowerPartOp = document.getElementById('mowerPartSelect');
+											var displaySetting = mowerPartOp.style.display;
+											if (displaySetting == 'none') {
+												mowerPartOp.style.display='block';
+											}
+										}
+										else {
+											var mowerPartOp = document.getElementById('mowerPartSelect');
+											var displaySetting = mowerPartOp.style.display;
+											if (displaySetting == 'block') {
+											mowerPartOp.style.display='none';
+											}
+										}
+								  }
+								}
+						
+						</script>
+		<div class="row mx-3">
+							<div class="col-2">
+								<label style="display:none;" class="form-label" id="category"for="categories">Select Category:</label>
+								<select class="form-select" id="categories" name="category" style="width:auto;display:none;">
+									<option value="all">All</option>
+								</select>
+							</div>
+							<div class="col-10">
+								<label style="display:none;"class="form-label" id="subcategory"for="subCategories">Select SubCategory:</label><br>
+								<select class="form-select" id="subCategories" name="subCategory" style="width:auto;display:none;">
+									<option value="all">All</option>
+								</select>
+							</div>
+							<div style="display:none;" id="blenderSelect">
+								<div class="row">
+									<div class="col-2">
+										<label class="form-label" for="blenderLength">Length:</label>
+										<select id="blenderLength" class="form-select" name="length">
+											<option value="">None</option>
+											<option th:each="length : ${blender_length}" th:value="${length}" th:text="${length}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="blenderWidth">Width:</label>
+										<select id="blenderWidth" class="form-select" name="width">
+											<option value="">None</option>
+											<option th:each="width : ${blender_width}" th:value="${width}" th:text="${width}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="blenderHeight">Height:</label>
+										<select id="blenderHeight" class="form-select" name="height">
+											<option value="">None</option>
+											<option th:each="height : ${blender_height}" th:value="${height}" th:text="${height}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="blenderColor">Color:</label>
+										<select id="blenderColor" class="form-select" name="color">
+											<option value="">None</option>
+											<option th:each="color : ${blender_color}" th:value="${color}" th:text="${color}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="blenderCondition">Condition:</label>
+										<select id="blenderCondition" class="form-select" name="condition">
+											<option value="">None</option>
+											<option th:each="condition : ${blender_condition}" th:value="${condition}" th:text="${condition}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="blenderModel">Model:</label>
+										<select id="blenderModel" class="form-select" name="model">
+											<option value="">None</option>
+											<option th:each="model : ${blender_model}" th:value="${model}" th:text="${model}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="blenderMake">Brand:</label>
+										<select id="blenderMake" class="form-select" name="brand">
+											<option value="">None</option>
+											<option th:each="make : ${blender_make}" th:value="${make}" th:text="${make}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="blenderCapacity">Capacity:</label>
+										<select id="blenderCapacity" class="form-select" name="capacity">
+											<option value="">None</option>
+											<option th:each="capacity : ${blender_capacity}" th:value="${capacity}" th:text="${capacity}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div style="display:none;" id="dryerSelect">
+								<div class="row">
+									<div class="col-2">
+										<label class="form-label" for="dryerLength">Length:</label>
+										<select id="dryerLength" class="form-select" name="length">
+											<option value="">None</option>
+											<option th:each="length : ${dryer_length}" th:value="${length}" th:text="${length}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="dryerWidth">Width:</label>
+										<select id="dryerWidth" class="form-select" name="width">
+											<option value="">None</option>
+											<option th:each="width : ${dryer_width}" th:value="${width}" th:text="${width}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="dryerHeight">Height:</label>
+										<select id="dryerHeight" class="form-select" name="height">
+											<option value="">None</option>
+											<option th:each="height : ${dryer_height}" th:value="${height}" th:text="${height}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="dryerColor">Color:</label>
+										<select id="dryerColor" class="form-select" name="color">
+											<option value="">None</option>
+											<option th:each="color : ${dryer_color}" th:value="${color}" th:text="${color}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="dryerCondition">Condition:</label>
+										<select id="dryerCondition" class="form-select" name="condition">
+											<option value="">None</option>
+											<option th:each="condition : ${dryer_condition}" th:value="${condition}" th:text="${condition}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="dryerModel">Model:</label>
+										<select id="dryerModel" class="form-select" name="model">
+											<option value="">None</option>
+											<option th:each="model : ${dryer_model}" th:value="${model}" th:text="${model}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="dryerMake">Brand:</label>
+										<select id="dryerMake" class="form-select" name="brand">
+											<option value="">None</option>
+											<option th:each="make : ${dryer_make}" th:value="${make}" th:text="${make}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div style="display:none;" id="washerSelect">
+								<div class="row">
+									<div class="col-2">
+										<label class="form-label" for="washerLength">Length:</label>
+										<select id="washerLength" class="form-select" name="length">
+											<option value="">None</option>
+											<option th:each="length : ${washer_length}" th:value="${length}" th:text="${length}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="washerWidth">Width:</label>
+										<select id="washerWidth" class="form-select" name="width">
+											<option value="">None</option>
+											<option th:each="width : ${washer_width}" th:value="${width}" th:text="${width}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="washerHeight">Height:</label>
+										<select id="washerHeight" class="form-select" name="height">
+											<option value="">None</option>
+											<option th:each="height : ${washer_height}" th:value="${height}" th:text="${height}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="washerColor">Color:</label>
+										<select id="washerColor" class="form-select" name="color">
+											<option value="">None</option>
+											<option th:each="color : ${washer_color}" th:value="${color}" th:text="${color}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="washerCondition">Condition:</label>
+										<select id="washerCondition" class="form-select" name="condition">
+											<option value="">None</option>
+											<option th:each="condition : ${washer_condition}" th:value="${condition}" th:text="${condition}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="washerModel">Model:</label>
+										<select id="washerModel" class="form-select" name="model">
+											<option value="">None</option>
+											<option th:each="model : ${washer_model}" th:value="${model}" th:text="${model}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="washerMake">Brand:</label>
+										<select id="washerMake" class="form-select" name="brand">
+											<option value="">None</option>
+											<option th:each="brand : ${washer_make}" th:value="${brand}" th:text="${brand}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div style="display:none;" id="microwaveSelect">
+								<div class="row">
+									<div class="col-2">
+										<label class="form-label" for="microwaveLength">Length:</label>
+										<select id="microwaveLength" class="form-select" name="length">
+											<option value="">None</option>
+											<option th:each="length : ${microwave_length}" th:value="${length}" th:text="${length}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="micorwaveWidth">Width:</label>
+										<select id="micorwaveWidth" class="form-select" name="width">
+											<option value="">None</option>
+											<option th:each="width : ${microwave_width}" th:value="${width}" th:text="${width}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="microwaveHeight">Height:</label>
+										<select id="microwaveHeight" class="form-select" name="height">
+											<option value="">None</option>
+											<option th:each="height : ${microwave_height}" th:value="${height}" th:text="${height}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="microwaveColor">Color:</label>
+										<select id="microwaveColor" class="form-select" name="color">
+											<option value="">None</option>
+											<option th:each="color : ${microwave_color}" th:value="${color}" th:text="${color}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="microwaveCondition">Condition:</label>
+										<select id="microwaveCondition" class="form-select" name="condition">
+											<option value="">None</option>
+											<option th:each="condition : ${microwave_condition}" th:value="${condition}" th:text="${condition}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="microwaveModel">Model:</label>
+										<select id="microwaveModel" class="form-select" name="model">
+											<option value="">None</option>
+											<option th:each="model : ${microwave_model}" th:value="${model}" th:text="${model}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="microwaveMake">Brand:</label>
+										<select id="microwaveMake" class="form-select" name="brand">
+											<option value="">None</option>
+											<option th:each="brand : ${microwave_make}" th:value="${brand}" th:text="${brand}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div style="display:none;" id="fridgeSelect">
+								<div class="row">
+									<div class="col-2">
+										<label class="form-label" for="fridgeLength">Length:</label>
+										<select id="fridgeLength" class="form-select" name="length">
+											<option value="">None</option>
+											<option th:each="length : ${fridge_length}" th:value="${length}" th:text="${length}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="fridgeWidth">Width:</label>
+										<select id="fridgeWidth" class="form-select" name="width">
+											<option value="">None</option>
+											<option th:each="width : ${fridge_width}" th:value="${width}" th:text="${width}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="fridgeHeight">Height:</label>
+										<select id="fridgeHeight" class="form-select" name="height">
+											<option value="">None</option>
+											<option th:each="height : ${fridge_height}" th:value="${height}" th:text="${height}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="fridgeColor">Color:</label>
+										<select id="fridgeColor" class="form-select" name="color">
+											<option value="">None</option>
+											<option th:each="color : ${fridge_color}" th:value="${color}" th:text="${color}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="fridgeCondition">Condition:</label>
+										<select id="fridgeCondition" class="form-select" name="condition">
+											<option value="">None</option>
+											<option th:each="condition : ${fridge_condition}" th:value="${condition}" th:text="${condition}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="fridgeModel">Model:</label>
+										<select id="fridgeModel" class="form-select" name="model">
+											<option value="">None</option>
+											<option th:each="model : ${fridge_model}" th:value="${model}" th:text="${model}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="fridgeMake">Brand:</label>
+										<select id="fridgeMake" class="form-select" name="brand">
+											<option value="">None</option>
+											<option th:each="brand : ${fridge_make}" th:value="${brand}" th:text="${brand}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div style="display:none;" id="blenderPartSelect">
+								<div class="row">
+									<div class="col-4">
+										<label class="form-label" for="blenderPartModel">Model:</label>
+										<select id="blenderPartModel" class="form-select" name="model">
+											<option value="">None</option>
+											<option th:each="model : ${blender_part_model}" th:value="${model}" th:text="${model}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="blenderPartBrand">Brand:</label>
+										<select id="blenderPartBrand" class="form-select" name="brand">
+											<option value="">None</option>
+											<option th:each="brand : ${blender_part_brand}" th:value="${brand}" th:text="${brand}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="blenderPartColor">Made In:</label>
+										<select id="blenderPartColor" class="form-select" name="color">
+											<option value="">None</option>
+											<option th:each="color : ${blender_part_color}" th:value="${color}" th:text="${color}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="blenderPartWarranty">warranty:</label>
+										<select id="blenderPartWarranty" class="form-select" name="warranty">
+											<option value="">None</option>
+											<option th:each="warranty : ${blender_part_warranty}" th:value="${warranty}" th:text="${warranty}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="blenderPartCondition">condition:</label>
+										<select id="blenderPartCondition" class="form-select" name="condition">
+											<option value="">None</option>
+											<option th:each="condition : ${blender_part_condition}" th:value="${condition}" th:text="${condition}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div style="display:none;" id="dryerPartSelect">
+								<div class="row">
+									<div class="col-4">
+										<label class="form-label" for="dryerPartModel">Model:</label>
+										<select id="dryerPartModel" class="form-select" name="model">
+											<option value="">None</option>
+											<option th:each="model : ${dryer_part_model}" th:value="${model}" th:text="${model}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="dryerPartBrand">Brand:</label>
+										<select id="dryerPartBrand" class="form-select" name="brand">
+											<option value="">None</option>
+											<option th:each="brand : ${dryer_part_brand}" th:value="${brand}" th:text="${brand}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="dryerPartColor">Made In:</label>
+										<select id="dryerPartColor" class="form-select" name="color">
+											<option value="">None</option>
+											<option th:each="color : ${dryer_part_color}" th:value="${color}" th:text="${color}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="dryerPartWarranty">warranty:</label>
+										<select id="dryerPartWarranty" class="form-select" name="warranty">
+											<option value="">None</option>
+											<option th:each="warranty : ${dryer_part_warranty}" th:value="${warranty}" th:text="${warranty}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="dryerPartCondition">condition:</label>
+										<select id="dryerPartCondition" class="form-select" name="condition">
+											<option value="">None</option>
+											<option th:each="condition : ${dryer_part_condition}" th:value="${condition}" th:text="${condition}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div style="display:none;" id="microwavePartSelect">
+								<div class="row">
+									<div class="col-4">
+										<label class="form-label" for="microwavePartModel">Model:</label>
+										<select id="microwavePartModel" class="form-select" name="model">
+											<option value="">None</option>
+											<option th:each="model : ${microwave_part_model}" th:value="${model}" th:text="${model}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="microwavePartBrand">Brand:</label>
+										<select id="microwavePartBrand" class="form-select" name="brand">
+											<option value="">None</option>
+											<option th:each="brand : ${microwave_part_brand}" th:value="${brand}" th:text="${brand}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="microwavePartColor">Made In:</label>
+										<select id="microwavePartColor" class="form-select" name="color">
+											<option value="">None</option>
+											<option th:each="color : ${microwave_part_color}" th:value="${color}" th:text="${color}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="microwavePartWarranty">warranty:</label>
+										<select id="microwavePartWarranty" class="form-select" name="warranty">
+											<option value="">None</option>
+											<option th:each="warranty : ${microwave_part_warranty}" th:value="${warranty}" th:text="${warranty}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="microwavePartCondition">condition:</label>
+										<select id="microwavePartCondition" class="form-select" name="condition">
+											<option value="">None</option>
+											<option th:each="condition : ${microwave_part_condition}" th:value="${condition}" th:text="${condition}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div style="display:none;" id="refrigeratorPartSelect">
+								<div class="row">
+									<div class="col-4">
+										<label class="form-label" for="refrigeratorPartModel">Model:</label>
+										<select id="refrigeratorPartModel" class="form-select" name="model">
+											<option value="">None</option>
+											<option th:each="model : ${refrigerator_part_model}" th:value="${model}" th:text="${model}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="refrigeratorPartBrand">Brand:</label>
+										<select id="refrigeratorPartBrand" class="form-select" name="brand">
+											<option value="">None</option>
+											<option th:each="brand : ${refrigerator_part_brand}" th:value="${brand}" th:text="${brand}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="refrigeratorPartColor">Made In:</label>
+										<select id="refrigeratorPartColor" class="form-select" name="color">
+											<option value="">None</option>
+											<option th:each="color : ${refrigerator_part_color}" th:value="${color}" th:text="${color}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="refrigeratorPartWarranty">warranty:</label>
+										<select id="refrigeratorPartWarranty" class="form-select" name="warranty">
+											<option value="">None</option>
+											<option th:each="warranty : ${refrigerator_part_warranty}" th:value="${warranty}" th:text="${warranty}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="refrigeratorPartCondition">condition:</label>
+										<select id="refrigeratorCondition" class="form-select" name="condition">
+											<option value="">None</option>
+											<option th:each="condition : ${refrigerator_part_condition}" th:value="${condition}" th:text="${condition}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div style="display:none;" id="washerPartSelect">
+								<div class="row">
+									<div class="col-4">
+										<label class="form-label" for="washerPartModel">Model:</label>
+										<select id="washerPartModel" class="form-select" name="model">
+											<option value="">None</option>
+											<option th:each="model : ${washer_part_model}" th:value="${model}" th:text="${model}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="washerPartBrand">Brand:</label>
+										<select id="washerPartBrand" class="form-select" name="brand">
+											<option value="">None</option>
+											<option th:each="brand : ${washer_part_brand}" th:value="${brand}" th:text="${brand}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="washerPartColor">Made In:</label>
+										<select id="washerPartColor" class="form-select" name="color">
+											<option value="">None</option>
+											<option th:each="color : ${washer_part_color}" th:value="${color}" th:text="${color}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="washerPartWarranty">warranty:</label>
+										<select id="washerPartWarranty" class="form-select" name="warranty">
+											<option value="">None</option>
+											<option th:each="warranty : ${washer_part_warranty}" th:value="${warranty}" th:text="${warranty}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="washerPartCondition">condition:</label>
+										<select id="washerCondition" class="form-select" name="condition">
+											<option value="">None</option>
+											<option th:each="condition : ${washer_part_condition}" th:value="${condition}" th:text="${condition}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div style="display:none;" id="computerSelect">
+								<div class="row">
+									<div class="col-3">
+										<label class="form-label" for="computerMemory">Memory Amount:</label>
+										<select id="computerMemory" class="form-select" name="memory">
+											<option value="">None</option>
+											<option th:each="memory : ${computer_memory}" th:value="${memory}" th:text="${memory}"></option>
+										</select>GB
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="computerStorage">Disk Size:</label>
+										<select id="computerStorage" class="form-select" name="storage">
+											<option value="">None</option>
+											<option th:each="storage : ${computer_storage}" th:value="${storage}" th:text="${storage}"></option>
+										</select>
+									</div>
+									<div class="col-3">
+										<label class="form-label" for="computerProcessor">Processor:</label>
+										<select id="computerProcessor" class="form-select" name="processor">
+											<option value="">None</option>
+											<option th:each="processor : ${computer_processor}" th:value="${processor}" th:text="${processor}"></option>
+										</select>
+									</div>
+									<div class="col-2">
+										<label class="form-label" for="computerGPU">GPU:</label>
+										<select id="computerGPU" class="form-select" name="GPU">
+											<option value="">None</option>
+											<option th:each="gpu : ${computer_gpu}" th:value="${gpu}" th:text="${gpu}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div style="display:none;" id="videoGameSelect">
+								<div class="row">
+									<div class="col-3">
+										<label class="form-label" for="videoGameDeveloper">Developer:</label>
+										<select id="videoGameDeveloper" class="form-select" name="developer">
+											<option value="">None</option>
+											<option th:each="developer : ${videoGame_developer}" th:value="${developer}" th:text="${developer}"></option>
+										</select>
+									</div>
+									<div class="col-3">
+										<label class="form-label" for="videoGameTitle">Game Title:</label>
+										<select id="videoGameTitle" class="form-select" name="gameTitle">
+											<option value="">None</option>
+											<option th:each="title : ${videoGame_title}" th:value="${title}" th:text="${title}"></option>
+										</select>
+									</div>
+									<div class="col-3">
+										<label class="form-label" for="videoGameConsole">Console:</label>
+										<select id="videoGameConsole" class="form-select" name="console">
+											<option value="">None</option>
+											<option th:each="console : ${videoGame_console}" th:value="${console}" th:text="${console}"></option>
+										</select>
+									</div>
+									<div class="col-3">
+										<label class="form-label" for="videoGameCondition">Game Condition:</label>
+										<select id="videoGameCondition" class="form-select" name="condition">
+											<option value="">None</option>
+											<option th:each="condition : ${videoGame_condition}" th:value="${condition}" th:text="${condition}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div style="display:none;" id="computerPartSelect">
+								<div class="row">
+									<div class="col-4">
+										<label class="form-label" for="computerPartModel">Model:</label>
+										<select id="computerPartModel" class="form-select" name="model">
+											<option value="">None</option>
+											<option th:each="model : ${computer_part_model}" th:value="${model}" th:text="${model}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="computerPartBrand">Brand:</label>
+										<select id="computerPartBrand" class="form-select" name="brand">
+											<option value="">None</option>
+											<option th:each="brand : ${computer_part_brand}" th:value="${brand}" th:text="${brand}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="computerPartColor">Color:</label>
+										<select id="computerPartColor" class="form-select" name="color">
+											<option value="">None</option>
+											<option th:each="color : ${computer_part_color}" th:value="${color}" th:text="${color}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="computerPartWarranty">warranty:</label>
+										<select id="computerPartWarranty" class="form-select" name="warranty">
+											<option value="">None</option>
+											<option th:each="warranty : ${computer_part_warranty}" th:value="${warranty}" th:text="${warranty}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="computerPartCondition">condition:</label>
+										<select id="computerPartCondition" class="form-select" name="condition">
+											<option value="">None</option>
+											<option th:each="condition : ${computer_part_condition}" th:value="${condition}" th:text="${condition}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div style="display:none;" id="videoGameAccessorySelect">
+								<div class="row">
+									<div class="col-4">
+										<label class="form-label" for="videoGameAccessoryModel">Model:</label>
+										<select id="videoGameAccessoryModel" class="form-select" name="model">
+											<option value="">None</option>
+											<option th:each="model : ${videoGame_accessory_model}" th:value="${model}" th:text="${model}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="videoGameAccessoryBrand">Brand:</label>
+										<select id="videoGameAccessoryBrand" class="form-select" name="brand">
+											<option value="">None</option>
+											<option th:each="brand : ${videoGame_accessory_brand}" th:value="${brand}" th:text="${brand}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="videoGameAccessoryColor">Color:</label>
+										<select id="videoGameAccessoryColor" class="form-select" name="color">
+											<option value="">None</option>
+											<option th:each="color : ${videoGame_accessory_color}" th:value="${color}" th:text="${color}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="videoGameAccessoryWarranty">warranty:</label>
+										<select id="videoGameAccessoryWarranty" class="form-select" name="warranty">
+											<option value="">None</option>
+											<option th:each="warranty : ${videoGame_accessory_warranty}" th:value="${warranty}" th:text="${warranty}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="videoGameAccessoryCondition">condition:</label>
+										<select id="videoGameAccessoryCondition" class="form-select" name="condition">
+											<option value="">None</option>
+											<option th:each="condition : ${videoGame_accessory_condition}" th:value="${condition}" th:text="${condition}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div style="display:none;" id="lawnMowerSelect">
+								<div class="row">
+									<div class="col-4">
+										<label class="form-label" for="mowerYardSize">Yard Size:</label>
+										<select id="mowerYardSize" class="form-select" name="yardSize">
+											<option value="">None</option>
+											<option th:each="yardSize : ${lawnMower_yardSize}" th:value="${yardSize}" th:text="${yardSize}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="mowerBrand">Brand:</label>
+										<select id="mowerBrand" class="form-select" name="brand">
+											<option value="">None</option>
+											<option th:each="brand : ${lawnMower_brand}" th:value="${brand}" th:text="${brand}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="mowerPowerSource">Power Source:</label>
+										<select id="mowerPowerSource" class="form-select" name="powerSource">
+											<option value="">None</option>
+											<option th:each="powerSource : ${lawnMower_powerSource}" th:value="${powerSource}" th:text="${powerSource}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div style="display:none;" id="carSelect">
+								<div class="row">
+									<div class="col-4">
+										<label class="form-label" for="carModel">Model:</label>
+										<select id="carModel" class="form-select" name="model">
+											<option value="">None</option>
+											<option th:each="model : ${car_model}" th:value="${model}" th:text="${model}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="carMake">Make:</label>
+										<select id="carMake" class="form-select" name="make">
+											<option value="">None</option>
+											<option th:each="make : ${car_make}" th:value="${make}" th:text="${make}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="carYear">Year:</label>
+										<select id="carYear" class="form-select" name="year">
+											<option value="">None</option>
+											<option th:each="year : ${car_year}" th:value="${year}" th:text="${year}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div style="display:none;" id="carPartSelect">
+								<div class="row">
+									<div class="col-4">
+										<label class="form-label" for="carPartModel">Model:</label>
+										<select id="carPartModel" class="form-select" name="model">
+											<option value="">None</option>
+											<option th:each="model : ${car_part_model}" th:value="${model}" th:text="${model}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="carPartBrand">Brand:</label>
+										<select id="carPartBrand" class="form-select" name="brand">
+											<option value="">None</option>
+											<option th:each="brand : ${car_part_brand}" th:value="${brand}" th:text="${brand}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="carPartMadeIn">Made In:</label>
+										<select id="carPartMadeIn" class="form-select" name="madeIn">
+											<option value="">None</option>
+											<option th:each="madeIn : ${car_part_madeIn}" th:value="${madeIn}" th:text="${madeIn}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="carPartMaterial">Material:</label>
+										<select id="carPartMaterial" class="form-select" name="material">
+											<option value="">None</option>
+											<option th:each="material : ${car_part_material}" th:value="${material}" th:text="${material}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="carPartWarranty">warranty:</label>
+										<select id="carPartWarranty" class="form-select" name="warranty">
+											<option value="">None</option>
+											<option th:each="warranty : ${car_part_warranty}" th:value="${warranty}" th:text="${warranty}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="carPartCondition">condition:</label>
+										<select id="carPartCondition" class="form-select" name="condition">
+											<option value="">None</option>
+											<option th:each="condition : ${car_part_condition}" th:value="${condition}" th:text="${condition}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div style="display:none;" id="mowerPartSelect">
+								<div class="row">
+									<div class="col-4">
+										<label class="form-label" for="mowerPartModel">Model:</label>
+										<select id="mowerPartModel" class="form-select" name="model">
+											<option value="">None</option>
+											<option th:each="model : ${mower_part_model}" th:value="${model}" th:text="${model}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="mowerPartBrand">Brand:</label>
+										<select id="mowerPartBrand" class="form-select" name="brand">
+											<option value="">None</option>
+											<option th:each="brand : ${mower_part_brand}" th:value="${brand}" th:text="${brand}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="mowerPartMaterial">Material:</label>
+										<select id="carPartMaterial" class="form-select" name="material">
+											<option value="">None</option>
+											<option th:each="material : ${mower_part_material}" th:value="${material}" th:text="${material}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="mowerPartWarranty">warranty:</label>
+										<select id="mowerPartWarranty" class="form-select" name="warranty">
+											<option value="">None</option>
+											<option th:each="warranty : ${mower_part_warranty}" th:value="${warranty}" th:text="${warranty}"></option>
+										</select>
+									</div>
+									<div class="col-4">
+										<label class="form-label" for="mowerPartCondition">condition:</label>
+										<select id="mowerPartCondition" class="form-select" name="condition">
+											<option value="">None</option>
+											<option th:each="condition : ${mower_part_condition}" th:value="${condition}" th:text="${condition}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+		<div class="row" style="margin-left:13px;">
+			<p style = "visibility:none;" id="rating"th:text="${sellerRating.ratingName}"></p>
+			<div class="form-group">
+				<div class="col-lg-4">
+				
+				</div>
+				<div class="col-xs-1">
+					<label style = "visibility:none;" id="pricelable"class="" for="priceFilter">Filter By Price:</label>
+					<select style = "visibility:none;" class="" id="priceFilter" name="operator">
+						<option value="greater">Greater Than</option>
+						<option value="lesser">Less Than</option>
+					</select>
+					<input style = "visibility:none;" id="numberinput"class="" type="number" value="" name="price" min="1" max="1000000" step="0.01">
+				</div>
+			</div>
+		</div>
+		<div th:switch="${widgets}">
+			<div class="card my-4 mx-4">
+				
+				<h2 th:case="null">No Listings</h2>
+				
+				<!-- search results -->
+				<div th:case="*">
+					<div class="card-header">
+						<h2>Search Results</h2>
+					</div>
+					<div class="card-body">
+						<table class="table">
+							<thead >
+								<tr>
+									<th scope="col"><h5>Product Name</h5></td>
+									<th scope="col"><h5>Product Description</h5></td>
+									<th scope="col"><h5>Price</h5></td>
+									<th scope="col"><h5>Link to Product</h5></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="widget : ${searchWidgets}">
+									<td class="text" th:each="listing : ${listings}" th:if="(${widget.id} == ${listing.widgetSold.id} and ${listing.isDeleted} != 1)" th:text="${widget.name}"></td>
+									<td class="text" th:each="listing : ${listings}" th:if="(${widget.id} == ${listing.widgetSold.id} and ${listing.isDeleted} != 1)" th:text="${widget.description}"></td>
+									<td class="text" th:each="listing : ${listings}" th:if="(${widget.id} == ${listing.widgetSold.id} and ${listing.isDeleted} != 1)">
+										<p>$<span  th:text="${listing.pricePerItem}"></span></p>
+									</td>
+									<td th:each="listing : ${listings}" th:if="(${widget.id} == ${listing.widgetSold.id} and ${listing.isDeleted} != 1)"><a class ="buttonSearchPur" th:href="@{/viewMarketListing/{id}(id = ${listing.id})}"><span>View Listing</span></a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</form>
+	</div>
+	</div>
+	</body>
+
+</html> 

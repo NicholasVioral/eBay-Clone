@@ -1,0 +1,47 @@
+@startuml
+class Transaction [[java:edu.sru.cpsc.webshopping.domain.market.Transaction]] {
+	+{static} WEBSITE_CUT_PERCENTAGE: BigDecimal
+	-id: long
+	-qtyBought: int
+	-totalPriceBeforeTaxes: BigDecimal
+	-totalPriceAfterTaxes: BigDecimal
+	-sellerProfit: BigDecimal
+	-purchaseDate: Date
+	-seller: User
+	-buyer: User
+	-marketListing: MarketListing
+	-isLocalPickup: boolean
+	-shippingEntry: Shipping
+	-localPickup: Pickup
+	-paymentDetails: PaymentDetails
+	-depositDetails: DirectDepositDetails
+	+getId(): long
+	+setId(id: long): void
+	+getQtyBought(): int
+	+setQtyBought(qtyBought: int): void
+	+getTotalPriceBeforeTaxes(): BigDecimal
+	+setTotalPriceBeforeTaxes(totalPrice: BigDecimal): void
+	+getTotalPriceAfterTaxes(): BigDecimal
+	+setTotalPriceAfterTaxes(totalPriceAfterTaxes: BigDecimal): void
+	+getSellerProfit(): BigDecimal
+	+setSellerProfit(sellerProfit: BigDecimal): void
+	+getPurchaseDate(): Date
+	+setPurchaseDate(purchaseDate: Date): void
+	+getBuyer(): User
+	+setBuyer(buyer: User): void
+	+getSeller(): User
+	+setSeller(seller: User): void
+	+getShippingEntry(): Shipping
+	+setShippingEntry(shippingEntry: Shipping): void
+	+getMarketListing(): MarketListing
+	+setMarketListing(marketListing: MarketListing): void
+	+getPaymentDetails(): PaymentDetails
+	+setPaymentDetails(paymentDetails: PaymentDetails): void
+	+getDepositDetails(): DirectDepositDetails
+	+setDepositDetails(depositDetails: DirectDepositDetails): void
+	+getLocalPickup(): Pickup
+	+setLocalPickup(localPickup: Pickup): void
+	+isLocalPickup(): boolean
+	+setLocalPickup(isLocalPickup: boolean): void
+}
+@enduml

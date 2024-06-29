@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="ISO-8859-1"/>
+	  	<title>Ticketing System</title>
+	  	
+	  	
+	  	<!-- font import -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+  		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  		<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+	  	
+	  	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+		
+		<link th:href="@{/styles/tickets.css}" rel="stylesheet"/>
+	  	<link th:href="@{/styles/button.css}" rel="stylesheet"/>
+		<link th:href="@{/styles/landing.css}" rel="stylesheet"/>
+		<link th:href="@{/styles/employee_page.css}" rel="stylesheet"/>
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		
+	  	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+	  	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+		
+		<style>
+		  	table.ticketTableForm td{
+		        height:50px;
+		        border: 2px solid black;
+		        border-color: black;
+		        padding-left: 8px;
+		        width: 120px;
+			}
+	  	</style>
+	</head>
+
+	<body>
+	
+		<!-- HEADER BAR -->
+		<div th:insert="~{header :: header}"></div>
+		<!-- END HEADER BAR -->
+	
+		<div>
+			<th:block th:switch="${page}">
+		    	<!-- MY TICKETS -->
+		    	<div th:case="tickets">
+					<div class="card my-4 mx-4">
+						<div class="card-header">
+							<h2>My Tickets</h2>
+						</div>
+						<div class="card-body">
+							<table class="table table-striped">
+								<thead>
+									<th scope="col"><h5>Ticket ID</h5></th>
+									<th scope="col"><h5>Subject</h5></th>
+									<th scope="col"><h5>State</h5></th>
+									<th scope="col"><h5>Created At</h5></th>
+									<th scope="col"><h5>Assigned At</h5></th>
+									<th scope="col"><h5>Updated At</h5></th>
+									<th scope="col"><h5>Resolved At</h5></th>
+									<th scope="col"><h5>Ticket Actions</h5></th>
+								</thead>
+								<tbody>
+									<tr th:each="ticket: ${tickets}">
+										<!-- id -->
+										<td><a th:href="@{/tickets/{id}(id = ${ticket.id})}" th:text="${ticket.id}"></a></td>
+				            			<!-- subject -->
+				            			<td class="text" th:text="${ticket.subject}"></td>
+				            			<!-- state -->
+				            			<td class="text" th:text="${ticket.state} ? ${ticket.state} : 'UNASSIGNED'" ></td>
+				            			<!-- created at -->
+				            			<td class="text" th:text="${ticket.createdAt}"></td>
+				            			<!-- assigned at -->
+				            			<td class="text" th:text="${ticket.assignedAt} ? ${ticket.assignedAt} : 'UNASSIGNED'"></td>
+				            			<!-- updated at -->
+				            			<td class="text" th:text="${ticket.updatedAt}"></td>
+				            			<!-- resolved at -->
+				            			<td class="text" th:text="${ticket.resolvedAt} ? ${ticket.resolvedAt} : 'UNRESOLVED'"></td>
+				            			<!-- actions -->
+				            			<td class="text">
+					              			<th:block th:if="${ticket.isResolved()}">
+					                			<form method="post" th:action="@{/reopenTicket/{id}(id = ${ticket.id})}">
+					                  				<input type="submit" value="Reopen Ticket"/>
+					                			</form>
+					              			</th:block>
+					              			<th:block th:unless="${ticket.isResolved()}"><p>IN PROGRESS</p></th:block>
+				            			</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+		    	</div>
+		    	
+		    	<!-- CREATE TICKETS -->
+		    	<div th:case="createTickets">
+		      		<form th:action="@{/createTickets}" th:object="${ticket}" method="post">
+						<div class="card my-4 mx-4">
+							<div class="card-header">
+								<h2>Create a Ticket</h2>
+							</div>
+							<div class="card-body">
+								<!-- ticket subject -->
+								<div>
+									<label for="subject">Ticket Subject:</label>
+									<input type="text" class="form-control" id="subject" th:field="*{subject}" cols="90">
+								</div>
+								
+								<!-- ticket description -->
+								<div>
+									<label for="description">Ticket Description:</label>
+									<th:block th:each="message, stat : *{messages}">
+										<textarea class="form-control" id="description" th:field="*{messages[__${stat.index}__].content}" rows="4" cols="90"></textarea>
+									</th:block>
+								</div>
+								<br>
+								<!-- buttons -->
+								<div style="display: flex; justify-content: center; gap: 8%;">
+			            			<a class="btn btn-outline-danger ms-1" th:href="@{/tickets}"><span>Cancel Ticket</span></a>
+			            			<input type="submit" class="btn btn-outline-success me-1" value="Create Ticket">
+								</div>
+							</div>
+		        		</div>
+		      		</form>
+		    	</div>
+		
+				<!-- view ticket details -->
+		    	<div th:case="ticketdetails">
+		      		<table class="table table-bordered d-flex justify-content-center" style="margin-top: 20px; margin-left: auto; margin-right: auto; width: 90%;">
+		        		<tr class="table-primary" style="background-color: #0d6efd; border: 1px solid black">
+		          			<th colspan="2">Ticket Details</th>
+		        		</tr>
+		        		<th:block th:object="${ticketdetail}">
+		          			<tr>
+		            			<td><p>Ticket ID : </p></td>
+		            			<td><p th:text="${ticketdetail.id}"></p></td>
+		          			</tr>
+		          			<tr>
+		            			<td><p>Ticket Subject : </p></td>
+		            			<td><p th:text="${ticketdetail.subject}"></p></td>
+		          			</tr>
+		          			<tr>
+		            			<td><p>State : </p></td>
+		            			<td><p th:text="${ticketdetail.state}"></p></td>
+		          			</tr>
+		          			<tr>
+		            			<td><p>Created At : </p></td>
+		            			<td><p th:text="${ticketdetail.createdAt}"></p></td>
+		          			</tr>
+		          			<tr>
+		            			<td><p>Assigned At : </p></td>
+		            			<td><p th:text="${ticketdetail.assignedAt} ? ${ticketdetail.assignedAt} : 'UNASSIGNED'"></p></td>
+		          			</tr>
+		          			<tr>
+		            			<td><p>Updated At : </p></td>
+		            			<td><p th:text="${ticketdetail.updatedAt}"></p></td>
+		          			</tr>
+		          			<tr>
+		            			<td><p>Resolved At : </p></td>
+		            			<td><p th:text="${ticketdetail.resolvedAt} ? ${ticketdetail.resolvedAt} : 'IN PROGRESS'"></p></td>
+		          			</tr>
+		          			<tr>
+		            			<td colspan="2">
+		              				<p>Ticket Messages</p>
+		              				<th:block th:each="message : ${ticketdetail.messages}">
+		              					<span style="white-space: pre-wrap"
+		                    				th:text="${message.sender} + ' : ' + ${message.content} + ' (' + ${message.msgDate} + ')'"></span><br>
+		              				</th:block>
+		              				<br>
+		              				<th:block th:if="${!ticketdetail.isResolved()}">
+		                				<form method="post" th:action="@{/replyTicket/{id}(id = ${ticketdetail.id})}"
+		                      				th:object="${message}">
+		                  					<label for="reply">Reply : </label>
+		                  					<input type="text" id="reply" name="reply" width="300" placeholder="Reply to the ticket" th:field="*{content}"/>
+		                  					<input type="submit" class="btn btn-primary btn-sm" value="submit"/>
+		                				</form>
+		              				</th:block>
+		            			</td>
+		          			</tr>
+		        		</th:block>
+		      		</table>
+		    	</div>
+		
+		  	</th:block>
+		</div>
+	</body>
+</html>

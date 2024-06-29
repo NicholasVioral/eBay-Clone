@@ -1,0 +1,28 @@
+@startuml Purchase Listing Use Case Diagram
+title Purchase Listing Use Case Diagram
+left to right direction
+
+actor   User        as user
+actor   Database    as db
+
+package Offerly {
+    usecase "Browse Listings" as browse
+    usecase "Search Listings" as search
+    usecase "View Listing" as view
+	usecase  "Purchase Listing" as purchase
+    usecase  "Add New Credit Card" as addCard
+    usecase  "Add New Shipping Address" as addAddress
+}
+
+user --> browse
+browse --> view
+search --> view
+browse --> search : <<extends>>
+view --> purchase
+purchase --> addCard : <<includes>>
+purchase --> addAddress : <<includes>>
+addCard --> db
+addAddress --> db
+purchase --> db
+
+@enduml

@@ -1,0 +1,40 @@
+@startuml
+class Applicant [[java:edu.sru.cpsc.webshopping.domain.user.Applicant]] {
+	-id: long
+	-firstName: String
+	-lastName: String
+	-phoneNumber: String
+	-email: String
+	-applicationDate: String
+	-roleAppliedfor: String
+	-answer1: String
+	-answer2: String
+	-answer3: String
+	-answer4: String
+	-reviewed: Boolean
+	+getEmail(): String
+	+setEmail(email: String): void
+	+getApplicationDate(): String
+	+setApplicationDate(applicationDate: String): void
+	+getId(): long
+	+setId(id: long): void
+	+getFirstName(): String
+	+setFirstName(firstName: String): void
+	+getLastName(): String
+	+setLastName(lastName: String): void
+	+getPhoneNumber(): String
+	+setPhoneNumber(phoneNumber: String): void
+	+getRoleAppliedfor(): String
+	+setRoleAppliedfor(roleAppliedfor: String): void
+	+getAnswer1(): String
+	+setAnswer1(answer1: String): void
+	+getAnswer2(): String
+	+setAnswer2(answer2: String): void
+	+getAnswer3(): String
+	+setAnswer3(answer3: String): void
+	+getAnswer4(): String
+	+setAnswer4(answer4: String): void
+	+getReviewed(): Boolean
+	+setReviewed(reviewed: Boolean): void
+}
+@enduml

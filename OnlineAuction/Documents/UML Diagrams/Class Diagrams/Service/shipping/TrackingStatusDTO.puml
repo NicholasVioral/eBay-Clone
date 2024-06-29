@@ -1,0 +1,25 @@
+@startuml
+class TrackingStatusDTO [[java:edu.sru.cpsc.webshopping.service.shipping.TrackingStatusDTO]] {
+	-objectCreated: String
+	-objectUpdated: String
+	-objectId: String
+	-status: String
+	-statusDetails: String
+	-statusDate: String
+	-location: AddressDTO
+	+getObjectCreated(): String
+	+setObjectCreated(objectCreated: String): void
+	+getObjectUpdated(): String
+	+setObjectUpdated(objectUpdated: String): void
+	+getObjectId(): String
+	+setObjectId(objectId: String): void
+	+getStatus(): String
+	+setStatus(status: String): void
+	+getStatusDetails(): String
+	+setStatusDetails(statusDetails: String): void
+	+getStatusDate(): String
+	+setStatusDate(statusDate: String): void
+	+getLocation(): AddressDTO
+	+setLocation(location: AddressDTO): void
+}
+@enduml

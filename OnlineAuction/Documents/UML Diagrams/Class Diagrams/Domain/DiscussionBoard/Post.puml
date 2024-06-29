@@ -1,0 +1,25 @@
+@startuml
+class Post [[java:edu.sru.cpsc.webshopping.domain.Post]] {
+	-id: Long
+	-title: String
+	-content: String
+	-user: User
+	-createdOn: Date
+	-comments: List<Comment>
+	-archived: boolean
+	+getId(): Long
+	+setId(id: Long): void
+	+getTitle(): String
+	+setTitle(title: String): void
+	+getContent(): String
+	+setContent(content: String): void
+	+getCreatedOn(): Date
+	+setCreatedOn(createdOn: Date): void
+	+getUser(): User
+	+setUser(user: User): void
+	+setComments(comments: List<Comment>): void
+	+getComments(): List<Comment>
+	+isArchived(): boolean
+	+setArchived(archived: boolean): void
+}
+@enduml

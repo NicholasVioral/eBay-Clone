@@ -1,0 +1,12 @@
+@startuml
+
+class TransactionService {
+  - transactionRepository: TransactionRepository
+  + TransactionService()
+  + getTransactionByRefundTicket(refundTicket: RefundTicket): Transaction
+  + save(transaction: Transaction): void
+  + getTransactionByMarketListingId(marketListingId: Long): Transaction
+  + getMarketListingForRefundTicket(refundTicket: RefundTicket): MarketListing
+}
+
+@enduml

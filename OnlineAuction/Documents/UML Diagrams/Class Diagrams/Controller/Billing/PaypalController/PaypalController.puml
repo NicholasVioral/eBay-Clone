@@ -1,0 +1,10 @@
+@startuml
+
+class PaypalController {
+    - entityManager : EntityManager
+    - paypalRepository : PaypalRepository
+
+    + deletePaypalDetails(details : Paypal) : void
+}
+
+@enduml

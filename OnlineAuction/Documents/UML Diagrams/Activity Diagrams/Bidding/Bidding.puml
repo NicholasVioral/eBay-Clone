@@ -1,0 +1,24 @@
+@startuml
+title Bidding Activity Diagram
+
+start
+:View listing;
+if (Valid auction) then (yes)
+    repeat
+        :Place bid;
+        switch (Type of bid)
+        case (Manual)
+            :Enter one time bid amount;
+        case (Auto)
+            :Enter maximum bid value;
+        endswitch
+        :Add to watchlist;
+    repeat while (Highest bidder?) is (no)
+    -> yes;
+    :Set new bid price;
+    
+else (no)
+    stop
+endif
+stop
+@enduml

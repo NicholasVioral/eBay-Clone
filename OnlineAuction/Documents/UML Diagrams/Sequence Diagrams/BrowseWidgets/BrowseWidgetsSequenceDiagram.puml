@@ -1,0 +1,23 @@
+@startuml BrowseWidgetsSequenceDiagram
+title Browse All Widgets Sequence Diagram
+actor User as User
+participant browseWidgets as bw
+participant LandingPageController as lpc
+participant MarketListingService as mls
+participant MarketListingRepository as mlr
+participant WidgetImageRepository as wir
+database Database as db
+
+User -> lpc : Enter Site or Click "Browse All Items"
+lpc --> lpc : browseWidgetsButton(pageNumber)
+lpc -> mls : findPage()
+mls -> mlr : findAllByIsDeletedNotInAndQtyAvailableNotIn()
+mlr -> db : get listings from database
+mls <-- db : return listings from database
+lpc <-- mls : return Page<MarketListing>
+lpc -> wir : *findByMarketListing()
+wir -> db : get listing images from database
+lpc <-- db : return WidgetImage
+lpc --> bw : return "browseWidgets"
+bw --> User : display available listings by page
+@enduml

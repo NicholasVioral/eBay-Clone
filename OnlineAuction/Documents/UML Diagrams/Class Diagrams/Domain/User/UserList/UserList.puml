@@ -1,0 +1,16 @@
+@startuml
+class UserList [[java:edu.sru.cpsc.webshopping.domain.user.UserList]] {
+	-id: long
+	-friend: User
+	-block: User
+	-owner: User
+	+getId(): long
+	+setId(id: long): void
+	+getOwner(): User
+	+setOwner(owner: User): void
+	+getFriend(): User
+	+setFriend(friend: User): String
+	+getBlock(): User
+	+setBlock(block: User): void
+}
+@enduml

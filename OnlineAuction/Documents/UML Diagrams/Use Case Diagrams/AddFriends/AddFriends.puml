@@ -1,0 +1,21 @@
+@startuml
+title Add Friends Use Case Diagram
+actor User
+actor "Other User" as OtherUser
+
+package "Add Friends" {
+  usecase "Filter by Username/Email" as FilterUser
+  usecase "Add Friend" as AddFriend
+  usecase "Send Friend Request" as SendRequest
+  usecase "Accept Friend Request" as AcceptRequest
+
+  AddFriend <|-- FilterUser : extends
+}
+
+User --> FilterUser : initiates
+User --> AddFriend : adds
+User --> SendRequest : sends
+SendRequest --> OtherUser : receives
+OtherUser --> AcceptRequest : can accept
+
+@enduml

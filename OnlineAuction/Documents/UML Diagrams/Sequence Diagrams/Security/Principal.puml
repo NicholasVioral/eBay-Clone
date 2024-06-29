@@ -1,0 +1,18 @@
+@startuml Principal
+
+participant "someController:Controller" as Controller
+participant "Principal" as P
+participant "User Service" as US
+participant "User Repository" as UR
+participant "PrincipalControllerAdvice" as PCA
+participant "HttpServletResponse" as Response
+
+Controller -> P : getName()
+alt principal is null
+    Controller -> PCA : handleUnauthenticated(principal, response)
+    PCA -> Response : sendRedirect("/login")
+else principal is not null
+    Controller -> US : getUserByUsername(principal.getName())
+end
+
+@enduml

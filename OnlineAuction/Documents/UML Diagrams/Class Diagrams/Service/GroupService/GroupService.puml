@@ -1,0 +1,58 @@
+@startuml
+
+package edu.sru.cpsc.webshopping.service {
+
+    class GroupService {
+        - groupRepository : GroupRepository
+        - userRepository : UserRepository
+
+        + createGroup(name: String, description: String): Group
+        + addUserToGroup(groupId: Long, userId: Long): boolean
+        + findGroupsByName(name: String): List<Group>
+        + findAllGroups(): Iterable<Group>
+        + deleteGroup(groupId: Long): void
+        + createGroupWithUsers(groupName: String, groupDescription: String, userIds: List<Long>, currentUser: User): Group
+        + findGroupById(groupId: Long): Group
+        + getAllGroupsForUser(user: User): List<Group>
+        + findGroupIdsByUsername(username: String): List<Long>
+        + findGroupWithMembersEagerly(groupId: Long): Group
+        + getGroupById(groupId: Long): Group
+        + findMembersByGroupId(groupId: Long): Set<User>
+        + removeUserFromGroup(groupId: Long, memberId: Long, username: String): boolean
+    }
+
+    class MemberRemovalDto {
+        - groupId : Long
+        - memberId : Long
+
+        + MemberRemovalDto()
+        + getGroupId(): Long
+        + setGroupId(groupId: Long): void
+        + getMemberId(): Long
+        + setMemberId(memberId: Long): void
+    }
+
+    class MemberAdditionDto {
+        - groupId : Long
+        - memberId : Long
+
+        + MemberAdditionDto()
+        + getGroupId(): Long
+        + setGroupId(groupId: Long): void
+        + getMemberId(): Long
+        + setMemberId(memberId: Long): void
+    }
+
+    class GroupRepository {
+    }
+
+    class UserRepository {
+    }
+
+    GroupService --> "1" GroupRepository : uses
+    GroupService --> "1" UserRepository : uses
+    GroupService ..> MemberRemovalDto : uses
+    GroupService ..> MemberAdditionDto : uses
+}
+
+@enduml

@@ -1,0 +1,11 @@
+@startuml
+
+class UserRole {
+    - id : long
+    - authorityName : String
+    + getId() : long
+    + setId(id : long) : void
+    + getAuthority() : String
+}
+
+@enduml

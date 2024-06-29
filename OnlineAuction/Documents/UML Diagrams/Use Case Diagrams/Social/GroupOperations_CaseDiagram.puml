@@ -1,0 +1,25 @@
+@startuml
+title Group Operations Use Case Diagram
+
+actor User
+
+package "Group Operations" {
+  usecase "Create Group" as CreateGroup
+  usecase "Edit Group" as EditGroup
+  usecase "Archive Group" as ArchiveGroup
+  usecase "Unarchive Group" as UnarchiveGroup
+  usecase "Delete Group" as DeleteGroup
+  usecase "Add Member to Group" as AddMember
+  usecase "Remove Member from Group" as RemoveMember
+}
+
+User --> CreateGroup : initiates
+User --> EditGroup : initiates
+User --> ArchiveGroup : initiates
+User --> UnarchiveGroup : initiates
+User --> DeleteGroup : initiates
+User --> AddMember : initiates
+User --> RemoveMember : initiates
+
+@enduml
+

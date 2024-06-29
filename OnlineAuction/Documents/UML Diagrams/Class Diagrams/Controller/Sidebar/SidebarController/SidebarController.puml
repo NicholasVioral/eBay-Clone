@@ -1,0 +1,12 @@
+@startuml
+
+  class SidebarController {
+    - sidebarRepository: SidebarRepository
+    - csvFilePath: String
+    + SidebarController(sidebarRepository: SidebarRepository)
+    + getSidebarRepository(): SidebarRepository
+    + setSidebarRepository(sidebarRepository: SidebarRepository)
+    + readAllTabs(): List<SidebarCSVModel>
+  }
+
+@enduml

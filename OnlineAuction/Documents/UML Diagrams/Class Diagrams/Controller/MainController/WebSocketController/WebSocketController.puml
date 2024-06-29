@@ -1,0 +1,14 @@
+@startuml
+class WebSocketController [[java:edu.sru.cpsc.webshopping.controller.WebSocketController]] {
+	-messageService: MessageService
+	-userService: UserService
+	-notificationService: NotificationService
+	-groupService: GroupService
+	-messagingTemplate: SimpMessagingTemplate
+	~statControl: StatisticsDomainController
+	+broadcastGroupMessage(messageDto: IncomingGroupMessageDTO, principal: Principal): void
+	+broadcastMessage(messageDto: IncomingSocialMessageDTO, principal: Principal): SocialMessageDTO
+	-toDTO(message: SocialMessage): SocialMessageDTO
+	-toDTO(user: User): UserDTO
+}
+@enduml

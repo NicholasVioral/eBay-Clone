@@ -1,0 +1,16 @@
+@startuml
+class Pickup [[java:edu.sru.cpsc.webshopping.domain.market.Pickup]] {
+	-id: long
+	-listing: MarketListing
+	-location: PickupAddress
+	-transaction: Transaction
+	+getId(): long
+	+setId(id: long): void
+	+getLocation(): PickupAddress
+	+setLocation(location: PickupAddress): void
+	+getListing(): MarketListing
+	+setListing(listing: MarketListing): void
+	+getTransaction(): Transaction
+	+setTransaction(transaction: Transaction): void
+}
+@enduml

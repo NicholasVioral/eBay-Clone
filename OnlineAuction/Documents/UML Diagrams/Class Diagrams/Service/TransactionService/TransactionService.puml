@@ -1,0 +1,9 @@
+@startuml
+class TransactionService [[java:edu.sru.cpsc.webshopping.service.TransactionService]] {
+	-transactionRepository: TransactionRepository
+	+getTransactionByRefundTicket(refundTicket: RefundTicket): Transaction
+	+save(transaction: Transaction): void
+	+getTransactionByMarketListingId(marketListingId: Long): Transaction
+	+getMarketListingForRefundTicket(refundTicket: RefundTicket): MarketListing
+}
+@enduml

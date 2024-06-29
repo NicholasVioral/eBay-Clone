@@ -1,0 +1,27 @@
+@startuml
+title View Logs Use Case Diagram
+left to right direction
+
+actor   Admin       as admin
+actor   Database    as db
+
+package Offerly {
+	usecase "View logs page"          as viewLogs
+	usecase "Get logs"                as getLogs
+	usecase "Display logs"            as displayLogs
+	usecase "Apply filters"           as applyFilters
+	usecase "Set category filter"     as categoryFilter
+	usecase "Set start date filter"   as startFilter
+	usecase "Set end date filter"     as endFilter
+}
+
+admin          --> viewLogs
+displayLogs    <-- getLogs          : <<include>>
+getLogs        --> db
+viewLogs       --> displayLogs
+displayLogs    <-- applyFilters     : <<extend>>
+applyFilters   <-- categoryFilter   : <<extend>>
+applyFilters   <-- startFilter      : <<extend>>
+applyFilters   <-- endFilter        : <<extend>>
+
+@enduml

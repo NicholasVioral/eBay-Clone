@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+	<head>
+		<meta charset="ISO-8859-1">
+		<title>Browse</title>
+		
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	  	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+		
+		<link th:href="@{/styles/button.css}" rel="stylesheet"/>
+		<link th:href="@{/styles/landing.css}" rel="stylesheet"/>
+		<link th:href="@{/styles/browse.css}" rel="stylesheet"/>
+		<link th:href="@{/styles/employee_page.css}" rel="stylesheet"/>
+		
+		<!-- font import -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+		
+		<style type="text/css">
+			th {
+				border: 2px solid #000000;
+				background-color: #e9ecef;
+				height: 50px;
+			}
+			
+			td {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				border: 2px solid #000000;
+				height: 40px;
+				margin-bottom: .5em;
+			}
+			
+			table.center {
+				margin: 20px;
+			}
+			
+			.search-bar-container {
+			    margin-top: 20px;
+			}
+		</style>
+	</head>
+
+	<body>
+			
+
+		<!-- HEADER BAR -->
+		<div th:insert="~{header :: header}"></div>
+		<!-- END HEADER BAR -->
+		
+		<!-- Search Bar - Positioned Below the Header -->
+	    <div class="search-bar-container">
+	        <div class="container mt-3">
+	            <input type="text" id="widgetSearch" placeholder="Search for a widget..." class="form-control mb-3" />
+	        </div>
+	    </div>
+	    
+		<div class="card mx-4"
+		style="margin-top: 1.5rem !important; margin-bottom: 1.5rem !important;">
+		<div class="card-header" style="cursor: pointer;" onclick="toggleFilter()">
+			<b id="filterIcon" style="float: right; font-size: x-large;">+</b>
+			<h4>Filter</h4>
+		</div>
+		<div id="filterBody" class="card-body filter-div" style="display: none;">
+			<form id="filterForm" th:action="@{/BrowseWidgetsButton/page/1/filtered}">
+				<div th:if="${filtered == true}">
+					<p>Price:</p>
+					<input name="startPrice" id="startPrice" style="width: 5%;" class="form-input" th:value="${filterValues[0]}" onchange="revealApply()"><span>-</span>
+					<input name="endPrice" id="endPrice" style="width: 5%;"class="form-input" th:value="${filterValues[1]}" onchange="revealApply()"><br>
+					<p>Quantity:</p>
+					<input name="startQty" id="startQty" style="width: 5%;" class="form-input" th:value="${filterValues[2]}" onchange="revealApply()"><span>-</span>
+					<input name="endQty" id="endQty" style="width: 5%;" class="form-input" th:value="${filterValues[3]}" onchange="revealApply()">
+				</div>
+				<div th:if="${filtered == false}">
+					<p>Price:</p>
+					<input name="startPrice" id="startPrice" style="width: 5%;" class="form-input" th:placeholder="0" onchange="revealApply()"><span>-</span>
+					<input name="endPrice" id="endPrice" style="width: 5%;"class="form-input" th:placeholder="0" onchange="revealApply()"><br>
+					<p>Quantity:</p>
+					<input name="startQty" id="startQty" style="width: 5%;" class="form-input" th:placeholder="0" onchange="revealApply()"><span>-</span>
+					<input name="endQty" id="endQty" style="width: 5%;" class="form-input" th:placeholder="0" onchange="revealApply()">
+				</div>
+				<br>
+				<button id="applyButton" class="btn btn-primary" style="display: none;">Apply Filters</button>
+				<a th:if="${filtered == true}" th:href="@{/}"><span class="btn btn-danger">Remove Filters</span></a>
+			</form>
+		</div>
+		</div>
+		
+		<!-- new design using bootstrap -->
+		<div class="grid-item columns">
+			<th:block th:each="searchedMarkets, iterStat: ${allMarketListings}" th:unless="${searchedMarkets.qtyAvailable == 0 || searchedMarkets.isDeleted == true}">
+				<a th:href="@{/viewMarketListing/{id}(id = ${searchedMarkets.id})}" style="text-decoration: none; color: inherit;">
+					<div class="card card-hover rounded-6" style="width: 80%; margin-bottom: 50px; margin-left: auto; margin-right: auto;">
+						<!-- image -->
+						<img class="card-img-top image" th:if="${searchedMarkets.coverImage == null}" src="https://previews.123rf.com/images/kritchanut/kritchanut1406/kritchanut140600093/29213195-.jpg?fj=1" alt="Blank Listing Avatar">
+						<img class="card-img-top image" th:unless="${searchedMarkets.coverImage == null}" th:src="'data:image/jpeg;base64,' + ${allEncodedImages[iterStat.index]}" alt="Listing Avatar" src="">
+						<div class="card-body">
+							<!-- title -->
+							<h5 class="card-title header-browse" th:text="${searchedMarkets.widgetSold.name}"></h5>
+						</div>
+						<ul class="list-group list-group-flush">
+							<!-- quantity -->
+							<ul class="list-group-item align-flex">
+								<p class="align-left">Quantity Available:</p>
+								<p class="align-right" th:text="${searchedMarkets.qtyAvailable}"></p>
+							</ul>
+							<!-- price -->
+							<ul class="list-group-item align-flex">
+								<p class="align-left">Price:</p>
+								<p class="align-right" th:text="'$' + ${searchedMarkets.pricePerItem}"></p>
+							</ul>
+							<ul class="list-group-item align-flex">
+								<p class="align-left">Seller:</p>
+								<p class="align-right" th:text="${searchedMarkets.seller.username}"></p>
+							</ul>										
+							<!-- auction price TODO CURRENTLY DISABLED RENABLE WITH AUCTION RETURN-->
+							<ul class="list-group-item align-flex" style="display: none;">
+								<p class="align-left">Auction Price:</p>
+								<!--<p class="align-right" th:text="'$' + ${searchedMarkets.auction.currentBid}"></p>-->
+							</ul>			
+						</ul>
+					</div>
+				</a>
+			</th:block>
+			
+		</div>
+		
+		<!-- display when there are no listings -->
+		<div th:if="${allMarketListings == null or allMarketListings.size() == 0}">
+			<h2 style="text-align: center;">There are no listings currently on the market.</h2>
+		</div>
+		
+	<script th:inline="javascript">
+		$(document).ready(function() {
+		    // Store the original order of items
+		    var originalItems = $(".grid-item").children().clone();
+		    var itemsWereHidden = false; // Track if items were hidden during search
+		
+		    $("#widgetSearch").on("keyup", function() {
+		        var value = $(this).val().toLowerCase();
+		
+		        if (value) {
+		            // Hide all items
+		            $(".grid-item .card").parent().hide();
+		
+		            // Filter and show only items that match
+		            $(".grid-item .card").filter(function() {
+		                return $(this).text().toLowerCase().indexOf(value) > -1;
+		            }).parent().show();
+		
+		            // Set the flag indicating items were hidden
+		            itemsWereHidden = true;
+		        } else {
+		            // When search is cleared, restore original order and show all items
+		            $(".grid-item").empty().append(originalItems);
+		            
+		            // Check if items were previously hidden and show all
+		            if (itemsWereHidden) {
+		                $(".grid-item .card").parent().show();
+		                itemsWereHidden = false; // Reset the flag
+		            }
+		        }
+		    });
+		});
+		
+		function changePage() {
+			var page = document.getElementById("pageInput").value;
+			if(!(page < 1 || page > [[${totalPages}]] || isNaN(page))){
+				window.location.href = '/BrowseWidgetsButton/page/' + page;
+			}
+			else {
+				console.log(page);
+			}
+		}
+		
+		function nextFilteredPage() {
+			var currentPage = /*[[${currentPage}]]*/ 1;
+			document.getElementById("filterForm").setAttribute("action", "/BrowseWidgetsButton/page/" + (currentPage + 1) + "/filtered");
+			document.getElementById("filterForm").submit();
+		}
+		
+		function previousFilteredPage() {
+			var currentPage = /*[[${currentPage}]]*/ 1;
+			document.getElementById("filterForm").setAttribute("action", "/BrowseWidgetsButton/page/" + (currentPage - 1) + "/filtered");
+			document.getElementById("filterForm").submit();
+		}
+		
+		function revealApply() {
+			console.log("changed");
+			document.getElementById("applyButton").removeAttribute("style");
+		}
+		
+		function toggleFilter() {
+			var filterBody = document.getElementById("filterBody");
+			var filterIcon = document.getElementById("filterIcon");
+			if(filterBody.style.display == "none") {
+				filterBody.style.display = "block";
+				filterIcon.innerHTML = "-";
+			}
+			else {
+				filterBody.style.display = "none";
+				filterIcon.innerHTML = "+";
+			}
+		}
+		
+	</script>	
+	</body>
+	<footer>
+		<div th:if="${filtered == false}" style="text-align: center;">
+			<a th:if="${currentPage - 1 >= 1}" class="btn btn-primary v-25 mx-4" th:href="@{/BrowseWidgetsButton/page/{id}(id = ${currentPage - 1})}">Previous</a>
+			<span th:unless="${currentPage - 1 >= 1}" class="btn btn-secondary v-25 mx-4">Previous</span>
+			<input id="pageInput" style="width: 2%;" class="form-input" th:placeholder="${currentPage}" onchange="changePage();">
+			<span th:text="'/' + ${totalPages}"></span>
+			<a th:if="${currentPage + 1 <= totalPages}" class="btn btn-primary v-25 mx-4" th:href="@{/BrowseWidgetsButton/page/{id}(id = ${currentPage + 1})}">Next</a>
+	   		<span th:unless="${currentPage + 1 <= totalPages}" class="btn btn-secondary v-25 mx-4">Next</span>
+		</div>
+	
+		<div th:if="${filtered == true}" style="text-align: center;">
+			<span th:if="${currentPage - 1 >= 1}" class="btn btn-primary v-25 mx-4" th:onclick="previousFilteredPage()">Previous</span>
+			<!--<a th:if="${currentPage - 1 >= 1}" class="btn btn-primary v-25 mx-4" th:href="@{/BrowseWidgetsButton/page/{id}/filtered (id = ${currentPage - 1})}">Previous</a> -->
+			<span th:unless="${currentPage - 1 >= 1}" class="btn btn-secondary v-25 mx-4">Previous</span>
+			<input id="pageInput" style="width: 2%;" class="form-input" th:placeholder="${currentPage}" onchange="changePage();">
+			<span th:text="'/' + ${totalPages}"></span>
+			<span th:if="${currentPage + 1 <= totalPages}" class="btn btn-primary v-25 mx-4" th:onclick="nextFilteredPage()">Next</span>
+			<!--<a th:if="${currentPage + 1 <= totalPages}" class="btn btn-primary v-25 mx-4" th:href="@{/BrowseWidgetsButton/page/{id}/filtered (id = ${currentPage + 1})}">Next</a> -->
+	   		<span th:unless="${currentPage + 1 <= totalPages}" class="btn btn-secondary v-25 mx-4">Next</span>
+		</div>
+	</footer>
+</html>

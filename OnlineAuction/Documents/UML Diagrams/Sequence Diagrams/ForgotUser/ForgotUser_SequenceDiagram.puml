@@ -1,0 +1,28 @@
+@startuml
+
+Actor "User" as user
+participant "forgotUser.html" as forgotUser
+participant "UserController" as userController
+database "UserDatabase" as userDatabase
+database "Model" as model
+
+user -> forgotUser : enterEmail(email)
+alt email is associated with an account
+    forgotUser -> userController : getUserByEmail(email)
+    userController -> userDatabase : checkEmail(email)
+    userDatabase --> userController : validEmail
+    userController --> forgotUser : user
+    forgotUser -> model : addAttribute("maskedEmail", maskedEmail)
+    forgotUser -> model : addAttribute("question", user.securityQuestion)
+    forgotUser --> user : showMaskedEmail(maskedEmail)
+    forgotUser --> user : askSecurityQuestion(user.securityQuestion)
+else email is not associated with an account
+    forgotUser -> userController : getUserByEmail(email)
+    userController -> userDatabase : checkEmail(email)
+    userDatabase --> userController : emailNotFound
+    userController --> forgotUser : null
+    forgotUser -> model : addAttribute("page", "findUserFail")
+    forgotUser --> user : showFailureMessage()
+end
+
+@enduml

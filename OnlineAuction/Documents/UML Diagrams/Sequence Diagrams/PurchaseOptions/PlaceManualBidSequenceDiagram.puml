@@ -1,0 +1,32 @@
+@startuml
+
+title          Manually Bid on Item\nSequence Diagram
+
+actor          Actor                            as actor
+participant    viewMarketListing                as viewMarketListing
+entity         MarketListingDomainController    as marketListDomainController
+entity         AuctionService                   as auctionService
+entity         BidRepository                    as bidRepository
+entity         MarketListing                    as marketListing
+entity         MarketListingRepository          as marketListingRepository
+database       Database                         as database
+
+actor                        ->     viewMarketListing             : Click "Bid Now"
+viewMarketListing            ->     marketListDomainController    : POST: /updateBid
+marketListDomainController   ->     auctionService                : auctionService.bid(auction, bidder, bidAmount);
+auctionService               ->     bidRepository                 : bidRepository.save(bid);
+bidRepository                ->     database                      : save the bid info
+auctionService               -->    marketListDomainController    :
+marketListDomainController   ->     marketListing                 : listing.getAuction().setCurrentBid(newBid);
+marketListing                ->     marketListingRepository       : marketRepository.save(listing);
+marketListingRepository      ->     database                      : update the listing info
+group Other accounts are auto bidding
+  marketListDomainController   ->     marketListDomainController    : placeAutoBids(listing, auction, currentBidPrice, manualBid);
+  marketListDomainController   ->     auctionService                : [for AutoBid bidEntry : autobids] auctionService.bid(auction, bidEntry.getBidder(), autoIncrement);
+  marketListDomainController   ->     marketListing                 : autoAuction.setCurrentBid(potentialBid);
+  marketListDomainController   ->     marketListingRepository       : marketRepository.save(listing);
+  marketListingRepository      ->     database                      : update listing info
+end
+marketListDomainController   -->    viewMarketListing             : redirect "/viewMarketListing/" + listingId
+
+@enduml

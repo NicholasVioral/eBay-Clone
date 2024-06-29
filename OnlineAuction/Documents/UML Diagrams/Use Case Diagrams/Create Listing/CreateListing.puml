@@ -1,0 +1,28 @@
+@startuml Create Listing Use Case Diagram
+title Create Listing Use Case Diagram
+left to right direction
+
+actor   User        as user
+actor   Database    as db
+
+package Offerly {
+	usecase   "Create market listing"                     as UC1
+	usecase   "Choose category"                          as UC2
+	usecase   "Provide widget details"                  as UC3
+	usecase  "Add new category attribute"                 as UC4
+	usecase   "Provide listing details"                 as UC5
+	usecase   "Add Pickup Option"                 		as UC6
+	usecase   "Mark Listing for Sale"               	as UC7
+}
+
+user --> UC1
+UC1 --> UC2
+UC2 --> UC3
+UC3 <-- UC4 : <<extends>>
+UC2 --> UC5
+UC5 <-- UC6 : <<extends>>
+UC1 --> UC7 : <<includes>>
+UC1 --> db
+UC7 --> db
+
+@enduml

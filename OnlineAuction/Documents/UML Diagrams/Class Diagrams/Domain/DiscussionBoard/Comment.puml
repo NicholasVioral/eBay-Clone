@@ -1,0 +1,19 @@
+@startuml
+class Comment [[java:edu.sru.cpsc.webshopping.domain.Comment]] {
+	-id: Long
+	-content: String
+	-user: User
+	-post: Post
+	-createdOn: Date
+	+getId(): Long
+	+setId(id: Long): void
+	+getContent(): String
+	+setContent(content: String): void
+	+setPost(post: Post): void
+	+getPost(): Post
+	+setUser(user: User): void
+	+getUser(): User
+	+getCreatedOn(): Date
+	+setCreatedOn(createdOn: Date): void
+}
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+
+title          Adding Item to Watchlist via Bidding\nSequence Diagram
+
+actor          Actor                            as actor
+participant    viewMarketListing                as viewMarketListing
+entity         MarketListingDomainController   as marketListDomainController
+entity         UserController                   as userController
+entity         WatchlistService                 as watchlistService
+entity         User                             as user
+database       Database                         as database
+
+actor                        ->     viewMarketListing             : Click "Bid Now"
+viewMarketListing            ->     marketListDomainController    : POST: /updateBid
+marketListDomainController   ->     watchlistService              : watchlistService.watchlistAdd(listing, user)
+watchlistService             ->     user                          : user.getWishlistedWidgets().add(addedWidget);
+user                         ->     database                      : add(userId, productId) to widget_wishlist_entry
+marketListDomainController   -->    viewMarketListing             : redirect:/viewMarketListing/{productId}
+viewMarketListing            -->    actor                         : "Add to Watchlist" button becomes "Remove from Watchlist"
+
+@enduml

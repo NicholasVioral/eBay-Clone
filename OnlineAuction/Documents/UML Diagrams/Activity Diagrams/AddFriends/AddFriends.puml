@@ -1,0 +1,31 @@
+@startuml
+title Add Friends Activity Diagram
+start
+
+:User initiates friend adding process;
+
+:Filter by username or email;
+
+if (Input is own username/email) then (yes)
+  :Notify: Cannot friend yourself;
+  stop
+else (no)
+endif
+
+if (Valid username/email?) then (yes)
+  :Send friend request;
+  :Request marked as pending for sender;
+  :Notify sender: Request sent;
+  if (Other user's decision) then (Accept)
+    :Users become friends;
+    :Both can view each other's profile, message, or remove;
+  else (Decline)
+    :Remove request from sender's pending tab;
+  endif
+else (no)
+  :Notify: User not found;
+  stop
+endif
+
+stop
+@enduml

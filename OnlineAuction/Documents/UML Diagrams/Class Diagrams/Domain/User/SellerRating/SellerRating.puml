@@ -1,0 +1,21 @@
+@startuml
+class SellerRating [[java:edu.sru.cpsc.webshopping.domain.user.SellerRating]] {
+	-id: long
+	-rating: float
+	-numRatings: int
+	-user: User
+	+SellerRating(user: User)
+	+SellerRating()
+	+getId(): long
+	+setId(id: long): void
+	+getRating(): float
+	+setRating(newRating: float): void
+	+getNumRatings(): int
+	+setNumRatings(numRatings: int): void
+	+getUser(): User
+	+setUser(user: User): void
+	+toString(): String
+	+getRatingName(): String
+	+noRatings(): boolean
+}
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+class SidebarCSVModel [[java:edu.sru.cpsc.webshopping.domain.sidebar.SidebarCSVModel]] {
+	-tabid: long
+	-displayText: String
+	-linkTo: String
+	-role: String
+	+getTabid(): long
+	+getDisplayText(): String
+	+getLinkTo(): String
+	+getRole(): String
+	+setTabid(tabid: long): void
+	+setDisplayText(displayText: String): void
+	+setLinkTo(linkTo: String): void
+	+setRole(role: String): void
+	+equals(o: Object): boolean
+	#canEqual(other: Object): boolean
+	+hashCode(): int
+	+toString(): String
+	+SidebarCSVModel()
+}
+@enduml

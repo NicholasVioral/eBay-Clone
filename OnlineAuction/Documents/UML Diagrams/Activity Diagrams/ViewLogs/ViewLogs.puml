@@ -1,0 +1,24 @@
+@startuml
+title View Logs Activity Diagram
+
+start
+if (Is admin?) then (yes)
+	:View logs page;
+	:Display all logs;
+	if (Apply filters?) then (yes)
+		switch (Choose filters)
+		case (category)
+  			:Set category filter;
+		case (start date)
+  			:Set start date filter;
+		case (end date)
+  			:Set end date filter;
+		endswitch
+		:Display filtered logs;
+	else(no)
+	endif
+else (no)
+	stop
+endif
+stop
+@enduml

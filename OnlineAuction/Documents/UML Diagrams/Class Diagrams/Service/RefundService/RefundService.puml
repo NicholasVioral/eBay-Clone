@@ -1,0 +1,10 @@
+@startuml
+class RefundService [[java:edu.sru.cpsc.webshopping.service.RefundService]] {
+	-refundTicketRepository: RefundTicketRepository
+	+processRefundRequest(transaction: Transaction, refundReason: String): boolean
+	-createRefundTicket(user: User, totalPriceAfterTaxes: Double, refundReason: String): RefundTicket
+	+getAllRefunds(): Iterable<RefundTicket>
+	+getRefundTicketById(id: Long): RefundTicket
+	+save(refundTicket: RefundTicket): void
+}
+@enduml

@@ -1,0 +1,30 @@
+@startuml
+class ShippingAddress [[java:edu.sru.cpsc.webshopping.domain.billing.ShippingAddress]] {
+	-id: long
+	-recipient: String
+	-streetAddress: String
+	-extraLocationInfo: String
+	-postalCode: String
+	-city: String
+	-state: StateDetails
+	-user: User
+	+getId(): long
+	+setId(id: long): void
+	+getRecipient(): String
+	+setRecipient(recipient: String): void
+	+getStreetAddress(): String
+	+setStreetAddress(streetAddress: String): void
+	+getExtraLocationInfo(): String
+	+setExtraLocationInfo(extraLocationInfo: String): void
+	+getPostalCode(): String
+	+setPostalCode(postalCode: String): void
+	+getState(): StateDetails
+	+setState(state: StateDetails): void
+	+getUser(): User
+	+setUser(user: User): void
+	+getCity(): String
+	+setCity(city: String): void
+	+transferFields(other: ShippingAddress): void
+	+buildFromForm(other: ShippingAddress_Form): boolean
+}
+@enduml

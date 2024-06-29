@@ -1,0 +1,48 @@
+@startuml
+autonumber
+
+Actor User
+participant "Browser\n(inbox.html)" as Browser
+participant "WebSocketConfig" as Config
+participant "WebSocketController" as Controller
+database "Messages Database" as DB
+
+User -> Browser: Navigate to Inbox page
+activate Browser
+Browser -> Server: GET /inbox
+activate Server
+Server --> Browser: Returns inbox.html
+deactivate Server
+Browser --> User: Displays Inbox page
+
+User -> Browser: Clicks on a friend from list
+Browser -> Browser: Calls loadConversation(friendId)
+activate Browser
+Browser -> Server: GET /api/conversations/{friendId}
+activate Server
+Server -> DB: Retrieve conversation\nby friendId
+activate DB
+DB --> Server: Conversation data
+deactivate DB
+Server --> Browser: Returns conversation data
+deactivate Server
+Browser --> User: Displays selected conversation
+
+Browser -> Config: Initialize WebSocket connection
+activate Config
+Config --> Browser: Connection established
+deactivate Config
+
+User -> Browser: Types a message\nSubmits form
+Browser -> Controller: Send message via WebSocket\n{content, receiver}
+activate Controller
+Controller -> DB: Save message to\nfriend's conversation
+activate DB
+DB --> Controller: Confirm save
+deactivate DB
+Controller --> Browser: Push message to client via WebSocket
+deactivate Controller
+Browser --> User: Appends message to chat box
+deactivate Browser
+
+@enduml

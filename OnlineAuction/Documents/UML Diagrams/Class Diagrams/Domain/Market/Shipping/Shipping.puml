@@ -1,0 +1,19 @@
+@startuml
+class Shipping [[java:edu.sru.cpsc.webshopping.domain.market.Shipping]] {
+	-id: long
+	-carrier: String
+	-trackingNumber: String
+	-address: ShippingAddress
+	-transaction: Transaction
+	+getId(): long
+	+setId(id: long): void
+	+getCarrier(): String
+	+setCarrier(carrier: String): void
+	+getAddress(): ShippingAddress
+	+setAddress(address: ShippingAddress): void
+	+getTransaction(): Transaction
+	+setTransaction(transaction: Transaction): void
+	+setTrackingNumber(trackingNumber: String): void
+	+getTrackingNumber(): String
+}
+@enduml

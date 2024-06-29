@@ -1,0 +1,43 @@
+@startuml
+class AddWidgetController [[java:edu.sru.cpsc.webshopping.controller.AddWidgetController]] {
+	-widgetService: WidgetService
+	-categoryService: CategoryService
+	-attributeService: AttributeService
+	-userService: UserService
+	-stateDetailsController: StateDetailsController
+	-attributeSuggestionRepository: AttributeSuggestionRepository
+	~widgetRepository: WidgetRepository
+	~categoryRepository: CategoryRepository
+	~widgetImageRepository: WidgetImageRepository
+	~marketListingRepos: MarketListingRepository
+	~widgetController: WidgetController
+	~marketListingController: MarketListingDomainController
+	~widgetImageController: WidgetImageController
+	~userRepo: UserRepository
+	~widget: Widget
+	~listingImages: Set<WidgetImage>
+	~categories: CategoryController
+	~attributeController: AttributeController
+	~marketListing: MarketListing
+	-widgetStorage: Widget
+	-category: Category
+	-tempImage: WidgetImage
+	-page: String
+	+getPage(): String
+	+setPage(page: String): void
+	+AddWidgetController(widgetRepository: WidgetRepository, categoryRepository: CategoryRepository, categories: CategoryController, attributeController: AttributeController, widgetImageRepository: WidgetImageRepository, widgetImageController: WidgetImageController, marketListingRepos: MarketListingRepository, widgetController: WidgetController, marketListingController: MarketListingDomainController, userRepo: UserRepository)
+	+addWidget(model: Model, principal: Principal): String
+	+createWidget(model: Model, principal: Principal): String
+	+createWidgetListing(model: Model, widgetForm: WidgetForm, result: BindingResult, principal: Principal): String
+	+createListing(model: Model, principal: Principal): String
+	+addListing(model: Model, coverImage: MultipartFile, files: MultipartFile[], attributes: RedirectAttributes, marketListing: MarketListing, stateId: String, result: BindingResult, principal: Principal): String
+	+backAndDelete(model: Model): String
+	+setListingImage(file: MultipartFile, marketListing: MarketListing): void
+	+uploadComputerDataFile(file: MultipartFile): String
+	+uploadMarketListingDataFile(file: MultipartFile, principal: Principal): String
+	-saveMarketListingFromCSV(file: MultipartFile, user: User): void
+	-saveWidgetFromCSV(file: MultipartFile, subcategory: String): void
+	+getWidgetStorage(): Widget
+	+setWidgetStorage(widgetStorage: Widget): void
+}
+@enduml

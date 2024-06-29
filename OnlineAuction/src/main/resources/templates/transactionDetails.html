@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="ISO-8859-1">
+		<title>Purchase Details</title>
+		
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	  	
+	  	<!-- font import -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+		
+		<link th:href="@{/styles/employee_page.css}" rel="stylesheet"/>
+		<link th:href="@{/styles/transactionDetails.css}" rel="stylesheet"/>
+	  	
+	  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	  	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+	  	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	  	
+		
+		<style>
+			#page {
+				display: flex;
+				height: 120vh;
+			}
+			
+			#website-title {
+				margin-left: 8px;
+				margin-right: 8px;
+				font-size: 12px;
+			}
+		</style>
+	</head>
+	
+	<body>
+	
+		<!-- HEADER BAR -->
+		<div th:insert="~{header :: header}"></div>
+		<!-- END HEADER BAR -->
+	
+	
+		<!-- Paypal Delete popup -->
+		<div class="modal fade" id="deleteTransactionModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="deleteTransactionModal">Delete Payment Details</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>This will delete this transaction - are you sure?
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+						<form method="post" action="#"
+							th:action="@{/viewTransactionDetails/deleteTransaction}">
+							<button type="submit" class="btn btn-danger" name="delete">Delete</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="page">
+			<div class="card h-100 w-100">
+				<div class="card-header d-flex justify-content-center">
+					<h1>Transaction Details</h1>
+				</div>
+				<div class="card-body">
+					<div th:if="${errMessage != null}" th:text="${errMessage}" class="alert alert-danger d-flex justify-content-center my-1 h3">
+					</div>
+					<!-- <div th:if="${!trans.shippingEntry.hasShipped() && user.id != trans.seller.id}" class="alert alert-info d-flex justify-content-center h3">
+						This purchase has not shipped yet - check back for updates!
+					</div>
+					<div th:if="${trans.shippingEntry.hasArrived() && user.id != trans.seller.id}" class="alert alert-success d-flex justify-content-center h3">
+						This purchase has arrived!
+					</div> -->
+					<div class="my-2">
+						<div class="d-flex justify-content-center">
+							<h2>Purchase Information</h2>
+						</div>
+						<div class="container">
+							<div class="row">
+								<ul class="list-group col-sm-4">
+									<li class="list-group-item">
+										Widget Name: <span th:text="${trans.marketListing.widgetSold.name}"></span>
+									</li>
+									<li class="list-group-item">
+										Widget Description: <span th:text="${trans.marketListing.widgetSold.description}"></span>
+									</li>
+								</ul>
+								<ul class="list-group col-sm-4">
+									<li class="list-group-item">Number Purchased: <span th:text="${trans.qtyBought}"></span></li>
+									<li class="list-group-item">Purchase Date: <span th:text="${trans.purchaseDate}"></span></li>
+								</ul>
+								<ul class="list-group col-sm-4">
+									<li class="list-group-item">Price Before Taxes: $<span th:text="${trans.totalPriceBeforeTaxes}"></span></li>
+									<li class="list-group-item">Price After Taxes: $<span th:text="${trans.totalPriceAfterTaxes}"></span></li>
+									<li class="list-group-item">Transaction fee: $<span th:text="${transFee}"></span></li>
+									<li class="list-group-item" th:if="${user.id == trans.seller.id}">Your Profit: $<span th:text="${trans.sellerProfit}"></span></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="my-2" th:if="${!trans.isLocalPickup}">
+						<div class="d-flex justify-content-center">
+							<h2>Shipping Information</h2>
+						</div>
+						<div class="container">
+							<div class="row">
+								<ul class="list-group col-sm-3">
+									<li class="list-group-item">Recipient: <span th:text="${trans.shippingEntry.address.recipient}"></span></li>
+									<li class="list-group-item">Street Address: <span th:text="${trans.shippingEntry.address.streetAddress}"></span></li>
+								</ul>
+								<ul class="list-group col-sm-3">
+									<li class="list-group-item">Postal Code: <span th:text="${trans.shippingEntry.address.postalCode}"></span></li>
+									<li class="list-group-item">State: <span th:text="${trans.shippingEntry.address.state.stateName}"></span></li>
+								</ul>
+							</div>
+
+							<div class="d-flex justify-content-center">
+								<h2>Tracking Details</h2>
+							</div>
+							<div class="container my-5">
+								<div class="row">
+									<!-- First Column: Tracking Status -->
+									<div class="col-md-6">
+										<div id="tracking-status"></div>
+									</div>
+							
+									<!-- Second Column: Timeline -->
+									<div class="col-md-6">
+										<ul class="timeline">
+											<li class="step step01 active"><div class="step-inner">Purchased</div></li>
+											<li class="step step02"><div class="step-inner">Shipped</div></li>
+											<li class="step step03"><div class="step-inner">In Transit</div></li>
+											<li class="step step04"><div class="step-inner">Delivered</div></li>
+											<span id="eta">Estimated Arrival: </span>
+										</ul>
+									</div>
+								</div>
+							</div>							
+						</div>
+					</div>
+
+					<div class="my-2" th:if="${trans.isLocalPickup}">
+						<div class="d-flex justify-content-center">
+							<h2>Local Pickup Information: </h2>
+						</div>
+						<div class="container">
+							<div class="row">
+								<ul class="list-group col-sm-3">
+									<li class="list-group-item">City: <span th:text="${trans.localPickup.location.city}"></span></li>
+									<li class="list-group-item">State: <span th:text="${trans.localPickup.location.state.stateName}"></span></li>
+								</ul>
+							</div>						
+						</div>
+					</div>
+
+
+					<!-- If seller, give access to changing shipping information -->
+					<form th:if="${user.id == trans.seller.id} and ${!trans.isLocalPickup}"
+						  method="post" action="#"
+						  th:action="@{/viewTransactionDetails/submitShippingUpdate}" th:object="${shipping}">
+  						<div class="d-flex justify-content-center">
+							<h2>Update Shipping Information</h2>
+						</div>
+						<div class="container">
+							<div class="row">
+								<div class="mb-3 col-sm-4">
+									<label for="trackingNumber" class="form-label">Tracking Number</label>
+									<input type="text" class="form-control" name="trackingNumber" th:field="*{trackingNumber}" th:value="SHIPPO_TEST">
+									<p th:if="${trackingNumberErr != null}" th:text="${trackingNumberErr}"></p>
+								</div>
+								<div class="mb-3 col-sm-4">
+									<label for="carrier" class="form-label">Carrier</label>
+									<select class="form-select" name="carrier" th:field="*{carrier}">
+										<option value="fedex">FedEx</option>
+										<option value="ups">UPS</option>
+										<option value="usps">USPS</option>
+										<option value="shippo" selected>Shippo (Test)</option>
+										<!-- Add other carriers as needed -->
+									</select>
+								</div>								
+							</div>
+						</div>
+						<div class="d-flex justify-content-evenly">
+								<button disabled th:if="${!canDelete}" type="submit" class="btn btn-danger" name="submit">Cancel Transaction</button>
+								<a th:if="${canDelete}" class="btn btn-danger"
+									data-bs-toggle="modal" data-bs-target="#deleteTransactionModal">
+									Cancel Transaction
+								</a>
+						  		<button type="submit" class="btn btn-success" name="submit">Submit Changes</button>
+						</div>
+					</form>
+					<div th:unless="${user.id == trans.seller.id}" class="d-flex justify-content-center mb-4">
+						<button disabled th:if="${!canDelete}" type="submit" class="btn btn-danger" name="submit">Cancel Transaction</button>
+						<a th:if="${canDelete}" class="btn btn-danger"
+							data-bs-toggle="modal" data-bs-target="#deleteTransactionModal">
+							Cancel Transaction
+						</a>
+						<button class="btn btn-outline-success" type="button" th:onclick="'location.href=\'' + @{/homePage} + '\''" style="float:left; margin-left:16px;">Home</button>
+					</div>
+					
+					<div th:if="${user.id == trans.buyer.id}" class="d-flex justify-content-center">
+						</hr>
+						<div class="d-flex justify-content-center">
+							<h2>Rate the Seller</h2>
+						</div>
+						<form id="ratingForm" method="post" action="#" th:action="@{/rate/{userId}(userId=${trans.seller.id})}">
+							<div class="star-rating">
+								<input type="radio" id="star5" name="rating" value="5" /><label for="star5">★</label>
+								<input type="radio" id="star4" name="rating" value="4" /><label for="star4">★</label>
+								<input type="radio" id="star3" name="rating" value="3" /><label for="star3">★</label>
+								<input type="radio" id="star2" name="rating" value="2" /><label for="star2">★</label>
+								<input type="radio" id="star1" name="rating" value="1" /><label for="star1">★</label>
+							</div>
+							<div class="d-flex justify-content-center">
+								<button type="submit" class="btn btn-success">Submit Rating</button>
+							</div>
+						</form>
+						<script>
+							$(document).ready(function() {
+								$('#ratingForm').submit(function(e) {
+									e.preventDefault(); // Prevent default form submission
+
+									var rating = $('input[name="rating"]:checked').val();
+									if (!rating) {
+										alert('Please select a rating');
+										return;
+									}
+
+									// Disable form elements
+									$(this).find(':input').prop('disabled', true);
+
+									// Make AJAX request
+									$.ajax({
+										url: $(this).attr('action'),
+										type: 'POST',
+										data: {rating: rating},
+										success: function(response) {
+											// Handle the response here
+											alert('Response: ' + response);
+											// Re-enable form elements if needed
+											$('#ratingForm').find(':input').prop('disabled', false);
+										},
+										error: function(xhr, status, error) {
+											// Handle errors here
+											alert('Error: ' + error);
+											$('#ratingForm').find(':input').prop('disabled', false);
+										}
+									});
+								});
+							});
+						</script>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		var isLocalPickup = /*[[${trans.isLocalPickup}]]*/ false;
+		/*]]>*/
+		var contextPath = /*[[ @{'/'} ]]*/ '';
+	</script>
+
+	<script>
+
+		async function fetchTrackingInfo() {
+			const transId = window.location.pathname.split('/').pop(); // Get the order ID from the URL 
+			try {
+				const response = await fetch(contextPath + `api/tracking/${transId}`);
+				if (!response.ok) {
+					throw new Error(`Network response was not ok ${response.statusText}`);
+				}
+				const track = await response.json();
+				displayTrackingInfo(track);
+			} catch (error) {
+				console.error('There has been a problem with your fetch operation:', error);
+			}
+		}
+
+		if (!isLocalPickup) {
+			fetchTrackingInfo();
+		}
+
+		function displayTrackingInfo(track) {
+			const trackingHtml = generateTrackingHtml(track);
+			document.getElementById('tracking-status').innerHTML = trackingHtml;
+			const etaText = track.eta 
+				? `Estimated Arrival: ${new Date(track.eta).toLocaleDateString("en-US")}` 
+				: 'Estimated Arrival: N/A';
+			document.getElementById('eta').textContent = etaText;
+			updateTrackingUI(track);
+		}
+
+		function generateTrackingHtml(track) {
+			if (!track.trackingStatus) {
+				return `
+					<div class="row">
+						<h5>Tracking information is not available yet.</h5>
+						<p>Please contact the seller and request them to upload their shipping label for tracking.</p>
+					</div>
+				`;
+			}
+
+			const location = track.trackingStatus.location ?
+                     `${track.trackingStatus.location.city}, ${track.trackingStatus.location.state}` :
+                     'Location not available';
+
+			const eta = track.eta ? new Date(track.eta).toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A';
+			const statusDate = track.trackingStatus.statusDate ? new Date(track.trackingStatus.statusDate).toLocaleString("en-US") : 'Date not available';
+
+			return `
+				<div class="row">
+					<ul class="list-group">
+						<li class="list-group-item">Carrier: ${track.carrier}</li>
+						<li class="list-group-item">Tracking Number: ${track.trackingNumber}</li>
+						<li class="list-group-item">Status: ${track.trackingStatus.status}</li>
+						<li class="list-group-item">Estimated Arrival: ${eta}</li>
+						<li class="list-group-item">
+							Latest Status: ${track.trackingStatus.statusDetails || 'Status details not available'}
+							on ${statusDate} 
+							at ${track.trackingStatus.location.city}, ${track.trackingStatus.location.state}
+						</li>
+					</ul>
+				</div>
+			`;
+		}
+
+		function updateTrackingUI(trackingInfo) {
+			if (!trackingInfo.trackingStatus) {
+				return;
+			}
+
+			const status = trackingInfo.trackingStatus.status;
+			
+			// Reset all steps to inactive
+			document.querySelectorAll('.step').forEach(step => {
+				step.classList.remove('active');
+			});
+			
+			// Set the appropriate step(s) to active based on the status
+			switch (status) {
+				case 'UNKNOWN':
+					document.querySelector('.step01').classList.add('active');
+					break;
+				case 'PRE_TRANSIT':
+					document.querySelector('.step02').classList.add('active');
+					break;
+				case 'TRANSIT':
+					document.querySelector('.step03').classList.add('active');
+					break;
+				case 'DELIVERED':
+					document.querySelector('.step04').classList.add('active');
+					break;
+				default:
+					document.querySelector('.step01').classList.add('active');
+					break;
+			}
+		}
+
+	</script>
+</html>

@@ -1,0 +1,10 @@
+@startuml
+class ShippingDomainController [[java:edu.sru.cpsc.webshopping.controller.ShippingDomainController]] {
+	-shippingRepository: ShippingRepository
+	-entityManager: EntityManager
+	+ShippingDomainController(shippingRepository: ShippingRepository)
+	+getShippingEntry(shippingId: long): Shipping
+	+deleteShipping(details: Shipping): void
+	+editShippingEntry(shipping: Shipping): void
+}
+@enduml

@@ -1,0 +1,57 @@
+@startuml
+class Auction [[java:edu.sru.cpsc.webshopping.domain.market.Auction]] {
+	-id: long
+	-marketListing: MarketListing
+	-startingBid: BigDecimal
+	-currentBid: BigDecimal
+	-startAuctionDate: LocalDateTime
+	-endAuctionDate: LocalDateTime
+}
+
+class AutoBid [[java:edu.sru.cpsc.webshopping.domain.market.AutoBid]] {
+	-id: long
+	-auction: Auction
+	-bidder: User
+	-maxBid: BigDecimal
+}
+
+class Bid [[java:edu.sru.cpsc.webshopping.domain.market.Bid]] {
+	-id: long
+	-auction: Auction
+	-bidder: User
+	-bidAmount: BigDecimal
+}
+
+class User {
+    - id : long
+    - firstName : String
+    - lastName : String
+    - displayName : String
+    - username : String
+}
+
+class MarketListing [[java:edu.sru.cpsc.webshopping.domain.market.MarketListing]] {
+	-id: long
+	-pricePerItem: BigDecimal
+	-setAutomatically: boolean
+	-qtyAvailable: long
+	-isDeleted: boolean
+	-seller: User
+	-widgetSold: Widget
+	-coverImage: String
+	-isLocalPickupOnly: boolean
+	-localPickup: Pickup
+	-images: Set<WidgetImage>
+	-transactions: Set<Transaction>
+	-auction: Auction
+	-wishlistingUsers: Set<User>
+}
+
+Auction "1" -- "1" MarketListing
+AutoBid "0..*" -- "1" Auction
+Bid "0..*" -- "1" Auction
+User "1" -- "0..*" AutoBid
+User "1" -- "0..*" Bid
+
+
+@enduml

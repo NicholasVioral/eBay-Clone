@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Friend's Profile</title>
+    
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  	
+  	<!-- font import -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.css"></link>
+	
+	<link th:href="@{/styles/button.css}" rel="stylesheet"/>
+	<link th:href="@{/styles/landing.css}" rel="stylesheet"/>
+	<link th:href="@{/styles/employee_page.css}" rel="stylesheet"/>
+	<link th:href="@{/styles/userDetails.css}" rel="stylesheet"/>
+	
+  	<link href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css'>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  	
+  	<style>		  
+	.back-button {
+	    font-size: 16px;
+	    color: #333; /* Change color as needed */
+	    text-decoration: none;
+	    margin-bottom: 20px; /* Space below the button */
+	    display: inline-flex;
+	    align-items: center;
+	    margin-left: 10px; /* Added this line to move the button to the right */
+	}
+	
+	.back-button i {
+	    margin-right: 8px; /* Space between icon and text */
+	}	
+	
+	.condensed-list .list-group-item {
+        margin: 0;
+        padding: 0.5rem 1.25rem; /* Reduced padding */
+    }
+	</style>
+	
+</head>
+<body>
+	
+    <!-- HEADER BAR -->
+    <div th:insert="~{header :: header}" th:unless="${user == null}"></div>
+	
+	<div class="row my-2">
+		<div class="col-12">
+		    <div class="card my-4 mx-4">
+					<a th:href="@{/Social}" class="back-button">
+				    	<i class="fas fa-arrow-left"></i> Back
+					</a>
+		        <!-- Card Header with Friend's Name -->
+		     	<div class="card-header text-center">
+					    <h2><span th:text="${friend.username} + '’s Profile'"></span></h2>
+					</di>
+		            <!-- Card Body -->
+		            <div class="card-body">
+		                <div class="row">
+							
+		                    <!-- Friend's Image -->
+							<div class="col-sm-4 offset-sm-1 d-flex justify-content-end">
+							    <img th:if="${friend.userImage != null}" th:src="@{/images/userImages/{icon}(icon=${friend.userImage})}" class="img-fluid" style="max-height: 150px; max-width: 150px;"></img>
+							    <img th:unless="${friend.userImage != null}" th:src="@{/images/userImages/default_user_icon.png}" class="img-fluid" style="max-height: 150px; max-width: 150px;"></img>
+							</div>
+		                    
+		                    <!-- Friend's Details -->
+							<div class="col-sm-6 d-flex justify-content-start"> 
+							    <ul class="list-group w-100 text-center condensed-list" style="margin-left: -15px;"> 
+							        <li class="list-group-item">Username: <span th:text="${friend.username}"></span></li>
+							        <li class="list-group-item">Email: <span th:text="${friend.email}"></span></li>
+							        <li class="list-group-item">Account Created: <span th:text="${friend.creationDate}"></span></li>
+							        <li class="list-group-item">Rating: 
+							            <!-- Rating Value -->
+							            <span th:text="${friend.sellerRating.rating}"></span>
+							            <!-- Filled Stars -->
+							            <th:block th:if="${friend.sellerRating.rating > 0}" th:each="star : ${#numbers.sequence(1, friend.sellerRating.rating)}">
+							                <span class="text-warning">★</span>
+							            </th:block>
+							            <!-- Unfilled Stars -->
+							            <th:block th:each="star : ${#numbers.sequence(friend.sellerRating.rating + 1, 5)}">
+							                <span class="text-muted">★</span>
+							            </th:block>
+							            <!-- Number of Ratings -->
+							            <span class="ms-2 text-muted" th:text="${friend.sellerRating.numRatings} + ' rating(s)'"></span>
+							        </li>
+							        <li class="list-group-item">
+							            <!-- Chat Box Icon -->
+							            <a th:href="@{/inbox}" class="btn btn-sm btn-primary me-2">
+							                <i class="fas fa-comment-alt"></i>
+							            </a>
+							            <!-- Trash Can Icon -->
+							            <form th:action="@{/remove}" method="post" style="display: inline;">
+									        <input type="hidden" th:value="${friend.id}" name="friendId" />
+									        <button class="btn btn-sm btn-danger custom-btn-space" type="submit">
+									            <i class="fas fa-trash"></i>
+									        </button>
+									    </form>
+							        </li>
+							    </ul>
+							</div>
+
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+	</div>
+	
+	<!-- Card containing Friend's Listings -->
+	<div class="card my-4 mx-4">
+	    <div class="card-header">
+	        <h2><span th:text="${friend.username} + '’s Listings'"></span></h2>
+	    </div>
+	    <div class="card-body">
+	        <table class="table">
+	            <thead>
+	                <tr>
+	                    <th scope="col"><h5>Item Name</h5></th>
+	                    <th scope="col"><h5>Item Description</h5></th>
+	                    <th scope="col"><h5>Price</h5></th>
+	                    <th scope="col"><h5>Link to Item</h5></th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                <tr th:each="listing : ${listings}" th:unless="${listing.qtyAvailable == 0}">
+	                    <th:block th:if="${friend.id == listing.seller.id && listing.isDeleted == false}">
+	                        <td class="text" th:text="${listing.widgetSold.name}"></td>
+	                        <td class="text" th:text="${listing.widgetSold.description}"></td>
+	                        <td class="text">
+	                            <p>$<span th:text="${listing.pricePerItem}"></span></p>
+	                        </td>
+	                        <td><a class="buttonSearchPur" th:href="@{/viewMarketListing/{id}(id = ${listing.id})}"><span>View Listing</span></a></td>
+	                    </th:block>
+	                </tr>
+	            </tbody>
+	        </table>
+	    </div>
+	</div>
+
+</body>
+</html>

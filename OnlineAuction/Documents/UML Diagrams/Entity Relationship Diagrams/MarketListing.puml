@@ -1,0 +1,68 @@
+@startuml
+class MarketListing [[java:edu.sru.cpsc.webshopping.domain.market.MarketListing]] {
+	-id: long
+	-pricePerItem: BigDecimal
+	-setAutomatically: boolean
+	-qtyAvailable: long
+	-isDeleted: boolean
+	-seller: User
+	-widgetSold: Widget
+	-coverImage: String
+	-isLocalPickupOnly: boolean
+	-localPickup: Pickup
+	-images: Set<WidgetImage>
+	-transactions: Set<Transaction>
+	-auction: Auction
+	-wishlistingUsers: Set<User>
+}
+
+class Widget [[java:edu.sru.cpsc.webshopping.domain.widgets.Widget]] {
+	-id: long
+	-name: String
+	-description: String
+	-category: Category
+	-widgetAttributes: Set<WidgetAttribute>
+}
+
+class Auction [[java:edu.sru.cpsc.webshopping.domain.market.Auction]] {
+	-id: long
+	-marketListing: MarketListing
+	-startingBid: BigDecimal
+	-currentBid: BigDecimal
+	-startAuctionDate: LocalDateTime
+	-endAuctionDate: LocalDateTime
+}
+
+class User {
+    - id : long
+    - firstName : String
+    - lastName : String
+    - displayName : String
+    - username : String
+}
+
+class Transaction [[java:edu.sru.cpsc.webshopping.domain.market.Transaction]] {
+	+{static} WEBSITE_CUT_PERCENTAGE: BigDecimal
+	-id: long
+	-qtyBought: int
+	-totalPriceBeforeTaxes: BigDecimal
+	-totalPriceAfterTaxes: BigDecimal
+	-sellerProfit: BigDecimal
+	-purchaseDate: Date
+	-seller: User
+	-buyer: User
+	-marketListing: MarketListing
+	-isLocalPickup: boolean
+	-shippingEntry: Shipping
+	-localPickup: Pickup
+	-paymentDetails: PaymentDetails
+	-depositDetails: DirectDepositDetails
+}
+
+MarketListing "1" -- "1" Widget
+MarketListing "1" -- "1" Auction
+MarketListing "1" -- "1 Seller" User
+MarketListing "1" -- "0..* wishlistingUsers" User
+MarketListing "1" -- "0..*" Transaction
+
+@enduml

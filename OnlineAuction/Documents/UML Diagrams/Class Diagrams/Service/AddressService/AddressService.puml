@@ -1,0 +1,11 @@
+@startuml
+class AddressService [[java:edu.sru.cpsc.webshopping.service.AddressService]] {
+	-shippoApiKey: String
+	-bankAddressRepository: BankAddressRepository
+	-entityManager: EntityManager
+	+AddressService(apiKey: String)
+	+addressExists(shipping: ShippingAddress_Form): boolean
+	+addressExists(shipping: BankAddress_Form): boolean
+	+addBankAddress(bankAddress: BankAddress): BankAddress
+}
+@enduml

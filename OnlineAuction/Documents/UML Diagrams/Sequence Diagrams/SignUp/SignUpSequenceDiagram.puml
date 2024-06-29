@@ -1,0 +1,47 @@
+@startuml
+title     Sign Up \nSequence Diagram
+
+actor          Actor                              as actor
+participant    index                              as index
+participant    newUser                            as newUser
+participant    newUserPayment                     as newUserPayment
+participant    newUserShipping                    as newUserShipping
+entity         SignUpController                   as signUpController
+entity         EmailController                    as emailController
+entity         UserController                     as userController
+entity         PaymentDetailsController           as payDetController
+entity         ShippingAddressDomainController    as shippingController
+entity         User                               as user
+entity         UserRepository                     as userRepository
+entity         PaymentDetailsRepository           as payDetRepository
+entity         ShippingAddressRepository          as shippingRepository
+database       Database                           as database 
+
+actor                 -> index                 : Click "Sign Up"
+index                 -> newUser               : th:href="@{/newUser}"
+actor                 -> newUser               : enter account information
+newUser               -> signUpController      : th:action="@{/add-user-signup}" th:object="{user}"
+signUpController      -> signUpController      : validate user details
+signUpController      -> emailController       : email.verificationEmail(user, util.randomStringGenerator());
+emailController       -> user                  : user.setEmailVerification(code);
+signUpController      -> userController        : userController.addUser(user, result)
+userController        -> userRepository        : userRepository.save(user)
+userRepository        -> database              : save user details to user table
+signUpController      --> newUserPayment       : return "newUserPayment"
+actor                 -> newUserPayment        : enter payment information
+newUserPayment        -> signUpController      : th:action="@{/submitPurchaseSignup}" object="${paymentDetails}"
+signUpController      -> signUpController      : validate payment details
+signUpController      -> payDetController      : payDetController.addPaymentDetails(currDetails)
+payDetController      -> payDetRepository      : payDetRepository.save(details)
+payDetRepository      -> database              : save payment details to payment_details table
+signUpController      --> newUserShipping      : return "newUserShipping"
+actor                 -> newUserShipping       : enter shipping information
+newUserShipping       -> signUpController      : th:action="@{/submitShippingAddressSignUp}" object="${shippingDetails}">
+signUpController      -> signUpController      : validate shipping details
+signUpController      -> shippingController    : shippingController.addShippingAddress(shipping);
+shippingController    -> shippingRepository    : shippingAddressRepository.save(details);
+shippingRepository    -> database              : save shipping details to shipping_address table
+signUpController      --> newUser              : return "redirect:/newUser";
+newUser               --> actor                : display that the user has to verify their email before logging in
+
+@enduml

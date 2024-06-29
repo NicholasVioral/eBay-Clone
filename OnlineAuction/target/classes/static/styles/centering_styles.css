@@ -1,0 +1,40 @@
+.center {
+  display: block;
+  margin-left: 0%;
+  margin-right: 0%;
+  width: auto;
+}
+.centerz {
+  position: static;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: auto;
+}
+.centera {
+  margin: 10px;
+  position: relative;
+  top: 55%;
+  left: 35%;
+  
+}
+.centerb {
+  margin: 10px;
+  position: relative;
+  top: 100%;
+  left: 20%;
+ 
+}
+.centerc {
+  margin: 10px;
+  position: relative;
+  top: 145%;
+  left: 20%;
+
+}
+
+.centered-div {
+    width: 50%;
+    margin: 0 auto;
+    text-align: center;
+}

@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<!-- Expiration date does not work as attended and can lead to problems.
+	 Security code, card number, postal code all needs to be verified. -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Confirm Purchase</title>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+	<!-- https://developer.paypal.com/sdk/js/configuration/ information on configuring the url correctly with the option you want -->
+	<script
+		src="https://www.paypal.com/sdk/js?client-id=AZOZjx8hradMWSN5ahMJQgGJEcRi5oXSIz9vSaduY2dr5fVVwshgyjlrnTMr48ytuQ45QJB9lnM1mnNn&components=buttons&disable-funding=card"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<!-- used a solution from https://stackoverflow.com/questions/9894339/disallow-twitter-bootstrap-modal-window-from-closing by AymKdn and edited by Peter Mortensen which stops users from clicking out of the modal after having entered their login information -->
+
+	<!-- font import -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+	<link th:href="@{/styles/employee_page.css}" rel="stylesheet" />
+	<link th:href="@{/styles/confirmPurchase.css}" rel="stylesheet" />
+
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+	<!-- Accordion Function -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+	<!-- https://developer.paypal.com/sdk/js/configuration/ information on configuring the url correctly with the option you want -->
+	<script
+		src="https://www.paypal.com/sdk/js?client-id=AZOZjx8hradMWSN5ahMJQgGJEcRi5oXSIz9vSaduY2dr5fVVwshgyjlrnTMr48ytuQ45QJB9lnM1mnNn&components=buttons&disable-funding=card"></script>
+
+	<!-- used a solution from https://stackoverflow.com/questions/9894339/disallow-twitter-bootstrap-modal-window-from-closing by AymKdn and edited by Peter Mortensen which stops users from clicking out of the modal after having entered their login information -->
+	<!-- https://teamtreehouse.com/community/keep-a-modal-window-open-after-form-submission helped me figure out that I should load the modal when the page reloads to keep it open after submissions / to show errors -->
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		var relogin = /*[[${relogin}]]*/'';
+		var loginEr = /*[[${loginEr}]]*/'';
+		var toShipping = /*[[${toShipping}]]*/'';
+		var update = /*[[${update}]]*/'';
+		var useThis = /*[[${useThis}]]*/ null;
+
+		if (useThis != null || relogin == false || loginEr == true) {
+			$(window).on('load', function () {
+				$('#paymentModal').removeData("modal").modal({ backdrop: 'static', keyboard: false });
+				$('#paymentModal').modal('show');
+			});
+		}
+
+		if ((relogin == false && toShipping == true) || (loginEr == true && toShipping == true) || update == true) {
+			$(window).on('load', function () {
+				$('#shippingModal').removeData("modal").modal({ backdrop: 'static', keyboard: false });
+				$('#shippingModal').modal('show');
+			});
+		}
+
+		/*]]>*/
+	</script>
+
+	<style>
+	</style>
+</head>
+
+<body>
+	<!-- HEADER BAR -->
+	<div th:insert="~{header :: header}"></div>
+	<!-- END HEADER BAR -->
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"></script>
+		
+
+	<div id="page">
+		<!-- Confirm Purchase Accordion -->
+		<div style="width:45%; margin-top: 1%; margin-bottom: 1%;" class="card mx-auto mh-auto mw-30 overflow-auto">
+			<div class="card-header d-flex justify-content-center">
+				<h1>Confirm Purchase</h1>
+			</div>
+			<div class="card-body">
+				<div class="accordion" id="purchaseDetailsAccordion">
+					<div class="card">
+						<div class="card-header bg-white text-center" id="headingOne">
+							<h2 class="mb-0">
+								<button class="btn btn-link text-dark font-weight-bold text-uppercase" type="button"
+									data-toggle="collapse" data-target="#collapseOne" aria-expanded="false"
+									aria-controls="collapseOne" style="text-decoration: none; width: 100%; text-align: left;">
+									Purchase Details
+									<i class="fas fa-chevron-down float-right"></i>
+								</button>
+							</h2>
+						</div>
+
+						<div id="collapseOne" class="collapse" aria-labelledby="headingOne"
+							data-parent="#purchaseDetailsAccordion">
+							<div class="card-body">
+								<a th:href="@{/viewMarketListing/{id}(id = ${marketListing.id})}" style="text-decoration: none; color: inherit;">
+									<div class="card card-hover rounded-6" style="width: 50%; margin-bottom: 50px; margin-left: auto; margin-right: auto;">
+										<!-- image -->
+										<img class="card-img-top image" th:if="${marketListing.coverImage == null}" src="https://imgs.search.brave.com/weIRA1E1HQWddw-U4hAnbw3NZmPgjkqCMZLD3-zntdA/rs:fit:860:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA1LzA3LzU4LzQx/LzM2MF9GXzUwNzU4/NDExMF9LTklmZTdk/M2hVQUVwcmFxMTBK/N01DUG10bnk4RUg3/QS5qcGc" alt="Blank Listing Image">
+										<img class="card-img-top image" th:unless="${marketListing.coverImage == null}" th:src="@{/listingImages/{image}(image = ${marketListing.coverImage})}" alt="Listing Avatar" src="">
+										
+										<div class="card-body">
+											<!-- title -->
+											<h5 class="card-title header-browse" th:text="${marketListing.widgetSold.name}"></h5>
+										</div>
+										<ul class="list-group list-group-flush">
+											<!-- quantity -->
+											<ul class="list-group-item align-flex">
+												<p class="align-left">Quantity:</p>
+												<p class="align-right" th:text="${purchase.qtyBought}"></p>
+											</ul>
+											<!-- price -->
+											<ul class="list-group-item align-flex">
+												<p class="align-left">Price:</p>
+												<p class="align-right" th:text="'$' + ${marketListing.pricePerItem}"></p>
+											</ul>	
+											<!-- auction price -->
+											<!-- <ul class="list-group-item align-flex">
+												<p class="align-left">Auction Price:</p>
+												<p class="align-right" th:text="'$' + ${searchedMarkets.auction.currentBid}"></p>
+											</ul>	 -->		
+										</ul>
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<hr>
+
+				<!--select shipping or pickup-->
+				<div class="d-flex justify-content-center my-3">
+				    <div class="form-check form-check-inline">
+				        <input class="form-check-input" type="radio" name="deliveryOption" id="shippingOption"
+				            th:value="shipping" th:disabled="${marketListing.isLocalPickupOnly}"
+				            th:checked="${!marketListing.isLocalPickupOnly}">
+				        <label class="form-check-label" for="shippingOption">Shipping</label>
+				    </div>
+				    <div class="form-check form-check-inline">
+				        <input class="form-check-input" type="radio" name="deliveryOption" id="pickupOption"
+				            th:value="pickup" th:disabled="${marketListing.localPickup == null}"
+				            th:checked="${marketListing.isLocalPickupOnly}">
+				        <label class="form-check-label" for="pickupOption">Local Pickup</label>
+				    </div>
+				</div>
+
+				<!-- Shipping Address Accordion -->
+				<div class="accordion" id="shippingAccordion">
+					<div class="card">
+						<div class="card-header bg-white text-center" id="shippingHeading">
+							<h2 class="mb-0">
+								<button class="btn btn-link text-dark font-weight-bold text-uppercase" type="button"
+									data-toggle="collapse" data-target="#shippingCollapse" aria-expanded="false"
+									aria-controls="shippingCollapse" style="text-decoration: none; width: 100%; text-align: left;">
+									Shipping Details
+									<i class="fas fa-chevron-down float-right"></i>
+								</button>
+							</h2>
+						</div>
+						<div id="shippingCollapse" class="collapse" aria-labelledby="shippingHeading"
+							data-parent="#shippingAccordion">
+							<div class="card-body">
+								<!-- Content Begins -->
+								<div th:if="${selectedAddress == null}"
+									class="d-flex justify-content-center">
+									<h3 style="color:red;">A Shipping Address Must Be Selected</h3>
+								</div>
+
+								<div class="mb-3" th:if="${selectedAddress != null}">
+								    <label class="form-label"><strong>Select an address:</strong></label>
+								    <div th:each="shippingEntry : ${allAddresses}">
+								        <div class="form-check">
+								            <input class="form-check-input" type="radio" name="savedShipping" th:value="${shippingEntry.id}" th:id="${'shippingEntry-' + shippingEntry.id}">
+								            <label class="form-check-label" th:for="${'shippingEntry-' + shippingEntry.id}">
+								                <span th:if="${shippingEntry.id.toString() == defaultAddressIdStr}" class="badge badge-primary ml-2">[Default]</span>
+								                <span th:text="${shippingEntry.streetAddress}"></span>,
+								                <span th:text="${shippingEntry.city}"></span>,
+								                <span th:text="${shippingEntry.state.stateName}"></span>,
+								                <span th:text="${shippingEntry.postalCode}"></span>
+								            </label>
+								        </div>
+								    </div>
+								</div>
+
+								<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#shippingModal">Add a New Address</button>
+								<div th:if="${errMessage != null}" th:text="${errMessage}"
+									class="alert alert-danger d-flex justify-content-center my-3">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Local Pickup Accordion -->
+				<div class="accordion" id="pickupAccordion" style="display:none;">
+					<div class="card">
+						<div class="card-header bg-white text-center" id="shippingHeading">
+							<h2 class="mb-0">
+								<button class="btn btn-link text-dark font-weight-bold text-uppercase" type="button"
+									data-toggle="collapse" data-target="#shippingCollapse" aria-expanded="false"
+									aria-controls="shippingCollapse" style="text-decoration: none; width: 100%; text-align: left;">
+									Pickup Details
+									<i class="fas fa-chevron-down float-right"></i>
+								</button>
+							</h2>
+						</div>
+						<div id="shippingCollapse" class="collapse" aria-labelledby="shippingHeading"
+							data-parent="#shippingAccordion">
+							<div class="card-body">
+								<h3>Pickup Area:</h3>
+								<p class="custom-font-style">
+									<span th:text="${marketListing.localPickup.location.city}"></span>,
+									<span th:text="${marketListing.localPickup.location.state.stateName}"></span>
+								</p>
+								<p>*An email will be sent after purchase with the full pickup address.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<hr>
+
+				<!-- Payment Details Accordion -->
+				<div class="accordion" id="paymentAccordion">
+					<div class="card">
+						<div class="card-header bg-white text-center" id="paymentHeading">
+							<h2 class="mb-0">
+								<button class="btn btn-link text-dark font-weight-bold text-uppercase" type="button"
+										data-toggle="collapse" data-target="#paymentCollapse" aria-expanded="false"
+										aria-controls="paymentCollapse" style="text-decoration: none; width: 100%; text-align: left;">
+									Payment Details
+									<i class="fas fa-chevron-down float-right"></i>
+								</button>
+							</h2>
+						</div>
+						<div id="paymentCollapse" class="collapse" aria-labelledby="paymentHeading"
+							data-parent="#paymentAccordion">
+							<div class="card-body">
+								<!-- Default Card Details -->
+								<div class="card mb-3" style="max-width: 540px;" th:if="${selectedPayment != null}">
+									<div class="row g-0">
+										<div class="col-md-4">
+											<!-- Display Card Image -->
+											<img th:src="@{/images/cardTypes/{image}.png(image = ${selectedPayment?.cardType != null ? selectedPayment.cardType.toLowerCase() : 'default'})}" alt="Card Image" style="width: 100%">
+										</div>
+										<div class="col-md-6">
+											<div class="card-body">
+												<h5 class="card-title">Default Card</h5>
+												<h4 th:text="${selectedPayment.cardType}"></h4>
+												<!-- Card Details -->
+												<p class="card-text">**** **** **** <span th:text="${selectedPayment.last4Digits}"></span></p>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- Saved Payment Methods Selection -->
+								<div class="mb-3">
+									<label class="form-label"><strong>Select a different payment method:</strong></label>
+									<div th:each="payment : ${allDetails}">
+										<div class="form-check">
+											<input class="form-check-input" type="radio" name="savedPayment" th:value="${payment.id}" th:id="${payment.id}" th:checked="${payment.id == selectedPayment.id ? 'checked' : ''}" th:onclick="|updateSelectedPayment('card', '${payment.id}')|">
+											<label class="form-check-label" th:for="${payment.id}">
+												<img th:src="@{/images/cardTypes/{image}.png(image = ${payment.cardType.toLowerCase()})}" alt="Card Type Image" style="width: 30px; height: 20px;">
+												**** **** **** <span th:text="${payment.last4Digits}"></span>
+											</label>
+										</div>
+									</div>
+									<!--Direct Deposit-->
+									<div class="form-check" th:if="${directDeposit != null}">
+										<input class="form-check-input" type="radio" name="savedPayment" th:value="${directDeposit.id}" th:id="${directDeposit.id}" th:onclick="|updateSelectedPayment('directDeposit', '${directDeposit.id}')|">
+										<label class="form-check-label" th:for="${directDeposit.id}">
+											<img th:src="@{/images/cardTypes/bank.png}" alt="Card Type Image" style="width: 30px; height: 20px;">
+											<span th:text="${directDeposit.bankName}"></span>
+										</label>
+									</div>
+									<script th:inline="javascript">
+									    var originalItemsCost, originalEstimatedTax, originalTotalCost;
+									
+									    document.addEventListener("DOMContentLoaded", function() {
+										    // Correctly capture the initial prices rendered by Thymeleaf
+										    originalItemsCost = document.getElementById("itemsCost").innerText;
+										    originalEstimatedTax = document.getElementById("estimatedTax").innerText;
+										    originalTotalCost = document.getElementById("totalCost").innerText;
+										
+										    // Setup default payment details, assuming these are correctly set by Thymeleaf as well
+										    var defaultPaymentType = /*[[${selectedPayment != null ? selectedPayment.cardType : 'card'}]]*/;
+										    var defaultPaymentId = /*[[${selectedPayment != null ? selectedPayment.id : '0'}]]*/;
+										    document.getElementById('selectedPaymentType').value = defaultPaymentType;
+										    document.getElementById('selectedPaymentId').value = defaultPaymentId;
+										});
+
+									
+									    function updateSelectedPayment(paymentType, paymentId) {
+										    if (paymentType === 'noCost') {
+										        document.getElementById("selectedPaymentType").value = "noCost";
+										        document.getElementById("selectedPaymentId").value = "0";
+										        document.getElementById("itemsCost").innerText = "0.00";
+										        document.getElementById("estimatedTax").innerText = "0.00";
+										        document.getElementById("totalCost").innerText = "0.00";
+										        document.getElementById("noCostSelected").value = "true"; // Update for no cost
+										    } else {
+										        document.getElementById("selectedPaymentType").value = paymentType;
+										        document.getElementById("selectedPaymentId").value = paymentId;
+										        document.getElementById("itemsCost").innerText = originalItemsCost;
+										        document.getElementById("estimatedTax").innerText = originalEstimatedTax;
+										        document.getElementById("totalCost").innerText = originalTotalCost;
+										        document.getElementById("noCostSelected").value = "false"; // Reset for normal payment
+										    }
+										}
+									</script>
+
+
+																		
+									<!-- No Cost Option -->
+									<div class="form-check mb-3">
+									    <input class="form-check-input" type="radio" name="savedPayment" id="noCostOption" onclick="updateSelectedPayment('noCost', '0')">
+									    <label class="form-check-label" for="noCostOption">
+									        No Cost (Local Pickup Only)
+									    </label>
+									</div>
+
+								</div>
+
+								<!-- Add New Payment Option -->
+								<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addPaymentModal">
+									Add a New Payment Method
+								</button>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			
+			</div>
+
+				<div class="d-flex justify-content-center mb-2">
+                    <a class="btn btn-outline-danger" style="margin-left: 15px" th:href="@{/index}">Back</a>
+                </div>
+
+			<hr>
+			<!-- Custom Alert Modal -->
+			<div id="customAlertModal" class="custom-alert-modal">
+			  <div class="custom-alert-modal-content">
+			    <span class="custom-alert-close-btn" onclick="closeCustomAlertModal()">&times;</span>
+			    <p>Please select a payment method to proceed.</p>
+			  </div>
+			</div>
+			
+
+					<!-- <div class="accordion-item">
+							<h2 class="accordion-header">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#paypalAccordion">
+									Pay via PayPal
+								</button>
+							</h2>
+							<div id="paypalAccordion" class="accordion-collapse collapse" data-bs-parent="#payment-methods">
+								<div class="accordion-body">
+									<div class="d-flex justify-content-center">
+										<h2>Paypal Details</h2>
+									</div>
+									<form method="post" action="#" class="row g-3 d-flex justify-content-center my-2"
+										th:action="@{/confirmPurchase/submitPurchasePaypal}"  th:object="${paypal}">
+										<div class="row">
+											<div class="mb-3 col-sm-6">
+												<label class="form-label">Paypal Email</label>
+												<input type="email" class="form-control" name="paypalLogin" id="paypalLogin" th:field="*{paypalLogin}"></input>
+												<p th:text="${paypalLoginErr}" th:if="${paypalLoginErr != null}"></p>
+											</div>
+											<div class="mb-3 col-sm-6">
+												<label class="form-label">Paypal Password</label>
+												<input type="password" class="form-control" name="paypalPassword" id="paypalPassword" th:field="*{paypalPassword}"></label>
+												<p th:text="${paypalPasswordErr}" th:if="${paypalPasswordErr != null}"></p>
+											</div>
+										</div>
+										<div class="d-flex justify-content-evenly mb-3">
+											<button class="btn btn-danger btn-lg" type="submit" name="cancel">Cancel</button>
+											<button th:if="${user.paypal != null}" class="btn btn-primary btn-lg" type="submit" name="submit">Purchase</button>
+											<button th:if="${user.paypal == null}" class="btn btn-danger btn-lg" disabled>Purchase Disabled</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div> -->
+				
+					<div class="w-40 mb-3"> <!--th:if="${allSelected and toShipping == false and modifyPayment == false}"-->
+						<div class="d-flex justify-content-center mb-4">
+							<h3>Order Summary</h3>
+						</div>
+						<form method="post" th:action="@{/attemptPurchase}" id="purchaseForm">
+							<input type="hidden" name="deliveryOption" th:value="${deliveryOption}">
+							<input type="hidden" name="selectedPaymentId" id="selectedPaymentId" value="${selectedPayment.id}">
+							<input type="hidden" name="selectedAddressId" id="selectedAddressId" value="">
+							<input type="hidden" name="selectedPaymentType" id="selectedPaymentType" value="card">
+							<input type="hidden" name="noCostSelected" id="noCostSelected" value="false">
+							<!-- Totals Table -->
+							<table class="table table-bordered mb-4">
+								<tbody>
+									<tr>
+										<td>Items:</td>
+										<td class="text-right">$<span id="itemsCost" th:text="${purchase.totalPriceBeforeTaxes}"></span></td>
+									</tr>
+									<tr>
+										<td>Estimated Tax:</td>
+										<td class="text-right">$<span id="estimatedTax" th:text="${tax}"></span></td>
+									</tr>
+									<tr class="table-primary">
+										<td><strong>Total Due Now:</strong></td>
+										<td class="text-right"><strong>$<span id="totalCost" th:text="${purchase.totalPriceAfterTaxes}"></span></strong></td>
+									</tr>
+								</tbody>
+							</table>
+							<!-- Purchase and Cancel Buttons -->
+							<div class="d-flex justify-content-center">
+						        <button type="submit" class="btn btn-primary btn-lg" onclick="return validatePaymentSelection()">Purchase</button>
+						        <a class="btn btn-danger btn-lg" th:href="@{/cancel-purchase}" style="margin-left:25px;">Cancel</a>
+						    </div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<hr>		
+		</div>
+	</div>
+	</div>
+
+	<!--Shipping Modal-->
+	<div class="modal fade" id="shippingModal" tabindex="-1" aria-labelledby="shippingModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="shippingModalLabel">Shipping Address</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<form method="post" action="#" th:action="@{/addShipping}" object="${shippingDetails}" class="py-3">
+					<input type="hidden" name="userId" th:value="${user.id}">
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<input type="text" field="*{recipient}" name="recipient" class="form-control" placeholder="Recipient"></input>
+							<p th:if="${recipientErr != null}" th:text="${recipientErr}"></p>
+						</div>
+						<div class="col-md-6 mb-3">
+							<input type="text" field="*{streetAddress}" name="streetAddress" class="form-control" placeholder="Street Address"></input>
+							<p th:if="${streetAddressErr != null}" th:text="${streetAddressErr}"></p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<input type="text" field="*{extraLocationInfo}" name="extraLocationInfo" class="form-control" placeholder="Apt, suite, unit, building, etc. (optional)"></input>
+						</div>
+						<div class="col-md-6 mb-3">
+							<input type="text" field="*{city}" name="city" class="form-control" placeholder="City"></input>
+							<p th:if="${cityErr != null}" th:text="${cityErr}"></p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<select class="form-select" id="stateId" name="stateId">
+								<option th:each="state : ${states}" th:value="${state.stateName}" th:text="${state.stateName}"></option>
+							</select>
+							<p th:if="${stateIdErr}" th:text="${stateId}"></p>
+						</div>
+						<div class="col-md-6 mb-3">
+							<input type="tel" field="*{postalCode}" name="postalCode" class="form-control" maxlength="5" placeholder="Postal Code"></input>
+							<p th:if="${postalCodeErr != null}" th:text="${postalCodeErr}"></p>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" name="submit" class="btn btn-success" id="confirmShippingButton">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal for Adding New Payment Method -->
+	<div class="modal fade" id="addPaymentModal" tabindex="-1" aria-labelledby="addPaymentModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="addPaymentModalLabel">Add New Payment Method</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<!-- Tab Navigation for Payment Methods -->
+					<ul class="nav nav-tabs" id="paymentMethodTab" role="tablist">
+						<li class="nav-item">
+							<a class="nav-link active" id="creditCard-tab" data-toggle="tab" href="#creditCard" role="tab" aria-controls="creditCard" aria-selected="true">Credit Card</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" id="bankAccount-tab" data-toggle="tab" href="#bankAccount" role="tab" aria-controls="bankAccount" aria-selected="false">Bank Account</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" id="paypal-tab" data-toggle="tab" href="#paypal" role="tab" aria-controls="paypal" aria-selected="false">PayPal</a>
+						</li>
+					</ul>
+					
+					<!-- Tab Content for Payment Methods -->
+					<div class="tab-content" id="paymentMethodTabContent">
+						<!-- Credit Card Form -->
+						<div class="tab-pane fade show active" id="creditCard" role="tabpanel" aria-labelledby="creditCard-tab">
+							<form method="post" id="creditCardForm" action="#" class="py-3" th:action="@{/addPayment}" object="${paymentDetails}">
+								<div class="row mb-3">
+									<label for="billingAddress" class="input-group-text">Billing Address:</label>
+									<select class="form-select" id="billingAddress" name="billingAddress">
+										<option value="">-- Saved Addresses: --</option>
+										<option th:each="address : ${allAddresses}" th:value="${address.id}" th:text="${address.streetAddress + ', ' + address.city + ', ' + address.state.stateName + ' ' + address.postalCode}"></option>
+									</select>
+									<button type="button" class="mt-2 btn btn-outline-primary" data-toggle="modal" data-target="#shippingModal">Add a New Billing Address</button>
+								</div>
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<!-- Card Type -->
+										<select class="form-select" id="cardType" name="cardType">
+											<option
+												th:each="cardType : ${cardTypes}"
+												th:value="${cardType.cardType}"
+												th:text="${cardType.cardType}">
+											</option>
+										</select>
+									</div>
+									<div class="col-md-6 mb-3">
+										<!-- Cardholder Name -->
+										<input type="text" class="form-control" field="*{cardholderName}" name="cardholderName" placeholder="Cardholder Name"></input>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<!-- Card Number -->
+										<input type="tel" class="form-control" field="*{cardNumber}" name="cardNumber" placeholder="Card Number" maxlength="16"></input>
+									</div>
+									<div class="col-md-6 mb-3">
+										<!-- Expiration Date -->
+										<input field="*{expirationDate}" name="expirationDate" class="form-control month-picker" placeholder="Exp. Date (MM / YY)" autocomplete="do-not-autofill"/>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<!-- Security Code -->
+										<input type="tel" class="form-control" id="securityCode" field="*{securityCode}" placeholder="CVV" name="securityCode" maxlength="4"></input>
+									</div>
+								</div>
+								<!--used for learning how to use jQuery to get month and year since input type="month" doesn't work on firefox https://stackoverflow.com/questions/2208480/jquery-ui-datepicker-to-show-month-year-only --> 
+								<script type="text/javascript"> 
+										$(function() {
+											$('.month-picker').datepicker( {
+												changeMonth: true,
+												changeYear: true,
+												showButtonPanel: true,
+												dateFormat: 'MM yy',
+												
+												onClose: function(dateText, inst) { 
+													var year = inst.selectedYear;
+													var month = inst.selectedMonth + 1;
+													var lastDay = new Date(year, month, 0).getDate();
+													$(this).datepicker('setDate', new Date(year, month - 1, lastDay));
+												}
+											});
+										});                                                                         
+								</script>        
+								
+							</form>
+						</div>
+
+						<!-- Bank Account Form -->
+						<div class="tab-pane fade" id="bankAccount" role="tabpanel" aria-labelledby="bankAccount-tab">
+							<form id="bankAccountForm" class="py-3" method="post" action="#" th:action="@{/addDirectDeposit}" th:object="${directDepositDetails}">
+								<div class="row mb-3">
+									<label for="billingAddress" class="input-group-text">Billing Address:</label>
+									<select class="form-select" id="billingAddress" name="billingAddress">
+										<option value="">-- Saved Addresses: --</option>
+										<option th:each="address : ${allAddresses}" th:value="${address.id}" th:text="${address.streetAddress + ', ' + address.city + ', ' + address.state.stateName + ' ' + address.postalCode}"></option>
+									</select>
+									<button type="button" class="mt-2 btn btn-outline-primary" data-toggle="modal" data-target="#shippingModal">Add a New Billing Address</button>
+								</div>
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<!-- Account holder Name -->
+										<input type="text" class="form-control" field="*{accountholderName}" name="accountholderName" placeholder="Account holder Name"></input>
+									</div>
+									<div class="col-md-6 mb-3">
+										<!-- Routing Number -->
+										<input type="number" class="form-control" field="*{routingNumber}" name="routingNumber" placeholder="Routing Number"></input>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<!-- Account Number -->
+										<input type="number" class="form-control" field="*{accountNumber}" name="accountNumber" placeholder="Account Number"></input>
+									</div>
+									<div class="col-md-6 mb-3">
+										<!-- Bank Name -->
+										<input type="text" class="form-control" field="*{bankName}" name="bankName" placeholder="Bank Name"></input>
+									</div>
+								</div>
+							</form>
+						</div>
+	
+						<!-- PayPal Form -->
+						<div class="tab-pane fade" id="paypal" role="tabpanel" aria-labelledby="paypal-tab">
+							<script type="text/javascript">
+								var totalPriceAfterTaxes = /*[[${purchase.totalPriceAfterTaxes}]]*/ '0.00';
+							</script>
+							<div id="paypal-button-container" class="mt-3"></div>
+							<script>
+								paypal.Buttons({
+									createOrder: function(data, actions) {
+										// This function sets up the details of the transaction, including the amount and line item details.
+										return actions.order.create({
+											purchase_units: [{
+												amount: {
+													value: totalPriceAfterTaxes
+												}
+											}]
+										});
+									},
+									onApprove: function(data, actions) {
+										// This function captures the funds from the transaction.
+										return actions.order.capture().then(function(details) {
+											// This function shows a transaction success message to your buyer.
+											alert('Transaction completed by ' + details.payer.name.given_name);
+										});
+									}
+								}).render('#paypal-button-container');
+							</script>
+						</div>
+					</div>
+			</div>
+			<div class="modal-footer">
+				<script type="text/javascript">
+					$(document).on('click', '#confirmButton', function() {
+						var activeTab = $('#paymentMethodTabContent .tab-pane.active').attr('id');
+						console.log('Active tab: ' + activeTab);
+						switch (activeTab) {
+							case 'creditCard':
+								console.log('Submitting creditCard form'); 
+								$('#creditCardForm').submit();
+								break;
+							case 'bankAccount':
+								console.log('Submitting bankAccount form'); 
+								$('#bankAccountForm').submit();
+								break;
+							case 'paypal':
+								break;
+						}
+					});
+				</script>
+				<!-- Confirm button -->
+				<button class="btn btn-outline-success" type="button" name="submit" id="confirmButton">Confirm</button>
+			</div>
+		</div>
+	</div>
+	
+
+</body>
+<script>
+$(document).ready(function () {
+    toggleAccordion();
+    toggleNoCostOption(); // Call it on page load to ensure correct state
+
+    $('input[name="deliveryOption"]').on('change', function () {
+        toggleAccordion();
+        toggleNoCostOption(); // Update the No Cost option based on the delivery choice
+    });
+
+    function toggleAccordion() {
+        if ($('#shippingOption').is(':checked')) {
+            $('#shippingAccordion').show();
+            $('#pickupAccordion').hide();
+        } else {
+            $('#pickupAccordion').show();
+            $('#shippingAccordion').hide();
+        }
+    }
+
+    function toggleNoCostOption() {
+        // Disable and uncheck the "No Cost" option if "Shipping" is selected, enable if "Local Pickup" is
+        if ($('#pickupOption').is(':checked')) {
+            $('#noCostOption').prop('disabled', false);
+            // Optionally, automatically check the "No Cost" option when Local Pickup is selected
+            // $('#noCostOption').prop('checked', true);
+        } else {
+            $('#noCostOption').prop('disabled', true).prop('checked', false);
+        }
+    }
+});
+
+
+	document.addEventListener('DOMContentLoaded', function() {
+        // Get all radio buttons with name 'deliveryOption' and the hidden input field.
+        const deliveryOptions = document.querySelectorAll('input[name="deliveryOption"]');
+        const deliveryOptionInput = document.querySelector('input[name="deliveryOption"][type="hidden"]');
+
+		deliveryOptions.forEach(option => {
+            if(option.checked) {
+                deliveryOptionInput.value = option.value;
+            }
+        });
+
+        // Loop through each radio button and add an event listener.
+        deliveryOptions.forEach(option => {
+            option.addEventListener('change', function() {
+                // Update the hidden input field's value.
+                deliveryOptionInput.value = this.value;
+            });
+        });
+    });
+    
+    function validatePaymentSelection() {
+	    const isPaymentSelected = document.querySelector('input[name="savedPayment"]:checked') !== null;
+	    
+	    if (!isPaymentSelected) {
+	    	console.log("test");
+	        showCustomAlertModal();
+	        return false;
+	    }
+	    return true;
+	}
+	
+	function showCustomAlertModal() {
+	    document.getElementById('customAlertModal').style.display = "block";
+	}
+	
+	function closeCustomAlertModal() {
+	    document.getElementById('customAlertModal').style.display = "none";
+	}
+	
+
+	function updateSelectedAddressId(addressId) {
+	    document.getElementById('selectedAddressId').value = addressId;
+	}
+	
+	document.addEventListener('DOMContentLoaded', function () {
+	    // Listen for changes on radio buttons with the name 'savedShipping'
+	    document.querySelectorAll('input[name="savedShipping"]').forEach(item => {
+	        item.addEventListener('change', function(event) {
+	            // Update the hidden input with the selected address ID when a shipping address is selected
+	            const selectedAddressId = this.value;
+	            document.getElementById('selectedAddressId').value = selectedAddressId;
+	        });
+	    });
+	});
+
+	
+
+    
+    
+</script>
+
+</html>

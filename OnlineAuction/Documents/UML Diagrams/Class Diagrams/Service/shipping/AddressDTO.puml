@@ -1,0 +1,13 @@
+@startuml
+class AddressDTO [[java:edu.sru.cpsc.webshopping.service.shipping.AddressDTO]] {
+	-city: String
+	-state: String
+	-zip: String
+	+setCity(city: String): void
+	+getCity(): String
+	+setState(state: String): void
+	+getState(): String
+	+setZip(zip: String): void
+	+getZip(): String
+}
+@enduml

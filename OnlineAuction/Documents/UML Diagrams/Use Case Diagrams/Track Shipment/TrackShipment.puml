@@ -1,0 +1,29 @@
+@startuml Track Shipment Use Case Diagram
+title Track Shipment Use Case Diagram
+left to right direction
+
+actor   Buyer        as buyer
+actor   Seller       as seller
+actor   Carrier     as carrier
+actor   Database    as db
+
+package Offerly {
+    usecase "view transaction" as view
+    usecase "update shipping label" as update
+    usecase "fetch shipping status" as status
+    usecase "rate seller" as rate
+
+}
+
+buyer --> view
+seller --> view
+seller --> update
+carrier --> status
+buyer --> rate
+rate --> db
+status --> view
+update --> db
+view --> update : <<extends>>
+view --> rate : <<extends>>
+
+@enduml

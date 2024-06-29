@@ -1,0 +1,6 @@
+@startuml
+class PaymentService [[java:edu.sru.cpsc.webshopping.service.PaymentService]] {
+	-directDepositDetailsRepository: DirectDepositDetailsRepository
+	+getDirectDepositDetails(id: long): DirectDepositDetails
+}
+@enduml

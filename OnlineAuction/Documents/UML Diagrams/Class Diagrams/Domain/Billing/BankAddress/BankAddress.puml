@@ -1,0 +1,27 @@
+@startuml
+class BankAddress [[java:edu.sru.cpsc.webshopping.domain.billing.BankAddress]] {
+	-id: long
+	-bankName: String
+	-streetAddress: String
+	-extraLocationInfo: String
+	-postalCode: String
+	-city: String
+	-state: StateDetails
+	+getId(): long
+	+setId(id: long): void
+	+getBankName(): String
+	+setBankName(bankName: String): void
+	+getStreetAddress(): String
+	+setStreetAddress(streetAddress: String): void
+	+getExtraLocationInfo(): String
+	+setExtraLocationInfo(extraLocationInfo: String): void
+	+getPostalCode(): String
+	+setPostalCode(postalCode: String): void
+	+getState(): StateDetails
+	+setState(state: StateDetails): void
+	+getCity(): String
+	+setCity(city: String): void
+	+transferFields(other: BankAddress): void
+	+buildFromForm(other: BankAddress_Form): boolean
+}
+@enduml

@@ -1,0 +1,33 @@
+@startuml
+Actor "User"
+participant AddFriendsPage as "addFriends.html"
+participant FriendRequestController as "FriendRequestController"
+participant FriendSocialRequestRepository as "FriendSocialRequestRepository"
+Database SocialFriendRequest
+
+User -> AddFriendsPage: Accesses page and fills out form
+activate AddFriendsPage
+
+note over AddFriendsPage: User submits the form\n to send a friend request
+
+AddFriendsPage -> FriendRequestController: sendFriendRequest(sender, receiver)
+activate FriendRequestController
+
+FriendRequestController -> FriendSocialRequestRepository: save(newRequest)
+activate FriendSocialRequestRepository
+
+FriendSocialRequestRepository -> SocialFriendRequest: save new request
+activate SocialFriendRequest
+SocialFriendRequest --> FriendSocialRequestRepository: Request saved
+deactivate SocialFriendRequest
+
+deactivate FriendSocialRequestRepository
+FriendSocialRequestRepository --> FriendRequestController: return savedRequest
+deactivate FriendRequestController
+FriendRequestController --> AddFriendsPage: Display success message
+AddFriendsPage --> User: Show success notification
+deactivate AddFriendsPage
+
+note over User: Friend request is sent\n and saved in the database
+
+@enduml

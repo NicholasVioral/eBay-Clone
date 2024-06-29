@@ -1,0 +1,86 @@
+.text {
+	font-family: 'Poppins';
+	font-size:17px;
+}
+
+table {
+	width: 100%;
+}
+
+.submit {
+	background-color: #e1ebff;
+	border: solid;
+	font-size: 20px;
+	color: black;
+	padding: 5px 10px;
+	text-align: center;
+	text-decoration: none;
+}
+
+.submit:hover {
+	background-color: #e1ebff;
+	border: solid;
+	font-size: 20px;
+	color: blue;
+	padding: 5px 10px;
+	text-align: center;
+	text-decoration: none;
+}
+
+.back {
+	border: solid;
+	font-size: 20px;
+	color: black;
+	padding: 16px 32px;
+	text-align: center;
+	text-decoration: none;
+	font-family: 'Poppins';
+	background-color:#dc3545;
+}
+
+.box {
+	margin: 8px 0;
+	padding: 12px 20px;
+	box-sizing: border-box;
+}
+
+h1 {
+	font-family: 'Poppins';
+	text-align: center;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.target {
+  display: block;
+}
+
+.target.hidden {
+  display: none;
+}
+
+table.uniTableForm td{
+	height:50px;
+	border-color: black;
+	border-width: 2px;
+	padding-left: 8px;
+	width: 120px;
+}
+
+.buttonSearchPur{
+	border-radius: 12px;
+	background-color: white;
+	border-color: black;
+	font-size: 17px;
+}
+
+#website-title {
+	margin-left: 8px;
+	margin-right: 8px;
+	font-size: 12px;
+}

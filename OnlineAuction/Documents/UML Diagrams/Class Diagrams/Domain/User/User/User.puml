@@ -1,0 +1,121 @@
+@startuml
+
+class User {
+    - id : long
+    - enabled : boolean
+    - firstName : String
+    - lastName : String
+    - phoneNumber : String
+    - countryCode : String
+    - secret1 : String
+    - secret2 : String
+    - secret3 : String
+    - userSecret1 : String
+    - userSecret2 : String
+    - userSecret3 : String
+    - captcha : String
+    - role : String
+    - hiddenCaptcha : String
+    - realCaptcha : String
+    - emailVerification : String
+    - twoFactorAuthenticationCode : String
+    - isTwoFactorEnabled : boolean
+    - displayName : String
+    - username : String
+    - password : String
+    - passwordconf : String
+    - email : String
+    - userDescription : String
+    - userImage : String
+    - creationDate : String
+    - accountExpired : boolean
+    - accountLocked : boolean
+    - credentialsExpired : boolean
+    - disabledAccount : boolean
+    - defaultPaymentDetails : PaymentDetails
+    - defaultShipping : ShippingAddress
+    - sellerRating : SellerRating
+    + User(user : User)
+    + User()
+    + getPassword() : String
+    + setPassword(password : String) : void
+    + getPasswordconf() : String
+    + setPasswordconf(passwordconf : String) : void
+    + getUsername() : String
+    + setUsername(userName : String) : void
+    + getEmail() : String
+    + setEmail(email : String) : void
+    + getUserDescription() : String
+    + setUserDescription(userDescription : String) : void
+    + getCreationDate() : String
+    + setCreationDate(creationDate : String) : void
+    + getDisplayName() : String
+    + setDisplayName(displayName : String) : void
+    + getId() : long
+    + setId(id : long) : void
+    + getFirstName() : String
+    + setFirstName(firstName : String) : void
+    + getLastName() : String
+    + setLastName(lastName : String) : void
+    + getPhoneNumber() : String
+    + setPhoneNumber(phoneNumber : String) : void
+    + getCountryCode() : String
+    + setCountryCode(countryCode : String) : void
+    + getEmailVerification() : String
+    + setEmailVerification(emailVerification : String) : void
+    + getTwoFactorAuthenticationCode() : String
+    + setTwoFactorAuthenticationCode(twoFactorAuthenticationCode : String) : void
+    + isTwoFactorEnabled() : boolean
+    + setTwoFactorEnabled(isTwoFactorEnabled : boolean) : void
+    + getUserSecret1() : String
+    + setUserSecret1(userSecret1 : String) : void
+    + getUserSecret2() : String
+    + setUserSecret2(userSecret2 : String) : void
+    + getUserSecret3() : String
+    + setUserSecret3(userSecret3 : String) : void
+    + getSecret1() : String
+    + setSecret1(secret1 : String) : void
+    + getSecret2() : String
+    + setSecret2(secret2 : String) : void
+    + getSecret3() : String
+    + setSecret3(secret3 : String) : void
+    + getCaptcha() : String
+    + setCaptcha(captcha : String) : void
+    + getHiddenCaptcha() : String
+    + setHiddenCaptcha(hiddenCaptcha : String) : void
+    + getRealCaptcha() : String
+    + setRealCaptcha(realCaptcha : String) : void
+    + getMarketListings() : Set<MarketListing>
+    + setMarketListings(marketListings : Set<MarketListing>) : void
+    + getInbox() : Set<Message>
+    + setInbox(Inbox : Set<Message>) : void
+    + getRole() : String
+    + setRole(role : String) : void
+    + getAuthorities() : Collection<? extends GrantedAuthority>
+    + isAccountNonExpired() : boolean
+    + isAccountNonLocked() : boolean
+    + isCredentialsNonExpired() : boolean
+    + isEnabled() : boolean
+    + setEnabled(enabled : boolean) : void
+    + getEnabled() : boolean
+    + getWishlistedWidgets() : Set<MarketListing>
+    + setWishlistedWidgets(wishlistedWidgets : Set<MarketListing>) : void
+    + getDefaultPaymentDetails() : PaymentDetails
+    + setDefaultPaymentDetails(defaultPaymentDetails : PaymentDetails) : void
+    + getPaymentDetails() : Set<PaymentDetails>
+    + setPaymentDetails(paymentDetails : Set<PaymentDetails>) : void
+    + getPaypal() : Paypal
+    + setPaypal(paypal : Paypal) : void
+    + getDirectDepositDetails() : DirectDepositDetails
+    + setDirectDepositDetails(directDepositDetails : DirectDepositDetails) : void
+    + getShippingDetails() : Set<ShippingAddress>
+    + setShippingDetails(shippingDetails : Set<ShippingAddress>) : void
+    + getDefaultShipping() : ShippingAddress
+    + setDefaultShipping(defaultShipping : ShippingAddress) : void
+    + getUserImage() : String
+    + setUserImage(userImage : String) : void
+    + getSellerRating() : SellerRating
+    + setSellerRating(sellerRating : SellerRating) : void
+}
+
+@enduml

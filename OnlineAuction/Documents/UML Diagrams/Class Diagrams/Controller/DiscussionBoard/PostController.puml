@@ -1,0 +1,11 @@
+@startuml
+class PostController [[java:edu.sru.cpsc.webshopping.controller.discussionBoard.PostController]] {
+	-postService: PostService
+	-userService: UserService
+	-commentService: CommentService
+	+viewHomePage(model: Model, principal: Principal): String
+	+savePost(post: Post, principal: Principal): String
+	+saveComment(postId: Long, comment: Comment, principal: Principal): String
+	+archivePost(postId: Long, model: Model, principal: Principal): String
+}
+@enduml

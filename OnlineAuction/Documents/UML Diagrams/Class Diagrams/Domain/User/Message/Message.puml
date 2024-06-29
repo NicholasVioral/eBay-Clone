@@ -1,0 +1,96 @@
+@startuml
+class Message [[java:edu.sru.cpsc.webshopping.domain.user.Message]] {
+	-id: long
+	-mySpam: User
+	-myTrash: User
+	-spamOwner: User
+	-spamOwnerReceiver: User
+	-trashOwner: User
+	-trashOwnerReceiver: User
+	-owner: User
+	-receiver: User
+	-oldOwner: User
+	-oldReceiver: User
+	-content: String
+	-sender: String
+	-msgDate: String
+	-subject: String
+	-receiverName: String
+	-spamReporter: String
+	-offender: String
+	-reviewerName: String
+	-messageType: MessageType
+	-userFeedback: String
+	-dateSentToTrashOwner: LocalDateTime
+	-expireDateOwner: LocalDateTime
+	-dateSentToTrashReceiver: LocalDateTime
+	-expireDateReceiver: LocalDateTime
+	-tickets: List<Ticket>
+	+setMsgDate(): void
+	+setDateSentToTrashOwner(): void
+	+resetDateSentToTrashOwner(): void
+	+setExpireDateOwner(): void
+	+resetExpireDateOwner(): void
+	+setDateSentToTrashReceiver(): void
+	+resetDateSentToTrashReceiver(): void
+	+setExpireDateReceiver(): void
+	+resetExpireDateReceiver(): void
+	+toString(): String
+	+getId(): long
+	+getMySpam(): User
+	+getMyTrash(): User
+	+getSpamOwner(): User
+	+getSpamOwnerReceiver(): User
+	+getTrashOwner(): User
+	+getTrashOwnerReceiver(): User
+	+getOwner(): User
+	+getReceiver(): User
+	+getOldOwner(): User
+	+getOldReceiver(): User
+	+getContent(): String
+	+getSender(): String
+	+getMsgDate(): String
+	+getSubject(): String
+	+getReceiverName(): String
+	+getSpamReporter(): String
+	+getOffender(): String
+	+getReviewerName(): String
+	+getMessageType(): MessageType
+	+getUserFeedback(): String
+	+getDateSentToTrashOwner(): LocalDateTime
+	+getExpireDateOwner(): LocalDateTime
+	+getDateSentToTrashReceiver(): LocalDateTime
+	+getExpireDateReceiver(): LocalDateTime
+	+getTickets(): List<Ticket>
+	+setId(id: long): void
+	+setMySpam(mySpam: User): void
+	+setMyTrash(myTrash: User): void
+	+setSpamOwner(spamOwner: User): void
+	+setSpamOwnerReceiver(spamOwnerReceiver: User): void
+	+setTrashOwner(trashOwner: User): void
+	+setTrashOwnerReceiver(trashOwnerReceiver: User): void
+	+setOwner(owner: User): void
+	+setReceiver(receiver: User): void
+	+setOldOwner(oldOwner: User): void
+	+setOldReceiver(oldReceiver: User): void
+	+setContent(content: String): void
+	+setSender(sender: String): void
+	+setMsgDate(msgDate: String): void
+	+setSubject(subject: String): void
+	+setReceiverName(receiverName: String): void
+	+setSpamReporter(spamReporter: String): void
+	+setOffender(offender: String): void
+	+setReviewerName(reviewerName: String): void
+	+setMessageType(messageType: MessageType): void
+	+setUserFeedback(userFeedback: String): void
+	+setDateSentToTrashOwner(dateSentToTrashOwner: LocalDateTime): void
+	+setExpireDateOwner(expireDateOwner: LocalDateTime): void
+	+setDateSentToTrashReceiver(dateSentToTrashReceiver: LocalDateTime): void
+	+setExpireDateReceiver(expireDateReceiver: LocalDateTime): void
+	+setTickets(tickets: List<Ticket>): void
+	+equals(o: Object): boolean
+	#canEqual(other: Object): boolean
+	+hashCode(): int
+	+Message()
+}
+@enduml

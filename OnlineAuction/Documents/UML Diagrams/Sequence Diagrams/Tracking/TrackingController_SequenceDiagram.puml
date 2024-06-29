@@ -1,0 +1,28 @@
+@startuml
+actor User
+participant TrackingController as TC
+participant TransactionController as TransC
+participant ShippoTrackingService as STS
+participant shippo.model.Track as T
+
+User -> TC : /api/tracking/{transId}
+activate TC
+    TC -> TransC : getTransaction(transId)
+    activate TransC
+    TransC -->> TC : Shipping order
+    deactivate TransC
+    
+    TC -> STS : getTrackingInformation(order.getCarrier(), order.getTrackingNumber())
+    activate STS
+    
+    STS -> T : getTrackingInfo(carrier, trackingNumber, shippoApiKey)
+    activate T
+    T -->> STS : track
+    deactivate T
+    STS -->> TC: trackDTO
+    deactivate STS
+
+    TC -->> User : trackDTO
+deactivate TC
+
+@enduml

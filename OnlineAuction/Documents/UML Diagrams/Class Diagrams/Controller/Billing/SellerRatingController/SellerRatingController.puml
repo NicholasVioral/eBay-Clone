@@ -1,0 +1,10 @@
+@startuml
+
+class SellerRatingController {
+    - userService : UserService
+    - LATE_SHIPPING_NUMBER_DAYS : long
+
+    + rateUser(userId : Long, rating : float, principal : Principal) : void
+}
+
+@enduml

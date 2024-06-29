@@ -1,0 +1,13 @@
+@startuml
+class ShippingAddressDomainController [[java:edu.sru.cpsc.webshopping.controller.ShippingAddressDomainController]] {
+	-shippingAddressRepository: ShippingAddressRepository
+	-entityManager: EntityManager
+	+ShippingAddressDomainController(shippingAddressRepository: ShippingAddressRepository)
+	+addShippingAddress(details: ShippingAddress, user: User): void
+	+updateShippingAddress(details: ShippingAddress, currDetails: ShippingAddress): void
+	+getShippingAddressEntry(shippingId: long): ShippingAddress
+	+deleteShippingAddress(details: ShippingAddress): void
+	+getShippingDetailsByUser(user: User): ShippingAddress[]
+	+editShippingEntry(shipping: ShippingAddress): void
+}
+@enduml

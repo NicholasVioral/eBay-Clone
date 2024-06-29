@@ -1,0 +1,39 @@
+@startuml
+class MarketListingDomainController [[java:edu.sru.cpsc.webshopping.controller.MarketListingDomainController]] {
+	-currentlyLoggedIn: User
+	-marketRepository: MarketListingRepository
+	-widgetRepository: WidgetRepository
+	-statControl: StatisticsDomainController
+	-imageController: WidgetImageController
+	-userController: UserController
+	-watchlistService: WatchlistService
+	-autoBidRepository: AutoBidRepository
+	-auctionService: AuctionService
+	-userService: UserService
+	-bidRepository: BidRepository
+	-entityManager: EntityManager
+	-servletContext: ServletContext
+	~MarketListingDomainController(marketRepository: MarketListingRepository, statControl: StatisticsDomainController, imageController: WidgetImageController, watchlistService: WatchlistService)
+	+getMarketListing(id: long): MarketListing
+	+getWidget(name: String): Widget
+	+getListingByWidget(widget: Widget): MarketListing
+	+getAllListings(): Iterable<MarketListing>
+	+marketListingPurchaseUpdate(marketListing: MarketListing, numPurchased: int): void
+	+addMarketListing(marketListing: MarketListing): MarketListing
+	+addMarketListingSimple(marketListing: MarketListing): MarketListing
+	+editMarketListing(updatedMarketListing: MarketListing, user: User): MarketListing
+	+undoPurchase(trans: Transaction): void
+	+getListingbyUser(user: User): MarketListing[]
+	+deleteMarketListing(id: long): void
+	+updateMarketListingAuction(marketListingId: Long, startingBid: BigDecimal, endAuctionDate: LocalDateTime): MarketListing
+	+updateBid(bidAmount: BigDecimal, listingId: Long, bidderId: Long, model: Model, redirectAttributes: RedirectAttributes, principal: Principal): ResponseEntity<Object>
+	+autoBid(maxBid: BigDecimal, listingId: Long, bidderId: Long, model: Model, redirectAttributes: RedirectAttributes, principal: Principal): ResponseEntity<Object>
+	-calculateIncrement(currentBidPrice: BigDecimal): BigDecimal
+	-placeAutoBids(listing: MarketListing, auction: Auction, currentBidPrice: BigDecimal, manualBid: boolean): void
+	+getUniqueBiddersCount(id: Long): ResponseEntity<String>
+	+getTotalBidsCount(id: Long): ResponseEntity<String>
+	+isHighestBidder(marketListingId: Long, principal: Principal): Map<String,Boolean>
+	+getUniqueBidders(id: Long): ResponseEntity<List<String>>
+	+getBidsForListing(id: Long): ResponseEntity<List<BidDTO>>
+}
+@enduml

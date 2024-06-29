@@ -1,0 +1,8 @@
+@startuml
+
+class CustomErrorController {
+  -CustomErrorController()
+  +handleError(HttpServletRequest request, Model model): String
+}
+
+@enduml

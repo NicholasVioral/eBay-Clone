@@ -1,0 +1,6 @@
+@startuml
+class TaxExcelToDatabaseService [[java:edu.sru.cpsc.webshopping.service.TaxExcelToDatabaseService]] {
+	-taxDetailRepository: StateDetailsRepository
+	+loadFromExcelFile(excelFile: Resource): void
+}
+@enduml

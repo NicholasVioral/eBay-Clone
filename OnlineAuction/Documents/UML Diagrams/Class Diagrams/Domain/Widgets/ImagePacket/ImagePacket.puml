@@ -1,0 +1,12 @@
+@startuml
+class ImagePacket [[java:edu.sru.cpsc.webshopping.domain.widgets.ImagePacket]] {
+	-id: Long
+	-images: Set<Image>
+	+getId(): Long
+	+setId(id: Long): void
+	+getImages(): Set<Image>
+	+addImage(image: Image): void
+	+removeImage(image: Image): void
+	+setImages(images: Set<Image>): void
+}
+@enduml

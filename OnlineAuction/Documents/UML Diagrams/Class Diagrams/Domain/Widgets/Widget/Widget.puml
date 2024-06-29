@@ -1,0 +1,19 @@
+@startuml
+class Widget [[java:edu.sru.cpsc.webshopping.domain.widgets.Widget]] {
+	-id: long
+	-name: String
+	-description: String
+	-category: Category
+	-widgetAttributes: Set<WidgetAttribute>
+	+getId(): long
+	+setId(id: long): void
+	+getName(): String
+	+setName(name: String): void
+	+getDescription(): String
+	+setDescription(description: String): void
+	+getCategory(): Category
+	+setCategory(category: Category): void
+	+getAttributes(): Set<WidgetAttribute>
+	+setAttributes(widgetAttributes: Set<WidgetAttribute>): void
+}
+@enduml

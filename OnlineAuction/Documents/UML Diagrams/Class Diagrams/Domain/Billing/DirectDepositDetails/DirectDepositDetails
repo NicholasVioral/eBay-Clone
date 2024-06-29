@@ -1,0 +1,29 @@
+@startuml
+class DirectDepositDetails [[java:edu.sru.cpsc.webshopping.domain.billing.DirectDepositDetails]] {
+	-id: long
+	-accountholderName: String
+	-routingNumber: String
+	-accountNumber: String
+	-bankName: String
+	-bankAddress: BankAddress
+	-user: User
+	+DirectDepositDetails(user: User)
+	+DirectDepositDetails()
+	+getId(): long
+	+setId(id: long): void
+	+getAccountholderName(): String
+	+setAccountholderName(accountholderName: String): void
+	+getRoutingNumber(): String
+	+setRoutingNumber(routingNumber: String): void
+	+getAccountNumber(): String
+	+setAccountNumber(accountNumber: String): void
+	+getBankName(): String
+	+setBankName(bankName: String): void
+	+getBankAddress(): BankAddress
+	+setBankAddress(bankAddress: BankAddress): void
+	+getUser(): User
+	+setUser(user: User): void
+	+transferFields(other: DirectDepositDetails): void
+	+buildFromForm(other: DirectDepositDetails_Form): void
+}
+@enduml

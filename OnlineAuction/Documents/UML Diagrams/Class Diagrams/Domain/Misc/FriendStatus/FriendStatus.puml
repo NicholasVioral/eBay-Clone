@@ -1,0 +1,7 @@
+@startuml
+enum FriendStatus [[java:edu.sru.cpsc.webshopping.domain.misc.FriendStatus]] {
+	PENDING
+	ACCEPTED
+	DECLINED
+}
+@enduml

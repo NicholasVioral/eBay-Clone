@@ -1,0 +1,16 @@
+@startuml
+class Sidebar [[java:edu.sru.cpsc.webshopping.domain.sidebar.Sidebar]] {
+	-tabID: Long
+	-displayText: String
+	-link: String
+	-role: String
+	+getTabID(): Long
+	+setTabID(tabID: Long): void
+	+getDisplayText(): String
+	+setDisplayText(displayText: String): void
+	+getLink(): String
+	+setLink(link: String): void
+	+getRole(): String
+	+setRole(role: String): void
+}
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+class PostService [[java:edu.sru.cpsc.webshopping.service.PostService]] {
+	-postRepository: PostRepository
+	-commentRepository: CommentRepository
+	-entityManager: EntityManager
+	+findAll(): List<Post>
+	+save(post: Post): Post
+	+findById(id: Long): Post
+	+findAllWithComments(): List<Post>
+	+deletePostById(id: Long): void
+	+toggleArchivePostById(id: long): void
+}
+@enduml

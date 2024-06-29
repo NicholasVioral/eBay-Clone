@@ -1,0 +1,12 @@
+@startuml
+class TestPageController [[java:edu.sru.cpsc.webshopping.controller.TestPageController]] {
+	~userController: UserController
+	~widgetController: WidgetController
+	+TestPageController(userController: UserController, widgetController: WidgetController)
+	+userWidgetTestPage(model: Model): String
+	+addUser(user: User, result: BindingResult): String
+	+deleteUser(id: long, model: Model): String
+	+addWidget(widget: Widget, result: BindingResult): String
+	+deleteWidget(id: long): String
+}
+@enduml

@@ -1,0 +1,135 @@
+body {
+	font-family: 'Poppins';
+	color: #222222;
+}
+
+.details-button {
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.pageBody {
+	background-color:#ffffff ;
+	margin: auto;
+	font-family: 'Poppins';
+	color: #222222;
+}
+
+
+.ui-datepicker-calendar {
+    display: none;
+}
+
+h1 {
+	font-family: 'Poppins';
+}
+
+h2 {
+	text-align:center;
+}
+
+.text {
+	font-family: 'Poppins';
+	font-size:20px;
+}
+
+.submit {
+	border: solid;
+	font-size: 20px;
+	color: black;
+	padding: 16px 32px;
+	text-align: center;
+	text-decoration: none;
+	font-family: 'Poppins';
+	/*background-color:#4dd2ff;*/
+	background-color: white;
+	margin: 10px 10px 10px 10px;
+}
+
+.submit:hover {
+	border: solid;
+	font-size: 20px;
+	color: blue;
+	padding: 16px 32px;
+	text-align: center;
+	text-decoration: none;
+	font-family: 'Poppins';
+	/*background-color:#4dd2ff;*/
+	background-color: white;
+	margin: 10px 10px 10px 10px;
+}
+
+
+.updateInfo{
+	border: solid;
+	font-size: 20px;
+	color: black;
+	padding: 12px 24px;
+	text-align: center;
+	text-decoration: none;
+	font-family: 'Poppins';
+	background-color:#66ff99;
+	margin: 10px 10px 10px 10px;
+}
+
+.updateInfo:hover{
+	border: solid;
+	font-size: 20px;
+	color: blue;
+	padding: 12px 24px;
+	text-align: center;
+	text-decoration: none;
+	font-family: 'Poppins';
+	background-color:#66ff99;
+	margin: 10px 10px 10px 10px;
+}
+
+.back {
+	border: solid;
+	font-size: 20px;
+	color: black;
+	padding: 16px 32px;
+	text-align: center;
+	text-decoration: none;
+	font-family: 'Poppins';
+	background-color:#dc3545;
+}
+
+.back:hover {
+	border: solid;
+	font-size: 20px;
+	color: blue;
+	padding: 16px 32px;
+	text-align: center;
+	text-decoration: none;
+	font-family: 'Poppins';
+	background-color:#dc3545;
+}
+
+form{
+	top:25%;
+	left:25%;
+}
+
+.userInfo{
+	background-color:#e1ebff;
+	border-style:solid;
+	border-width:3px;
+	margin: 10px 10px 10px 10px;
+}
+
+.card-body-styling {
+	background-color: #e1ebff !important;
+}
+
+/* used to hide arrows from number inputs - https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+  	margin: 0;
+}
+/* Firefox */
+input[type=number] {
+  	-moz-appearance: textfield;
+}

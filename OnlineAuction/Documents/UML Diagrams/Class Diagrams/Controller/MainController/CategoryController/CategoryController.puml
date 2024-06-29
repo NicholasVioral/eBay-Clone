@@ -1,0 +1,14 @@
+@startuml
+
+class CategoryController {
+    -CategoryRepository categoryRepository
+    -CategoryService categoryService
+    +addCategory(Category, BindingResult)
+    +getCategory(long)
+    +getAllCategories()
+    +updateCategory(long, Category, BindingResult)
+    +deleteCategory(long)
+    +getTopRecommendedAttributes(long, int)
+}
+
+@enduml

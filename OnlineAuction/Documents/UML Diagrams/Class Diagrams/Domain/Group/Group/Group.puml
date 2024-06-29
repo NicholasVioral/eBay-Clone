@@ -1,0 +1,52 @@
+@startuml
+
+package edu.sru.cpsc.webshopping.domain.group {
+
+    class Group {
+        - id : Long
+        - name : String
+        - description : String
+        - groupImage : String
+        - members : Set<User>
+        - messages : Set<SocialMessage>
+        - owner : User
+        - status : String
+
+        + getId() : Long
+        + setId(id : Long) : void
+        + getName() : String
+        + setName(name : String) : void
+        + getDescription() : String
+        + setDescription(description : String) : void
+        + getGroupImage() : String
+        + setGroupImage(groupImage : String) : void
+        + getMembers() : Set<User>
+        + setMembers(members : Set<User>) : void
+        + addMember(user : User) : void
+        + removeMember(user : User) : void
+        + getMessages() : Set<SocialMessage>
+        + setMessages(messages : Set<SocialMessage>) : void
+        + getOwner() : User
+        + setOwner(owner : User) : void
+        + setStatus(status : String) : void
+        + getStatus() : String
+        + Group()
+        + Group(name : String, description : String)
+    }
+}
+
+package edu.sru.cpsc.webshopping.domain.user {
+    class User {
+    }
+}
+
+package edu.sru.cpsc.webshopping.domain.misc {
+    class SocialMessage {
+    }
+}
+
+Group "0..*" -- "1" User : owner
+Group "0..*" -- "0..*" User : members
+Group "1" -- "0..*" SocialMessage : messages
+
+@enduml

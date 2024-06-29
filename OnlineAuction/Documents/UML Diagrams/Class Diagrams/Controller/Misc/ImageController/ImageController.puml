@@ -1,0 +1,10 @@
+@startuml
+
+class ImageController {
+  -ImageRepository imageRepo
+  +ImageController(ImageRepository imageRepo)
+  +getImageByImageId(@PathVariable("image_id") Long imageId): Image
+  +getImageByImageName(@PathVariable("image_name") String imageName): Image
+}
+
+@enduml

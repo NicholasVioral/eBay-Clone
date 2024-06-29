@@ -1,0 +1,21 @@
+@startuml
+class MarketListingCSVModel [[java:edu.sru.cpsc.webshopping.domain.market.MarketListingCSVModel]] {
+	-widgetId: long
+	-pricePerItem: BigDecimal
+	-auctionPrice: BigDecimal
+	-qtyAvailable: long
+	+getWidgetId(): long
+	+getPricePerItem(): BigDecimal
+	+getAuctionPrice(): BigDecimal
+	+getQtyAvailable(): long
+	+setWidgetId(widgetId: long): void
+	+setPricePerItem(pricePerItem: BigDecimal): void
+	+setAuctionPrice(auctionPrice: BigDecimal): void
+	+setQtyAvailable(qtyAvailable: long): void
+	+equals(o: Object): boolean
+	#canEqual(other: Object): boolean
+	+hashCode(): int
+	+toString(): String
+	+MarketListingCSVModel()
+}
+@enduml

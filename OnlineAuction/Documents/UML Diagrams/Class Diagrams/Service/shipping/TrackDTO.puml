@@ -1,0 +1,31 @@
+@startuml
+class TrackDTO [[java:edu.sru.cpsc.webshopping.service.shipping.TrackDTO]] {
+	-carrier: String
+	-trackingNumber: String
+	-addressFrom: AddressDTO
+	-addressTo: AddressDTO
+	-transaction: String
+	-eta: Date
+	-originalEta: String
+	-trackingStatus: TrackingStatusDTO
+	-trackingHistory: List<TrackingEventDTO>
+	+setTrackingNumber(trackingNumber: String): void
+	+getTrackingNumber(): String
+	+setCarrier(carrier: String): void
+	+getCarrier(): String
+	+setAddressFrom(addressFrom: AddressDTO): void
+	+getAddressFrom(): AddressDTO
+	+setAddressTo(addressTo: AddressDTO): void
+	+getAddressTo(): AddressDTO
+	+setTransaction(transaction: String): void
+	+getTransaction(): String
+	+setEta(eta: Date): void
+	+getEta(): Date
+	+setOriginalEta(originalEta: String): void
+	+getOriginalEta(): String
+	+setTrackingStatus(trackingStatus: TrackingStatusDTO): void
+	+getTrackingStatus(): TrackingStatusDTO
+	+setTrackingHistory(trackingHistory: List<TrackingEventDTO>): void
+	+getTrackingHistory(): List<TrackingEventDTO>
+}
+@enduml

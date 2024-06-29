@@ -1,0 +1,206 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f6f8;
+    margin: 0;
+    padding: 0;
+}
+
+h3 {
+    font-weight: 600;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #eaeaea;
+    padding-bottom: 10px;
+}
+
+.btn {
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s ease;
+    padding: 10px 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.container {
+    max-width: 1875px;
+    margin: 25px auto 100px auto; /* 50px margin-top and 100px margin-bottom */
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 60px;
+    max-height: 85vh;
+    min-height: 85vh;  /* Makes sure the container has at least 80% of the viewport height */
+}
+
+ul.list-group li {
+    border-radius: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+ul.list-group li:hover {
+    background-color: #0056b3;
+    transform: translateX(10px);
+}
+
+.list-group-item {
+    border: 2px solid transparent;
+    margin: 5px 0;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.form-control {
+    border-radius: 20px;
+    border: 2px solid #eaeaea;
+}
+
+.form-control:focus {
+    border-color: #007BFF;
+    box-shadow: none;
+}
+
+.selected-friend {
+    box-shadow: 0 0 0 2px #0d6efd inset;
+	border-color: transparent;
+}
+
+ul.list-group li.selected-friend {
+margin: 10px 0;
+}
+
+.individualChatBox {
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 60vh; /* or whatever height you prefer */
+    overflow-y: scroll;
+}
+
+.individualChat {
+    border: 1px solid #eee;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.individualChat.my-message {
+    background-color: #f0f0f0;
+}
+
+.individualChat.other-message {
+    background-color: #aed5ff;
+}
+
+.chat-timestamp {
+    font-size: 0.8em;  /* Smaller font size */
+    color: #6c757d;   /* Subtle color, you can adjust as needed */
+    margin-right: 5px;
+}
+
+.chat-username {
+    font-size: 0.9em;  /* Slightly smaller font size */
+    color: #343a40;   /* Subtle color, you can adjust as needed */
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.selected-friend {
+    background-color: #007BFF;  /* This is a Bootstrap primary blue color */
+    color: white;  /* White text color */
+}
+
+
+.message-input-with-icon {
+    padding-right: 40px; /* this space is to make sure the text doesn't overlap with the icon */
+}
+
+.btn-send-icon {
+    background: none;
+    border: none;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #007bff; /* this is typically the primary color for Bootstrap, adjust as needed */
+    font-size: 1.5em; /* adjust as needed */
+    cursor: pointer;
+}
+
+
+.btn-send-icon:hover {
+    color: #0056b3; /* darker shade of bootstrap primary color, adjust as needed */
+}
+
+#sendMessageForm {
+    display: none; /* hide the message input and send button initially */
+}
+
+.back-arrow {
+    font-size: 20px; /* Adjust this value to change the arrow size */
+    text-decoration: none;
+    color: #333; /* Adjust this color as per your theme */
+    display: block;
+    margin-bottom: -25px; /* Adjust as needed */
+}
+
+.friend-profile-img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 5px; /* small border-radius to make it look neater */
+    margin-right: 10px; /* space between image and username */
+    vertical-align: middle; /* to align it in the middle with the username */
+}
+
+.selected-group {
+    box-shadow: 0 0 0 2px #007BFF inset; /* Blue border for selected group, matching selected friend */
+    border-color: transparent;
+}
+
+ul.list-group li.selected-group {
+    background-color: #007BFF; /* Match the selected friend's background color */
+    color: white; /* Ensure text color is white for better readability */
+    margin: 10px 0; /* Match the margin styling of selected friend */
+}
+
+/* Keep the cursor pointer and transition for a consistent user experience */
+#inboxGroupList .list-group-item {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Optionally adjust the hover effect for group list items to match or complement the selected friend style */
+#inboxGroupList .list-group-item:hover {
+    background-color: #0056b3; /* A slightly darker blue on hover, complementary to the selected friend's style */
+    color: white;
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px;
+    color: #000000;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.back-button i {
+    margin-right: 5px;
+}
+
+/* Hover effect */
+.back-button:hover, .back-button:focus {
+    color: #0056b3;
+    text-decoration: none;
+    background-color: #e7f5ff;
+}
+
+.group-item-inbox:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}

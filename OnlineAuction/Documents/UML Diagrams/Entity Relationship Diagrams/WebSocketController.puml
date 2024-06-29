@@ -1,0 +1,56 @@
+@startuml
+
+class WebSocketController {
+    - statControl: StatisticsDomainController
+    - messageService: MessageService
+    - userService: UserService
+    - notificationService: NotificationService
+
+    + broadcastMessage(messageDto: IncomingSocialMessageDTO, principal: Principal): SocialMessageDTO
+    - toDTO(message: SocialMessage): SocialMessageDTO
+    - toDTO(user: User): UserDTO
+}
+
+class SocialMessageDTO {
+    - content: String
+    - sender: UserDTO
+    - receiver: UserDTO
+    - timestamp: LocalDateTime
+
+    + SocialMessageDTO(content: String, sender: UserDTO, receiver: UserDTO, timestamp: LocalDateTime)
+    + getContent(): String
+    + setContent(content: String): void
+    + getSender(): UserDTO
+    + setSender(sender: UserDTO): void
+    + getReceiver(): UserDTO
+    + setReceiver(receiver: UserDTO): void
+    + getTimestamp(): LocalDateTime
+    + setTimestamp(timestamp: LocalDateTime): void
+}
+
+class UserDTO {
+    - id: Long
+    - username: String
+
+    + UserDTO(id: Long, username: String)
+    + getId(): Long
+    + setId(id: Long): void
+    + getUsername(): String
+    + setUsername(username: String): void
+}
+
+class IncomingSocialMessageDTO {
+    - content: String
+    - receiverId: Long
+
+    + getContent(): String
+    + setContent(content: String): void
+    + getReceiverId(): Long
+    + setReceiverId(receiverId: Long): void
+}
+
+WebSocketController -- SocialMessageDTO
+WebSocketController -- UserDTO
+WebSocketController -- IncomingSocialMessageDTO
+
+@enduml

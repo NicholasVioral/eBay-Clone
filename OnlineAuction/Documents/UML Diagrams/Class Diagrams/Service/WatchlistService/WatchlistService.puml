@@ -1,0 +1,13 @@
+@startuml
+class WatchlistService [[java:edu.sru.cpsc.webshopping.service.WatchlistService]] {
+	~userController: UserController
+	~userService: UserService
+	~userRepository: UserRepository
+	-entityManager: EntityManager
+	~statControl: StatisticsDomainController
+	~WatchlistService(userService: UserService, userRepository: UserRepository)
+	+watchlistAdd(marketListing: MarketListing, user: User): void
+	+watchlistRemove(marketListing: MarketListing, user: User): void
+	+countUsersWithMarketListingInWatchlist(marketListingId: Long): Long
+}
+@enduml

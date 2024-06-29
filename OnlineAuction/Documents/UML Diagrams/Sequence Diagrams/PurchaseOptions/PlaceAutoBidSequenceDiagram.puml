@@ -1,0 +1,36 @@
+@startuml
+
+title          Automatically Bid on Item\nSequence Diagram
+
+actor          Actor                            as actor
+participant    viewMarketListing                as viewMarketListing
+entity         MarketListingDomainController    as marketListDomainController
+entity         AuctionService                   as auctionService
+entity         BidRepository                    as bidRepository
+entity         MarketListing                    as marketListing
+entity         MarketListingRepository          as marketListingRepository
+entity         AutoBidRepository                as autoBidRepository
+database       Database                         as database
+
+actor                        ->     viewMarketListing             : Click "Bid Now"
+viewMarketListing            ->     marketListDomainController    : POST: /autoBid
+marketListDomainController   ->     auctionService                : auctionService.bid(auction, bidder, increment);
+auctionService               ->     bidRepository                 : bidRepository.save(bid);
+bidRepository                ->     database                      : save the bid info
+auctionService               -->    marketListDomainController    :
+marketListDomainController   ->     marketListing                 : listing.getAuction().setCurrentBid(newBid);
+marketListing                ->     marketListingRepository       : marketRepository.save(listing);
+marketListingRepository      ->     database                      : update the listing info
+group Other accounts are auto bidding
+  marketListDomainController   ->     marketListDomainController    : placeAutoBids(listing, auction, currentBidPrice, manualBid);
+  marketListDomainController   ->     auctionService                : [for AutoBid bidEntry : autobids] auctionService.bid(auction, highestAutoBidder, newBid);
+  marketListDomainController   ->     marketListing                 : autoAuction.setCurrentBid(newBid);
+  marketListDomainController   ->     marketListingRepository       : marketRepository.save(listing);
+  marketListingRepository      ->     database                      : update listing info
+  marketListDomainController   ->     auctionService                : auctionService.removeAutoBid(lowBidderId);
+  auctionService               ->     bidRepository                 : autoBidRepository.deleteById(id);
+  autoBidRepository            ->     database                      : remove the lower bidder from the auto bid table
+end
+marketListDomainController   -->    viewMarketListing             : redirect "/viewMarketListing/" + listingId
+
+@enduml

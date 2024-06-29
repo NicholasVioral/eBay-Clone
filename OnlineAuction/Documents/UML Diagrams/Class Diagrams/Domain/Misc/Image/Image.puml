@@ -1,0 +1,11 @@
+@startuml
+class Image [[java:edu.sru.cpsc.webshopping.domain.misc.Image]] {
+	-image_id: Long
+	~imageName: String
+	-imagePacket: ImagePacket
+	+getImage_id(): Long
+	+setImage_id(image_id: Long): void
+	+getImagePacket(): ImagePacket
+	+setImagePacket(imagePacket: ImagePacket): void
+}
+@enduml

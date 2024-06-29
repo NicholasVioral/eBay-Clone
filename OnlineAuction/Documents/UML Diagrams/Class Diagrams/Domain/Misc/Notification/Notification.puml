@@ -1,0 +1,21 @@
+@startuml
+class Notification [[java:edu.sru.cpsc.webshopping.domain.misc.Notification]] {
+	-id: Long
+	-userId: Long
+	-message: String
+	-isRead: boolean
+	-createdAt: LocalDateTime
+	+Notification()
+	+Notification(userId: Long, message: String)
+	+getId(): Long
+	+setId(id: Long): void
+	+getUserId(): Long
+	+setUserId(userId: Long): void
+	+getMessage(): String
+	+setMessage(message: String): void
+	+getIsRead(): boolean
+	+setIsRead(read: boolean): void
+	+getCreatedAt(): LocalDateTime
+	+setCreatedAt(createdAt: LocalDateTime): void
+}
+@enduml

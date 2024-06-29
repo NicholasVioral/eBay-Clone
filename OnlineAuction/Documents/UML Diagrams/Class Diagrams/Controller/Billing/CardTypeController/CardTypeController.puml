@@ -1,0 +1,9 @@
+@startuml
+
+class CardTypeController {
+    - cardRepository : CardTypeRepository
+
+    + getAllCardTypes() : Iterable<CardType>
+}
+
+@enduml

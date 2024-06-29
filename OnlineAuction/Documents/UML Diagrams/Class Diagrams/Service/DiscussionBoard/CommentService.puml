@@ -1,0 +1,8 @@
+@startuml
+class CommentService [[java:edu.sru.cpsc.webshopping.service.CommentService]] {
+	-commentRepository: CommentRepository
+	-postService: PostService
+	+addCommentToPost(postId: Long, comment: Comment): Comment
+	+save(comment: Comment): void
+}
+@enduml

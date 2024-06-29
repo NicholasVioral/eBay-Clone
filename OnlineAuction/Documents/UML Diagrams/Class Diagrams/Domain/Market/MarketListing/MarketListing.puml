@@ -1,0 +1,52 @@
+@startuml
+class MarketListing [[java:edu.sru.cpsc.webshopping.domain.market.MarketListing]] {
+	-id: long
+	-pricePerItem: BigDecimal
+	-setAutomatically: boolean
+	-qtyAvailable: long
+	-isDeleted: boolean
+	-seller: User
+	-creationDate: Date
+	-widgetSold: Widget
+	-coverImage: String
+	-isLocalPickupOnly: boolean
+	-localPickup: Pickup
+	-images: Set<WidgetImage>
+	-transactions: Set<Transaction>
+	-auction: Auction
+	-wishlistingUsers: Set<User>
+	-pageViews: long
+	+getId(): long
+	+setId(id: long): void
+	+getPricePerItem(): BigDecimal
+	+setPricePerItem(pricePerItem: BigDecimal): void
+	+getQtyAvailable(): long
+	+setQtyAvailable(qtyAvailable: long): void
+	+getSeller(): User
+	+setSeller(seller: User): void
+	+getCreationDate(): Date
+	+setCreationDate(creationDate: Date): void
+	+getWidgetSold(): Widget
+	+setWidgetSold(widgetSold: Widget): void
+	+isDeleted(): boolean
+	+setDeleted(isDeleted: boolean): void
+	+getTransactions(): Set<Transaction>
+	+setTransactions(transactions: Set<Transaction>): void
+	+getImages(): Set<WidgetImage>
+	+setImages(images: Set<WidgetImage>): void
+	+getCoverImage(): String
+	+setCoverImage(coverImage: String): void
+	+getAuction(): Auction
+	+setAuction(auction: Auction): void
+	+getSetAutomatically(): boolean
+	+setSetAutomatically(setAutomatically: boolean): void
+	+getLocalPickup(): Pickup
+	+setLocalPickup(localPickup: Pickup): void
+	+getIsLocalPickupOnly(): boolean
+	+setIsLocalPickupOnly(isLocalPickupOnly: boolean): void
+	+getWishlistingUsers(): Set<User>
+	+setWishlistingUsers(wishlistingUsers: Set<User>): void
+	+getPageViews(): long
+	+setPageViews(pageViews: long): void
+}
+@enduml

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Social Page</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom Styles -->
+    <link th:href="@{/styles/button.css}" rel="stylesheet" />
+    <link th:href="@{/styles/landing.css}" rel="stylesheet" />
+    <link th:href="@{/styles/employee_page.css}" rel="stylesheet" />
+    <link th:href="@{/styles/social.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    
+    <!-- jQuery and jQuery UI CSS -->
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+	
+	<!-- jQuery and jQuery UI JS -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+
+    <style>		
+		
+	.ui-autocomplete {
+	    max-height: 200px;
+	    overflow-y: auto;
+	    border: 1px solid #aaa;
+	    background-color: #f6f6f6;
+	}
+	
+	
+	.ui-menu-item {
+	    padding: 8px 12px;
+	}
+	
+	
+	.ui-menu-item-wrapper.ui-state-active {
+	    background-color: #007bff;
+	    color: white;
+	    border-radius: 3px;
+	}
+
+    </style>
+    
+</head>
+
+<body>
+
+	<!-- HEADER BAR -->
+    <div th:insert="~{header :: header}" th:unless="${user == null}"></div>
+
+    <!-- Main Content Wrapper -->
+    <div class="container mt-5">
+
+        <!-- Alert for friend request sent -->
+        <div th:if="${requestSent}" class="alert alert-success" role="alert">
+            Friend request has been sent!
+        </div>
+    
+        <!-- Cancel Pending Success Message -->
+		<div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+        <!-- Alert for error message -->
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
+
+        <!-- Start of Row -->
+        <div class="row mb-5">
+
+			<!-- Left Container: Friends List Section -->
+			<div class="col-md-6">
+				
+				<!-- Inbox button  -->
+				<a class="btn btn-outline-primary btn-lg w-100 mb-8" th:href="@{/inbox}">
+					<!--unread message count-->
+					Inbox <span th:unless="${unreadMessageCount} == 0" class="badge-dark badge-light"><i style="padding: 5px" class="fas fa-envelope"></i>[[${unreadMessageCount}]]</span>
+				</a>
+				
+			    <div class="container p-4 bg-white rounded shadow">
+			        <h3>Friends List</h3>
+			        
+			        <!-- Search Input for Friends -->
+			        <input type="text" id="friendSearch" placeholder="Search for a friend..." class="form-control mb-3" />
+			        
+			        <ul class="list-group" id="friendList">
+					    <li class="list-group-item friend-item" th:each="friend : ${friends}" th:data-friendId="${friend.id}">
+					
+					    	<!-- Friend's Image -->
+					        <div class="d-inline-block me-2">
+					            <img th:if="${friend.userImage != null}" th:src="@{/images/userImages/{icon}(icon=${friend.userImage})}" class="img-fluid" style="max-height: 50px; max-width: 50px;"></img>
+					            <img th:unless="${friend.userImage != null}" th:src="@{/images/userImages/default_user_icon.png}" class="img-fluid" style="max-height: 50px; max-width: 50px;"></img>
+					        </div>
+					
+					        <!-- Friend's Username -->
+							<span th:text="${friend.username}"></span>
+							
+							<div class="float-end">
+							    <!-- View Profile Button -->
+							    <a th:href="@{'/viewProfile/' + ${friend.id}}" class="btn btn-sm btn-success custom-btn-space">
+							        <i class="fas fa-user"></i>
+							    </a>
+							
+							    <!-- Message Button for Individual Friends -->
+							    <form action="/loadMessages" method="post" style="display: inline;">
+							        <input type="hidden" name="friendId" th:value="${friend.id}" />
+							        <button type="submit" class="btn btn-sm btn-primary custom-btn-space">
+							            <i class="fas fa-comment-alt"></i>
+							        </button>
+							    </form>
+							
+							    <!-- Remove Button -->
+							    <form th:action="@{/remove}" method="post" style="display: inline;">
+							        <input type="hidden" th:value="${friend.id}" name="friendId" />
+							        <button class="btn btn-sm btn-danger custom-btn-space" type="submit">
+							            <i class="fas fa-trash"></i>
+							        </button>
+							    </form>
+							</div>
+			            </li>
+			        </ul>
+			    </div>
+			    <!-- Outgoing Pending Friend Requests Section -->
+				<div class="col-md-12">
+				    <div class="container p-4 bg-white rounded shadow mt-4">
+				        <h3>Pending Friend Requests</h3>
+				        <ul class="list-group">
+				            <li th:each="request : ${outgoingPendingRequests}" class="list-group-item">
+				                <div th:if="${request.status.name() == 'PENDING'}">
+				                    <!-- Receiver's Image -->
+				                    <div class="d-inline-block me-2">
+				                        <img th:if="${request.receiver.userImage != null}" th:src="@{/images/userImages/{icon}(icon=${request.receiver.userImage})}" class="img-fluid" style="max-height: 50px; max-width: 50px;"></img>
+				                        <img th:unless="${request.receiver.userImage != null}" th:src="@{/images/userImages/default_user_icon.png}" class="img-fluid" style="max-height: 50px; max-width: 50px;"></img>
+				                    </div>
+				                    <!-- Receiver's Username -->
+				                    <div>
+									    <span class="username" th:text="${request.receiver.username}"></span>
+									    <!-- Adding a visual separator -->
+									    <span class="text-muted mx-1">|</span>
+									    <span class="timestamp text-muted small" th:text="${#temporals.format(request.timestamp, 'dd MMM yyyy HH:mm')}"></span>
+				                    <!-- Cancel Request Button -->
+				                    <form th:action="@{/cancelRequest}" method="post" class="float-end">
+				                        <input type="hidden" th:value="${request.id}" name="requestId" />
+				                        <button class="btn btn-sm btn-danger" type="submit"><i class="fas fa-times"></i> Cancel</button>
+				                    </form>
+				                    </div>
+				                </div>
+				            </li>
+				        </ul>
+				    </div>
+				</div>
+			</div>
+
+            <div class="col-md-6">
+			    <div class="container p-4 bg-white rounded shadow">
+			        <!-- Add Friend Section -->
+			        <h3>
+			            Add Friend
+			            <i class="fas fa-cog ml-2" data-bs-toggle="modal" data-bs-target="#addFriendModal"></i>
+			        </h3>
+			        
+			        <form th:action="@{/add}" method="post">
+			            <!-- Input field for searching friends by username or email -->
+			            <div class="searchWrapper">
+			                <input id="addValue" name="value" placeholder="Search by username..." class="form-control mb-3" autocomplete="off" />
+			                <!-- Hidden field to specify search type (username or email) -->
+			                <input type="hidden" name="filterType" id="filterType" value="name" />
+			            </div>
+			            <button type="submit" class="btn btn-primary w-100 mb-4">Add Friend</button>
+			        </form>
+			
+			        <!-- Friend Requests Section -->
+			        <h3>Friend Requests</h3>
+			        <ul class="list-group">
+					    <li class="list-group-item" th:each="request : ${friendRequests}">
+					        <!-- Sender's Image -->
+					        <div class="d-inline-block me-2">
+					            <img th:if="${request.sender.userImage != null}" th:src="@{/images/userImages/{icon}(icon=${request.sender.userImage})}" class="img-fluid" style="max-height: 50px; max-width: 50px;"></img>
+					            <img th:unless="${request.sender.userImage != null}" th:src="@{/images/userImages/default_user_icon.png}" class="img-fluid" style="max-height: 50px; max-width: 50px;"></img>
+					        </div>
+					        <!-- Sender's Username and Timestamp -->
+							<!-- Wrapping the content in a div for better control -->
+							<div>
+							    <span class="username" th:text="${request.sender.username}"></span>
+							    <!-- Adding a visual separator -->
+							    <span class="text-muted mx-1">|</span>
+							    <span class="timestamp text-muted small" th:text="${#temporals.format(request.timestamp, 'dd MMM yyyy HH:mm')}"></span>
+							</div>
+							
+					        
+					        <div class="float-end">
+					            <!-- Accept Button -->
+					            <form th:action="@{/acceptRequest}" method="post" style="display: inline;">
+					                <input type="hidden" th:value="${request.id}" name="requestId" />
+					                <button class="btn btn-sm btn-success me-2" type="submit">Accept</button>
+					            </form>
+					
+					            <!-- Decline Button -->
+					            <form th:action="@{/declineRequest}" method="post" style="display: inline;">
+					                <input type="hidden" th:value="${request.id}" name="requestId" />
+					                <button class="btn btn-sm btn-danger" type="submit">Decline</button>
+					            </form>
+					        </div>
+					    </li>
+					</ul>
+
+			    </div>
+			</div>
+
+			
+			
+			<div class="col-md-6 mt-4">
+			    <div class="container p-4 bg-white rounded shadow">
+			        <!-- Create Group Section -->
+			        <h3>
+			            Create Group
+			            <i id="createGroupIcon" class="fas fa-users ml-2"></i>
+			        </h3>
+			        <!-- Modal for Group Creation -->
+			        <div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="createGroupModalLabel" aria-hidden="true">
+			            <div class="modal-dialog">
+			                <div class="modal-content">
+			                    <div class="modal-header">
+			                        <h5 class="modal-title" id="createGroupModalLabel">Create New Group</h5>
+			                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+			                            <span aria-hidden="true">&times;</span>
+			                        </button>
+			                    </div>
+			                    <form th:action="@{/createGroup}" method="post" id="createGroupForm">
+			                        <div class="modal-body">
+			                            <!-- Group Name Input -->
+			                            <div class="form-group mb-3">
+										    <label for="groupName">Group Name</label>
+										    <input type="text" class="form-control" id="groupName" name="groupName" placeholder="Enter group name" required maxlength="50">
+										</div>
+			                            <!-- Description Input -->
+			                            <div class="form-group mb-3">
+										    <label for="groupDescription">Description</label>
+										    <textarea class="form-control" id="groupDescription" name="groupDescription" rows="3" placeholder="Group description" maxlength="200"></textarea>
+										</div>
+
+			                            <!-- Friends Checkboxes -->
+			                            <div class="form-group mb-3">
+			                                <label>Add Friends to Group</label>
+			                                <div id="friendsList">
+			                                    <th:block th:each="friend : ${friends}">
+			                                        <div class="form-check">
+			                                            <input type="checkbox" class="form-check-input" th:id="${'friend_' + friend.id}" th:value="${friend.id}" name="friends" />
+			                                            <label class="form-check-label" th:for="${'friend_' + friend.id}" th:text="${friend.username}"></label>
+			                                        </div>
+			                                    </th:block>
+			                                </div>
+			                            </div>
+			                        </div>
+			                        <div class="modal-footer">
+			                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			                            <button type="submit" class="btn btn-primary">Create Group</button>
+			                        </div>
+			                    </form>
+			                </div>
+			            </div>
+			        </div>
+			
+			        <!-- Groups List Section -->
+					<div class="mt-4">
+					    <h3>Groups List</h3>
+					    <ul class="list-group groups-list">
+					        <li class="list-group-item hoverable-list-group-item" th:each="group : ${groups}">
+					            <div class="tooltip-container">
+					                <!-- Group Name with Conditional 'Archived' Badge -->
+					                <span th:text="${group.name}">Group Name</span>
+					                <!-- Displaying the owner's name or username next to the group name -->
+					                <span th:text="' - (' + ${group.owner.username} + ')'">Owner Username</span>
+					                <span th:if="${group.status == 'archived'}" class="ms-2 badge bg-secondary">Archived</span>
+					                <span class="tooltip-text" th:text="${group.description}">Group Description</span>
+					            </div>
+					            
+					            <div class="float-end d-flex align-items-center">
+					                
+					                <!-- Message Group Button (Consider disabling or hiding if group is archived) -->
+					                <form action="/loadMessages" method="post" class="me-2" th:if="${group.status != 'archived'}">
+					                    <input type="hidden" name="groupId" th:value="${group.id}" />
+					                    <button type="submit" class="btn btn-outline-primary btn-sm">
+					                        <i class="fas fa-comments"></i> Message
+					                    </button>
+					                </form>
+					            
+					                <!-- Edit Group Button (Conditional Display and Consider hiding if group is archived) -->
+					                <div th:if="${group.owner?.username == user?.username} and ${group.status != 'archived'}" class="me-2">
+					                    <button type="button" class="btn btn-outline-info btn-sm" th:onclick="'editGroup(' + ${group.id} + ');'">Edit</button>
+					                </div>
+					                
+					                <!-- Archive Group Button (Conditional Display based on not being already archived and only visible to the owner) -->
+					                <form th:if="${group.owner?.username == user?.username} and ${group.status != 'archived'}" action="/archiveGroup" method="post" class="me-2">
+					                    <input type="hidden" name="_csrf" value="${_csrf.token}"/> <!-- CSRF Token -->
+					                    <input type="hidden" name="groupId" th:value="${group.id}" />
+					                    <button type="submit" class="btn btn-outline-secondary btn-sm">
+					                        <i class="fas fa-archive"></i> Archive
+					                    </button>
+					                </form>
+					                
+					                <!-- Unarchive Group Button (Only visible to the owner and if the group is archived) -->
+									<form th:if="${group.owner?.username == user?.username} and ${group.status == 'archived'}" th:action="@{/unarchiveGroup}" method="post" class="me-2">
+									    <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+									    <input type="hidden" name="groupId" th:value="${group.id}" />
+									    <button type="submit" class="btn btn-outline-success btn-sm">
+									        <i class="fas fa-box-open"></i> Unarchive
+									    </button>
+									</form>
+
+					                <!-- Delete Group Button (Consider displaying always or based on certain conditions) -->
+					                <form th:if="${group.owner?.username == user?.username}" th:action="@{/deleteGroup}" method="post">
+					                    <input type="hidden" th:value="${group.id}" name="groupId" />
+					                    <button type="submit" class="btn btn-outline-danger btn-sm">
+					                        <i class="fas fa-trash"></i> Delete
+					                    </button>
+					                </form>
+					                
+					                <div th:if="${currentUser != null and group.owner != null and group.owner.username != currentUser.username}" class="me-2">
+								    <form th:action="@{/leaveGroup}" method="post">
+								        <input type="hidden" name="_csrf" value="${_csrf.token}"/> <!-- CSRF Token -->
+								        <input type="hidden" name="groupId" th:value="${group.id}" />
+								        <button type="submit" class="btn btn-outline-warning btn-sm">
+								            <i class="fas fa-sign-out-alt"></i> Leave Group
+								        </button>
+								    </form>
+								</div>
+          
+					            </div>
+					        </li>
+					    </ul>
+					</div>
+
+
+    <!-- Modal for selecting add friend method -->
+    <div class="modal fade" id="addFriendModal" tabindex="-1" role="dialog" aria-labelledby="addFriendModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addFriendModalLabel">Add Friend via</h5>
+                    	<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+						    <span aria-hidden="true">&times;</span>
+						</button>
+                </div>
+                <div class="modal-body">
+                	<div class="form-check">
+					    <input class="form-check-input" type="radio" name="addFriendVia" id="viaUsername" value="username" checked>
+					    <label class="form-check-label" for="viaUsername">
+					        Username
+					    </label>
+					</div>
+					<div class="form-check">
+					    <input class="form-check-input" type="radio" name="addFriendVia" id="viaEmail" value="email">
+					    <label class="form-check-label" for="viaEmail">
+					        Email
+					    </label>
+					</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+	<div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="alertModalLabel">Notice</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	        Please add at least one friend to create a group.
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<div class="modal fade" id="alertModal2" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="alertModalLabel">Notice</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	        Must have at least 1 friend to create a group.
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<!-- Edit Group Modal -->
+	<div class="modal fade" id="editGroupModal" tabindex="-1" aria-labelledby="editGroupModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="editGroupModalLabel">Edit Group</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	        <!-- Member list and search bar will be dynamically added here -->
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<script th:inline="javascript">
+	    /*<![CDATA[*/
+	    var currentUserUsername = [[${user.username}]];
+	    /*]]>*/
+	</script>
+
+	<script th:inline="javascript">
+		var contextPath = /*[[ @{'/'} ]]*/ '';
+
+		$(document).ready(function() {
+		    // Autocomplete logic
+		    $("#addValue").autocomplete({
+		        source: function(request, response) {
+		            // Get the filter type from the hidden input
+		            var filterType = $('#filterType').val();
+		
+		            $.ajax({
+		                url: contextPath + "searchUser",
+		                dataType: "json",
+		                data: {
+		                    value: request.term,
+		                    filterType: filterType
+		                },
+		                success: function(data) {
+		                    response(data);
+		                }
+		            });
+		        },
+		        minLength: 1, 
+		        select: function(event, ui) {
+		            // Handle the selection if needed
+		        }
+		    });
+		
+		    // Event listeners to change the placeholder and hidden input value based on modal selection
+		    $('#viaUsername').on('click', function() {
+		        $('#addValue').attr('placeholder', 'Search by username...');
+		        $('#filterType').val('name');
+		    });
+		
+		    $('#viaEmail').on('click', function() {
+		        $('#addValue').attr('placeholder', 'Search by email...');
+		        $('#filterType').val('email');
+		    });
+		});
+
+		
+	</script>
+	<script>
+		$(document).ready(function(){
+	        $("#friendSearch").on("keyup", function() {
+	            var value = $(this).val().toLowerCase();
+	            $("#friendList .friend-item").filter(function() {
+	                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+	            });
+	        });
+    	});
+    	
+    	$('#friendList .friend-item').each(function() {
+		    var friendUsername = $(this).find('span').text(); // Assuming the friend's username is within a <span>
+		    var friendId = $(this).data('friendId'); // Correctly retrieves the friend's ID
+		    // Continue with appending to addFriendsList and setting up the AJAX call
+		});
+    	
+    	
+	</script>
+	
+    
+    <script>
+	    document.getElementById('createGroupForm').addEventListener('submit', function(event) {
+	        const checkboxes = document.querySelectorAll('input[name="friends"]:checked');
+	        if (checkboxes.length === 0) {
+	            var alertModal = new bootstrap.Modal(document.getElementById('alertModal'));
+	            alertModal.show();
+	            event.preventDefault(); // Prevent form submission
+	        }
+	    });
+	    
+	    document.addEventListener('DOMContentLoaded', function () {
+		    var createGroupIcon = document.getElementById('createGroupIcon');
+		    if (createGroupIcon) {
+		        createGroupIcon.addEventListener('click', function(event) {
+		            var friendList = document.getElementById('friendList');
+		            var listItems = friendList.querySelectorAll('.friend-item');
+		
+		            if (listItems.length === 0) {
+		                var alertModal = new bootstrap.Modal(document.getElementById('alertModal2'));
+	            		alertModal.show();
+		            } else {
+		                var modal = new bootstrap.Modal(document.getElementById('createGroupModal'));
+		                modal.show();
+		            }
+		        });
+		    } else {
+		        console.error('Create group icon not found');
+		    }
+		});
+		
+		function editGroup(groupId) {
+		    console.log('Fetching edit details for group ID:', groupId);
+		
+		    $.ajax({
+		        url: '/api/groupMembers/' + groupId, // Adjust this URL to your endpoint
+		        method: 'GET',
+		        dataType: 'json',
+		        success: function(response) {
+		            console.log('Members fetched successfully:', response);
+		            populateEditModal(groupId, response); // Pass groupId for removal logic
+		        },
+		        error: function(xhr, status, error) {
+		            console.error('Failed to fetch group members:', status, error);
+		            alert('Failed to fetch edit details: ' + error);
+		        }
+		    });
+		}
+
+		
+		function populateEditModal(groupId, members) {
+		    var modalBody = $('#editGroupModal .modal-body');
+		    modalBody.empty(); // Clear existing content
+		
+		    // Initialize the search bar for adding new friends within the modal
+		    var searchBarToAddNewMembers = $('<input type="text" id="modalAddFriendSearch" class="form-control mb-3" placeholder="Search friends to add...">');
+		    modalBody.append(searchBarToAddNewMembers);
+		
+		    // Display current group members
+		    var currentMembersUsernames = []; // Initialize an array to keep track of current member usernames
+		    if (members.length > 0) {
+		        var membersList = $('<ul class="list-group mb-3" id="currentGroupMembers">');
+		        $.each(members, function(index, member) {
+		            // Add each member's username to the tracking array
+		            currentMembersUsernames.push(member.username.toLowerCase()); // Use lowercase to ensure case-insensitive comparison
+		
+		            var listItem = $('<li class="list-group-item d-flex justify-content-between align-items-center">')
+		                .text(member.username);
+		
+		            if (member.username === currentUserUsername) {
+		                // For the owner, display an "Owner" badge instead of a remove button
+		                var ownerBadge = $('<span class="badge bg-primary btn-sm">Owner</span>');
+		                listItem.append(ownerBadge);
+		            } else {
+		                // For regular members, add a "Remove" button
+		                var removeBtn = $('<button class="btn btn-danger btn-sm">Remove</button>')
+		                    .click(function() { removeMember(groupId, member.id); });
+		                listItem.append(removeBtn);
+		            }
+		            membersList.append(listItem);
+		        });
+		        modalBody.append(membersList);
+		    } else {
+		        modalBody.append($('<p>').text('No members found.'));
+		    }
+		
+		    // Setup for 'Add New Members' section in the modal
+		    var addFriendsTitle = $('<h5>').text('Add New Members');
+		    var addFriendsList = $('<ul class="list-group mb-3" id="addFriendsList">');
+		    modalBody.append(addFriendsTitle, addFriendsList);
+		
+		    // Copy existing friends to the modal for adding as new members
+		    $('#friendList .friend-item').each(function() {
+		        var friendUsername = $(this).find('span').text(); // Assuming the friend's username is within a <span>
+		        var friendId = $(this).attr('data-friendId'); // Ensure this is correctly retrieving the friend's ID
+		
+		        // Check if the friend is not already a member of the group
+		        if (!currentMembersUsernames.includes(friendUsername.toLowerCase())) { // Case-insensitive comparison
+		            var listItem = $('<li class="list-group-item d-flex justify-content-between align-items-center">')
+		                .text(friendUsername)
+		                .append($('<button class="btn btn-primary btn-sm" style="margin-left: auto;">Add</button>').click(function() {
+		                    // AJAX call to add the member to the group
+		                    $.ajax({
+		                        url: '/api/addMemberToGroup',
+		                        type: 'POST',
+		                        contentType: 'application/json',
+		                        data: JSON.stringify({ groupId: groupId, memberId: friendId }),
+		                        success: function(response) {
+		                            console.log("Member added successfully:", response);
+		                            alert("Member added successfully");
+		                            // Optionally, refresh the group members list or close the modal
+		                        },
+		                        error: function(xhr, status, error) {
+		                            console.error("Error adding member to group:", error);
+		                            alert('Failed to add member: ' + (xhr.responseText || error));
+		                        }
+		                    });
+		                }));
+		            $('#addFriendsList').append(listItem);
+		        }
+		    });
+		
+		    // Functionality to filter friends list based on search input
+		    $('#modalAddFriendSearch').on("keyup", function() {
+		        var value = $(this).val().toLowerCase();
+		        $('#addFriendsList li').filter(function() {
+		            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+		        });
+		    });
+		
+		    var editGroupModal = new bootstrap.Modal(document.getElementById('editGroupModal'));
+		    editGroupModal.show();
+		}
+
+		function removeMember(groupId, memberId) {
+		    console.log("Removing member with ID:", memberId, "from group ID:", groupId);
+		
+		    // Example endpoint and AJAX setup
+		    $.ajax({
+		        url: '/api/removeMemberFromGroup',
+		        method: 'POST',
+		        contentType: 'application/json',
+		        data: JSON.stringify({ groupId: groupId, memberId: memberId }),
+		        success: function(response) {
+		            console.log("Member removed successfully:", response);
+		            $('#memberItem-' + memberId).remove(); // Remove the member's list item from the modal
+		        },
+		        error: function(xhr, status, error) {
+		            console.error("Failed to remove member:", status, error);
+		            alert('Failed to remove member: ' + xhr.responseText || error);
+		        }
+		    });
+		}
+	</script>
+
+</body>
+
+</html>

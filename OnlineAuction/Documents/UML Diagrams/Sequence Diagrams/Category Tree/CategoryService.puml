@@ -1,0 +1,33 @@
+@startuml
+participant "Client" as A
+participant "CategoryService" as B
+participant "Category" as C
+participant "AttributeRecommendation" as D
+participant "Attribute" as E
+
+A -> B : getRecommendedAttributes(category)
+B -> C : getAttributes()
+loop while category is not null
+    C --> B : return attributes
+    B -> C : getParent()
+    C --> B : return parent category
+end
+B -> D : sort based on recommendation
+loop for each attributeRecommendation
+    D -> E : getAttribute()
+    E --> B : return attribute
+    B -> B : add attribute to list
+end
+B --> A : return list of attributes
+
+
+A -> B : generateCategoryStack(category)
+loop while category is not null
+    B -> C : getName()
+    C --> B : return name
+    B -> B : add name to categoryStack at position 0
+    B -> C : getParent()
+    C --> B : return parent category
+end
+B --> A : return categoryStack
+@enduml

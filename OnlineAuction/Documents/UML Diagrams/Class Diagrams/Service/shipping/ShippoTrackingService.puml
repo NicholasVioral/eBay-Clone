@@ -1,0 +1,10 @@
+@startuml
+class ShippoTrackingService [[java:edu.sru.cpsc.webshopping.service.shipping.ShippoTrackingService]] {
+	-shippoApiKey: String
+	+getTrackingInformation(carrier: String, trackingNumber: String): TrackDTO
+	-mapTrackToTrackDTO(track: Track): TrackDTO
+	-mapAddressToAddressDTO(address: Track.Address): AddressDTO
+	-mapTrackingStatusToTrackingStatusDTO(trackingStatus: Track.TrackingEvent): TrackingStatusDTO
+	-mapTrackingEventToTrackingEventDTO(trackingEvents: Track.TrackingEvent[]): List<TrackingEventDTO>
+}
+@enduml

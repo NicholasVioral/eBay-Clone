@@ -1,0 +1,11 @@
+@startuml
+class WidgetImageController [[java:edu.sru.cpsc.webshopping.controller.WidgetImageController]] {
+	-widgetImageRepository: WidgetImageRepository
+	-entityManager: EntityManager
+	~WidgetImageController(widgetImageRepository: WidgetImageRepository)
+	+getWidgetImage(id: long): WidgetImage
+	+getwidgetImageByMarketListing(listing: MarketListing): WidgetImage[]
+	+addWidgetImage(widgetImage: WidgetImage): WidgetImage
+	+deleteWidgetImage(id: long): void
+}
+@enduml

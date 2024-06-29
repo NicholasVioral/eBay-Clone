@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<head>
+        <title>Verification</title>
+        <link th:href="@{/styles/login.css}" rel="stylesheet" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Gemunu%20Libre">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    
+    <body>
+		<th:block th:switch="${page}">
+			<div th:case="wronguser">
+ 				<h2 style="margin-left: 24px; margin-top: 15px;"> Incorrect Username</h2>
+  			<div class ="card d-flex shadow bg-light mx-4 mt-4" style="width: fit-content; float:left">
+				<div class="card-header">
+					<h4>Verify Email</h4>
+				</div>
+				<div class="card-body">
+					<form th:action="@{/verify}" method="post">
+       					<div class="flex-column mb-4"><input type="text" name="username" placeholder="username" style="width:275px;"/></div>
+       					<div class="flex-column mt-4 mb-4"><input type="text" name="verification" placeholder="verification code" style="width:275px;"/></div>
+       					<div>
+       						<input type="submit" class="btn btn-outline-success me-1" value="Verify Email" style="float:left">
+       					</div>
+   					</form>
+   					<form th:action="@{index}" method="post">
+   						<input type="submit" class="btn btn-outline-danger me-1" value="Return to Index" style="float:left;">
+   					</form>
+   				</div>
+			</div>
+			</div>
+			<div th:case="alreadyverified">
+				<h2 style="margin-left: 24px; margin-top: 15px;">This account is already verified, you may now log in!</h2>
+				<form th:action="@{/login}" method="post">
+  					<input type="submit" class="btn btn-outline-success me-1" value="Return to Login">
+  				</form>
+			</div>
+ 			<div th:case="verifysuccess">
+ 				<h2 style="margin-left: 24px; margin-top: 15px;">Verification successful you may now log in!</h2>
+ 				<form th:action="@{/login}" method="post">
+  					<input type="submit" class="btn btn-outline-success me-1" value="Return to Login">
+  				</form>
+ 			</div>
+   			<div th:case="wrongcode">
+   				<h2 style="margin-left: 24px; margin-top: 15px;">Incorrect Verification Code</h2>
+           		<div class ="card d-flex shadow bg-light mx-4 mt-4" style="width: fit-content; float:left">
+					<div class="card-header">
+						<h4>Verify Email</h4>
+					</div>
+					<div class="card-body">
+						<form th:action="@{/verify}" method="post">
+       						<div class="flex-column mb-4"><input type="text" name="username" placeholder="username" style="width:275px;"/></div>
+       						<div class="flex-column mt-4 mb-4"><input type="text" name="verification" placeholder="verification code" style="width:275px;"/></div>
+       						<div>
+       							<input type="submit" class="btn btn-outline-success me-1" value="Verify Email" style="float:left">
+       						</div>
+   						</form>
+   						<form th:action="@{index}" method="post">
+   							<input type="submit" class="btn btn-outline-danger me-1" value="Return to Index" style="float:left;">
+   						</form>
+   					</div>
+				</div>
+   			</div>
+			<div th:case="startverify">
+				<div class ="card d-flex shadow bg-light mx-4 mt-4" style="width: fit-content; float:left">
+					<div class="card-header">
+						<h4>Verify Email</h4>
+					</div>
+					<div class="card-body">
+						<form th:action="@{/verify}" method="post">
+		       				<div class="flex-column mb-4"><input type="text" name="username" placeholder="username" style="width:275px;"/></div>
+		       				<div class="flex-column mt-4 mb-4"><input type="text" name="verification" placeholder="verification code" style="width:275px;"/></div>
+		       				<div>
+		       					<input type="submit" class="btn btn-outline-success me-1" value="Verify Email" style="float:left">
+		       				</div>
+		   				</form>
+		   				<form th:action="@{index}" method="post">
+		   					<input type="submit" class="btn btn-outline-danger me-1" value="Return to Index" style="float:left;">
+		   				</form>
+		   			</div>
+				</div>
+		  	</div>
+   </body>
+</html>

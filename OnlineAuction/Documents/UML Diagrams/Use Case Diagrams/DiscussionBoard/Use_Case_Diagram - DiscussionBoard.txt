@@ -1,0 +1,16 @@
+@startuml
+left to right direction
+actor "User" as fc
+actor "Admin" as fs
+rectangle DiscussionBoard{
+  usecase "Post" as DB1
+  usecase "Comment" as DB2
+  usecase "Archive" as DB3
+  usecase "Delete" as DB4
+}
+fc --> DB1
+fc --> DB2
+fc --> DB3
+fs --> DB3
+fs --> DB4
+@enduml

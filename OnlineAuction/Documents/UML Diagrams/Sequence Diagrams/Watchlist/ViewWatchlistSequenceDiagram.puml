@@ -1,0 +1,18 @@
+@startuml
+title     Viewing Watchlist \nSequence Diagram
+
+actor          Actor                            as actor
+participant    header                           as header.html
+entity         EmployeeController               as employeeController
+entity         User                             as user
+database       Database                         as database
+
+actor                  ->     header.html             : Click "Watchlist"
+header.html            ->     employeeController      : th:href="/Watchlist"
+employeeController     ->     user                    : user.getWishlistedWidgets()
+user                   ->     database                : get(userId, productId) from widget_wishlist_entry
+user                   -->    employeeController      : return wishlistedWidgets
+employeeController     -->    header.html             : return watchlist.html
+header.html            -->    actor                   : View User's watchlist
+
+@enduml

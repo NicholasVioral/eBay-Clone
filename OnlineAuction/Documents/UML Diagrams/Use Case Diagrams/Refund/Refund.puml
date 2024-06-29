@@ -1,0 +1,30 @@
+@startuml
+title Refund Use Case Diagram
+actor User
+actor "Employee" as Employee
+actor "Admin" as Admin
+
+package "Refund System" {
+  usecase "Purchase Item" as Purchase
+  usecase "Decide to Refund" as DecideRefund
+  usecase "State Reason for Refund" as StateReason
+  usecase "Send Refund Ticket" as SendTicket
+  usecase "Assign Ticket to Self" as AssignSelf
+  usecase "Assign Ticket to Others" as AssignOthers
+  usecase "Decide on Refund" as DecideOnRefund
+  usecase "Notify User of Decision" as NotifyDecision
+
+  DecideRefund <|-- StateReason : extends
+  AssignSelf <|-- AssignOthers : extends
+}
+
+User --> Purchase : initiates
+Purchase --> DecideRefund : decides
+DecideRefund --> SendTicket : if yes
+SendTicket --> Employee : receives
+Employee --> AssignSelf : assigns
+Admin --> AssignOthers : assigns
+AssignSelf --> DecideOnRefund : decides
+DecideOnRefund --> NotifyDecision : notifies
+
+@enduml

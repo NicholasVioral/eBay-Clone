@@ -1,0 +1,15 @@
+@startuml
+
+actor potentialBuyer
+potentialBuyer -> MarketListing : offerAmount()
+
+MarketListing -> MessageController : rejectOffer()
+potentialBuyer <- MessageController : rejectOfferNotification()
+
+MessageController <- MarketListing : acceptOffer() 
+potentialBuyer <- MessageController : acceptOfferNotification()
+
+MessageController -> ConfirmPurchasePage : purchase()
+
+
+@enduml

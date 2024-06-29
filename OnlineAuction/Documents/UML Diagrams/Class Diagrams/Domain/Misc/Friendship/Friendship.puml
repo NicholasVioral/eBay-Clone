@@ -1,0 +1,13 @@
+@startuml
+class Friendship [[java:edu.sru.cpsc.webshopping.domain.misc.Friendship]] {
+	-id: Long
+	-user1: User
+	-user2: User
+	+getId(): Long
+	+getUser1(): User
+	+getUser2(): User
+	+setId(id: Long): void
+	+setUser1(user1: User): void
+	+setUser2(user2: User): void
+}
+@enduml

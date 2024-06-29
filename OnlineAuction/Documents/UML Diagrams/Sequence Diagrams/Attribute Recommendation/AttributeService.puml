@@ -1,0 +1,35 @@
+@startuml
+
+participant "Client" as A
+participant "AttributeService" as B
+participant "AttributeRepository" as C
+participant "AttributeRecommendationRepository" as D
+
+A -> B : associateAttributeWithCategory(attributeName, dataType, category)
+B -> B : attributeName.toLowerCase()
+B -> B : dataType.toUpperCase()
+B -> B : addOrGetAttribute(attributeName, dataTypeEnum)
+B -> C : findByAttributeKey(attributeKey)
+alt Attribute exists
+    C --> B : return attribute
+else Attribute doesn't exist
+    B -> C : save(new Attribute(attributeKey, dataType))
+    C --> B : return new attribute
+end
+B -> D : findByAttributeAndCategory(attribute, category)
+alt Attribute is already associated with category
+    B -> B : updateRecommendationLevel(attribute, category, 1)
+    B -> D : findByAttributeAndCategory(attribute, category)
+    D --> B : return mappingOpt
+    B -> D : save(mapping)
+    B -> B : removeAssociationIfRecommendationIsZero(attribute, category)
+    B -> D : findByAttributeAndCategory(attribute, category)
+    alt mapping recommendation <= 0
+        B -> D : delete(mapping)
+    end
+else Attribute is not associated with category
+    B -> D : save(new AttributeRecommendation())
+end
+B --> A : return attribute
+
+@enduml

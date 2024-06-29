@@ -1,0 +1,9 @@
+@startuml
+class ContactController [[java:edu.sru.cpsc.webshopping.controller.ContactController]] {
+	-userService: UserService
+	-ticketService: TicketService
+	-ticketRepository: TicketRepository
+	+viewContactUsPage(model: Model, principal: Principal): String
+	+submitContactUsTicket(contactUsTicket: ContactUsTicket, attributes: RedirectAttributes, principal: Principal): String
+}
+@enduml

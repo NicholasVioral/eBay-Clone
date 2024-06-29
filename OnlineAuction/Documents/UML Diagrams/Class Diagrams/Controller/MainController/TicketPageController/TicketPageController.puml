@@ -1,0 +1,51 @@
+@startuml
+class TicketPageController [[java:edu.sru.cpsc.webshopping.controller.TicketPageController]] {
+	-page: String
+	-ticketRepository: TicketRepository
+	-emailController: EmailController
+	-entityManager: EntityManager
+	-sessionFactory: SessionFactory
+	-userService: UserService
+	-statControl: StatisticsDomainController
+	-refundService: RefundService
+	~widgetController: WidgetController
+	~marketController: MarketListingDomainController
+	-transController: TransactionController
+	-transactionRepository: TransactionRepository
+	+getTicketsPage(model: Model, principal: Principal): String
+	+getTicketDetailsPage(id: Long, model: Model, principal: Principal): String
+	+reopenTicket(id: Long, model: Model, principal: Principal): String
+	+createTicketsPage(model: Model, principal: Principal): String
+	+createTickets(model: Model, ticket: Ticket, principal: Principal): String
+	+showRefundPage(model: Model, widgetModel: Model, listingModel: Model, tempSearch: String, principal: Principal): String
+	+requestRefund(model: Model, purchaseId: Long, totalPriceAfterTaxes: Double, refundReason: String, principal: Principal): String
+	+getTicketsPage(id: Long, message: Message, model: Model, principal: Principal): String
+	+getPage(): String
+	+getTicketRepository(): TicketRepository
+	+getEmailController(): EmailController
+	+getEntityManager(): EntityManager
+	+getSessionFactory(): SessionFactory
+	+getUserService(): UserService
+	+getStatControl(): StatisticsDomainController
+	+getRefundService(): RefundService
+	+getWidgetController(): WidgetController
+	+getMarketController(): MarketListingDomainController
+	+getTransController(): TransactionController
+	+getTransactionRepository(): TransactionRepository
+	+setPage(page: String): void
+	+setEntityManager(entityManager: EntityManager): void
+	+setSessionFactory(sessionFactory: SessionFactory): void
+	+setUserService(userService: UserService): void
+	+setStatControl(statControl: StatisticsDomainController): void
+	+setRefundService(refundService: RefundService): void
+	+setWidgetController(widgetController: WidgetController): void
+	+setMarketController(marketController: MarketListingDomainController): void
+	+setTransController(transController: TransactionController): void
+	+setTransactionRepository(transactionRepository: TransactionRepository): void
+	+equals(o: Object): boolean
+	#canEqual(other: Object): boolean
+	+hashCode(): int
+	+toString(): String
+	+TicketPageController(ticketRepository: TicketRepository, emailController: EmailController)
+}
+@enduml

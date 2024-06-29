@@ -1,0 +1,17 @@
+@startuml
+class AutoBid [[java:edu.sru.cpsc.webshopping.domain.market.AutoBid]] {
+	-id: long
+	-auction: Auction
+	-bidder: User
+	-maxBid: BigDecimal
+	+AutoBid()
+	+AutoBid(maxBid: BigDecimal, auction: Auction, bidder: User)
+	+getId(): long
+	+setMaxBid(maxBid: BigDecimal): void
+	+getMaxBid(): BigDecimal
+	+setAuction(auction: Auction): void
+	+getAuction(): Auction
+	+setBidder(bidder: User): void
+	+getBidder(): User
+}
+@enduml

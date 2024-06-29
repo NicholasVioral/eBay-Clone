@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http:www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head>
+	<meta charset="ISO-8859-1">
+
+	<!-- font import -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+	<link th:href="@{/styles/navBar.css}" rel="stylesheet">
+
+</head>
+
+<header th:fragment="header" th:switch="${user != null}">
+	<th:block th:case="true">
+		<!-- Nav Bar For Guest User -->
+		<nav class="navbar navbar-expand-sm" style="background-color: #222222">
+			<div class="container-fluid">
+
+				<!-- Unbiased Left Justified Unordered List -->
+				<ul class="navbar-nav">
+					<li class="nav-item" th:switch="${user.role}">
+						<a th:case="ROLE_USER" class="navbar-brand" th:href="@{/homePage}"><img
+								th:src="@{/images/offerly-logo.png}" alt="Home"
+								style="width:64px; height:64px; border-radius: 1em;"></img></a>
+						<a th:case="ROLE_ADMIN" class="navbar-brand" th:href="@{/employee}"><img
+								th:src="@{/images/offerly-logo.png}" alt="Home"
+								style="width:64px; height:64px; border-radius: 1em;"></img></a>
+						<a th:case="ROLE_SUPERADMIN" class="navbar-brand" th:href="@{/employee}"><img
+								th:src="@{/images/offerly-logo.png}" alt="Home"
+								style="width:64px; height:64px; border-radius: 1em;"></img></a>
+						<a th:case="ROLE_CUSTOMERSERVICE" class="navbar-brand" th:href="@{/employee}"><img
+								th:src="@{/images/offerly-logo.png}" alt="Home"
+								style="width:64px; height:64px; border-radius: 1em;"></img></a>
+						<a th:case="ROLE_TECHNICALSERVICE" class="navbar-brand" th:href="@{/employee}"><img
+								th:src="@{/images/offerly-logo.png}" alt="Home"
+								style="width:64px; height:64px; border-radius: 1em;"></img></a>
+						<a th:case="ROLE_HELPDESK_ADMIN" class="navbar-brand" th:href="@{/employee}"><img
+								th:src="@{/images/offerly-logo.png}" alt="Home"
+								style="width:64px; height:64px; border-radius: 1em;"></img></a>
+						<a th:case="ROLE_HELPDESK_REGULAR" class="navbar-brand" th:href="@{/employee}"><img
+						th:src="@{/images/offerly-logo.png}" alt="Home"
+						style="width:64px; height:64px; border-radius: 1em;"></img></a>
+					</li>
+				</ul>
+				<!-- End Unbiased Left Justified Unordered List -->
+			<nav th:fragment="navBar">
+		<!-- User's Header -->
+		<div th:if="${user.role} == ROLE_USER">
+			<ul class="nav nav-pills">
+			
+				<!-- Home -->
+				<li class="nav-item">
+					<a th:if="${page == 'home'}" th:href="@{/homePage}" class="submit4 nav-link active"><span>Home</span></a>
+					<a th:unless="${page == 'home'}" th:href="@{/homePage}" class="submit4"><span>Home</span></a>
+				</li>
+				
+				<!-- Your Listings -->		
+				<li class="nav-item">
+					<a th:if="${page == 'yourListings'}" th:href="@{/yourListings}"
+						class="submit4 nav-link active"><span>Your Listings</span></a>
+					<a th:unless="${page == 'yourListings'}" th:href="@{/yourListings}"
+						class="submit4"><span>Your Listings</span></a>
+				</li>
+				
+				<!-- Browse Items -->
+				<li class="nav-item">
+					<a th:if="${page == 'searchWidgetSellerMarketListing'}" th:href="@{/BrowseWidgetsButton}" class="submit4 nav-link active"><span>Browse All Items</span></a>
+					<a th:unless="${page == 'searchWidgetSellerMarketListing'}" th:href="@{/BrowseWidgetsButton}" class="submit4"><span>Browse All Items</span></a>
+				</li>
+				
+				<!-- Sell an item -->
+				<li class="nav-item">
+					<a th:if="${page == 'addWidget'}" th:href="@{/createWidget}" class="submit4 nav-link active"><span>Sell an Item</span></a>
+					<a th:unless="${page == 'addWidget'}" th:href="@{/createWidget}" class="submit4"><span>Sell an Item</span></a>
+				</li>
+				
+				<!-- Watchlist -->
+				<li class="nav-item">
+					<a th:if="${page == 'watchlistPage'}" th:href="@{/Watchlist}" class="submit4 nav-link active"><span>Watchlist</span></a>
+					<a th:unless="${page == 'watchlistPage'}" th:href="@{/Watchlist}" class="submit4"><span>Watchlist</span></a>
+				</li>
+				
+				<!-- DiscussionBoard -->
+				<li class="nav-item">
+					<a th:if="${page == 'discussionBoard'}" th:href="@{/discussionBoard}" class="submit4 nav-link active"><span>Discussion Board</span></a>
+					<a th:unless="${page == 'discussionBoard'}" th:href="@{/discussionBoard}" class="submit4"><span>Discussion Board</span></a>
+				</li>
+				
+				<!-- Social -->
+				<li class="nav-item">
+				    <a th:if="${page == 'social' or page == 'viewProfile' or page == 'inbox'}" 
+				       th:href="@{/Social}" 
+				       class="submit4 nav-link active">
+				        <span>Social</span>
+				    </a>
+				    <a th:unless="${page == 'social' or page == 'viewProfile' or page == 'inbox'}" 
+				       th:href="@{/Social}" 
+				       class="submit4">
+				        <span>Social</span>
+				    </a>
+				</li>
+
+
+							<!-- Contact Us -->
+							<li class="nav-item">
+								<a th:if="${page == 'contactUs'}" th:href="@{/contactUs}"
+									class="submit4 nav-link active"><span>Contact Us</span></a>
+								<a th:unless="${page == 'contactUs'}" th:href="@{/contactUs}"
+									class="submit4"><span>Contact Us</span></a>
+							</li>
+				
+				
+
+							<!-- Messages 
+				<li class="nav-item">
+					<a th:if="${page == 'messages'}" th:href="@{/messages}" class="submit4 nav-link active"><span>My Messages</span></a>
+					<a th:unless="${page == 'messages'}" th:href="@{/messages}" class="submit4"><span>My Messages</span></a>
+				</li>
+				-->
+
+							<!-- Help -->
+							<!-- <li class="nav-item pointer" style="position: relative; z-index: 10;">
+					<a th:if="${page == 'tickets' || page == 'createTickets'}" class="submit4 nav-link dropdown-toggle active" data-bs-toggle="dropdown"><span>Need Help?</span></a>
+					<a th:unless="${page == 'tickets' || page == 'createTickets'}" class="submit4 nav-link dropdown-toggle" data-bs-toggle="dropdown"><span>Need Help?</span></a>
+					<div class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="text-align: center;">
+						<a th:if="${page == 'tickets'}" class="submit4 nav-link active" th:href="@{/tickets}"><span>My Tickets</span></a>
+	        			<a th:unless="${page == 'tickets'}" class="submit4" th:href="@{/tickets}"><span>My Tickets</span></a>
+						<a th:if="${page == 'createTickets'}" class="submit4 nav-link active" th:href="@{/createTickets}"><span>Add Ticket</span></a>
+						<a th:unless="${page == 'createTickets'}" class="submit4" th:href="@{/createTickets}"><span>Add Ticket</span></a>
+						<a th:if="${page == 'refund'}" class="submit4 nav-link active" th:href="@{/refund}"><span>Refund</span></a>
+						<a th:unless="${page == 'refund'}" class="submit4" th:href="@{/refund}"><span>Refund</span></a>
+					</div>
+				</li> -->
+
+							<!-- User info -->
+							<!-- <li th:if="${selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).PAYMENT_DETAILS or selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).DEPOSIT_DETAILS}" class="nav-item pointer" style="position: relative; z-index: 10;">
+					<a th:if="${selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).PAYMENT_DETAILS or selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).DEPOSIT_DETAILS}" class="submit4 nav-link dropdown-toggle active" data-bs-toggle="dropdown"><span>Payment Details</span></a>
+					<a th:unless="${selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).PAYMENT_DETAILS or selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).DEPOSIT_DETAILS}" class="submit4 nav-link dropdown-toggle" data-bs-toggle="dropdown"><span>Payment Details</span></a>
+					<div class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="text-align: center;">
+						<a th:if="${selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).PAYMENT_DETAILS}" th:href="@{/userDetails/paymentDetails}" class="submit4 nav-link active">Card Info</a>
+						<a th:unless="${selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).PAYMENT_DETAILS}" th:href="@{/userDetails/paymentDetails}" class="submit4">Card Info</a>
+						<a th:if="${selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).DEPOSIT_DETAILS}" th:href="@{/userDetails/depositDetails}" class="submit4 nav-link active">Direct Deposit</a>
+						<a th:unless="${selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).DEPOSIT_DETAILS}" th:href="@{/userDetails/depositDetails}" class="submit4">Direct Deposit</a>
+					</div>
+				</li> -->
+
+						</ul>
+					</div>
+					<!-- End User's Header -->
+
+					<!-- Admin's Header -->
+					<div th:if="${user.role} == ROLE_ADMIN">
+						<ul class="nav nav-pills">
+							<!-- home -->
+							<li class="nav-item">
+								<a th:if="${page == 'begin'}" class="submit4 nav-link active"
+									th:href="@{/employee}"><span>Employee Home</span></a>
+								<a th:unless="${page == 'begin'}" class="submit4" th:href="@{/employee}"><span>Employee
+										Home</span></a>
+							</li>
+							<!-- view users -->
+							<li class="nav-item">
+								<a th:if="${page == 'search'}" class="submit4 nav-link active"
+									th:href="@{/searchButton}"><span>View Users</span></a>
+								<a th:unless="${page == 'search'}" class="submit4" th:href="@{/searchButton}"><span>View
+										Users</span></a>
+							</li>
+							<!-- view tickets -->
+							<li class="nav-item">
+								<a th:if="${page == 'ticket'}" class="submit4 nav-link active"
+									th:href="@{/searchTickets}"><span>View Tickets</span></a>
+								<a th:unless="${page == 'ticket'}" class="submit4"
+									th:href="@{/searchTickets}"><span>View Tickets</span></a>
+							</li>
+							<!-- view listings -->
+							<li class="nav-item">
+								<a th:if="${page =='searchWidgetSellerMarketListing'}" class="submit4 nav-link active"
+									th:href="@{/searchWidgetButton}"><span>View Listings</span></a>
+								<a th:unless="${page =='searchWidgetSellerMarketListing'}" class="submit4"
+									th:href="@{/searchWidgetButton}"><span>View Listings</span></a>
+							</li>
+							<!-- item details
+				<li class="nav-item">
+					<a th:if="${page == 'widgetsInfo'}" class="submit4 nav-link active" th:href="@{/widgetsInfo}"><span>Items Details</span></a>
+					<a th:unless="${page == 'widgetsInfo'}" class="submit4" th:href="@{/widgetsInfo}"><span>Items Details</span></a>
+				</li> -->
+							<!-- add account -->
+							<li class="nav-item">
+								<a th:if="${page == 'create'}" class="submit4 nav-link active"
+									th:href="@{/createButton}"><span>Add Account</span></a>
+								<a th:unless="${page == 'create'}" class="submit4" th:href="@{/createButton}"><span>Add
+										Account</span></a>
+							</li>
+							<!-- DiscussionBoard -->
+							<li class="nav-item">
+								<a th:if="${page == 'postLayout'}" th:href="@{/postLayout}" class="submit4 nav-link active"><span>Discussion Board</span></a>
+								<a th:unless="${page == 'postLayout'}" th:href="@{/postLayout}" class="submit4"><span>Discussion Board</span></a>
+							</li>
+							
+							<!-- social -->
+							<li class="nav-item">
+								<a th:if="${page == 'social' or page == 'viewProfile' or page == 'inbox'}"
+									th:href="@{/Social}" class="submit4 nav-link active">
+									<span>Social</span>
+								</a>
+								<a th:unless="${page == 'social' or page == 'viewProfile' or page == 'inbox'}"
+									th:href="@{/Social}" class="submit4">
+									<span>Social</span>
+								</a>
+							</li>
+							<!-- logs -->
+							<li class="nav-item">
+								<a th:if="${page == 'logs'}" class="submit4 nav-link active"
+									th:href="@{/viewLogs}"><span>Logs</span></a>
+								<a th:unless="${page == 'logs'}" class="submit4"
+									th:href="@{/viewLogs}"><span>Logs</span></a>
+							</li>
+						</ul>
+					</div>
+					<!-- End Admin's Header -->
+
+					<!-- Super Admin's Header -->
+					<div th:if="${user.role} == ROLE_SUPERADMIN">
+						<ul class="nav nav-pills">
+							<!-- home -->
+							<li class="nav-item">
+								<a th:if="${page == 'begin'}" class="submit4 nav-link active"
+									th:href="@{/employee}"><span>Employee Home</span></a>
+								<a th:unless="${page == 'begin'}" class="submit4" th:href="@{/employee}"><span>Employee
+										Home</span></a>
+							</li>
+							<!-- view users -->
+							<li class="nav-item">
+								<a th:if="${page == 'search'}" class="submit4 nav-link active"
+									th:href="@{/searchButton}"><span>View Users</span></a>
+								<a th:unless="${page == 'search'}" class="submit4" th:href="@{/searchButton}"><span>View
+										Users</span></a>
+							</li>
+							<!-- view tickets -->
+							<li class="nav-item">
+								<a th:if="${page == 'ticket'}" class="submit4 nav-link active"
+									th:href="@{/searchTickets}"><span>View Tickets</span></a>
+								<a th:unless="${page == 'ticket'}" class="submit4"
+									th:href="@{/searchTickets}"><span>View Tickets</span></a>
+							</li>
+							<!-- view listings -->
+							<li class="nav-item">
+								<a th:if="${page =='searchWidgetSellerMarketListing'}" class="submit4 nav-link active"
+									th:href="@{/searchWidgetButton}"><span>View Listings</span></a>
+								<a th:unless="${page =='searchWidgetSellerMarketListing'}" class="submit4"
+									th:href="@{/searchWidgetButton}"><span>View Listings</span></a>
+							</li>
+							<!-- add account -->
+							<li class="nav-item">
+								<a th:if="${page == 'create'}" class="submit4 nav-link active"
+									th:href="@{/createButton}"><span>Add Account</span></a>
+								<a th:unless="${page == 'create'}" class="submit4" th:href="@{/createButton}"><span>Add
+										Account</span></a>
+							</li>
+							
+							<!-- DiscussionBoard -->
+							<li class="nav-item">
+								<a th:if="${page == 'postLayout'}" th:href="@{/postLayout}" class="submit4 nav-link active"><span>Discussion Board</span></a>
+								<a th:unless="${page == 'postLayout'}" th:href="@{/postLayout}" class="submit4"><span>Discussion Board</span></a>
+							</li>
+							
+							<!-- social -->
+							<li class="nav-item">
+								<a th:if="${page == 'social' or page == 'viewProfile' or page == 'inbox'}"
+									th:href="@{/Social}" class="submit4 nav-link active">
+									<span>Social</span>
+								</a>
+								<a th:unless="${page == 'social' or page == 'viewProfile' or page == 'inbox'}"
+									th:href="@{/Social}" class="submit4">
+									<span>Social</span>
+								</a>
+							</li>
+							<!-- logs -->
+							<li class="nav-item">
+								<a th:if="${page == 'logs'}" class="submit4 nav-link active"
+									th:href="@{/viewLogs}"><span>Logs</span></a>
+								<a th:unless="${page == 'logs'}" class="submit4"
+									th:href="@{/viewLogs}"><span>Logs</span></a>
+							</li>
+							<!-- backup scheduler -->
+							<li class="nav-item">
+								<a th:if="${page == 'backup'}" class="submit4 nav-link active"
+									th:href="@{/viewLogs}"><span>Schedule Backup</span></a>
+								<a th:unless="${page == 'backup'}" class="submit4"
+									th:href="@{/scheduleBackup}"><span>Schedule Backup</span></a>
+							</li>
+							<!-- trans revenue -->
+							<li class="nav-item">
+								<a th:if="${page == 'revenue'}" class="submit4 nav-link active"
+									th:href="@{/viewRevenue}"><span>Revenue</span></a>
+								<a th:unless="${page == 'revenue'}" class="submit4"
+									th:href="@{/viewRevenue}"><span>Revenue</span></a>
+							</li>
+						</ul>
+					</div>
+					<!-- End Super Admin's Header -->
+
+					<!-- Customer Service's Header -->
+					<div th:if="${user.role} == 'ROLE_CUSTOMERSERVICE'">
+						<ul class="nav nav-pills">
+							<li class="nav-item">
+								<a th:href="@{/employee}" class="submit4 nav-link"
+									th:classappend="${page == 'begin'} ? 'active' : ''"><span>Employee Home</span></a>
+							</li>
+							<li class="nav-item">
+								<a th:href="@{/searchTickets}" class="submit4 nav-link"
+									th:classappend="${page == 'ticket'} ? 'active' : ''"><span>View User
+										Tickets</span></a>
+							</li>
+							<!-- social -->
+							<li class="nav-item">
+								<a th:if="${page == 'social' or page == 'viewProfile' or page == 'inbox'}"
+									th:href="@{/Social}" class="submit4 nav-link active">
+									<span>Social</span>
+								</a>
+								<a th:unless="${page == 'social' or page == 'viewProfile' or page == 'inbox'}"
+									th:href="@{/Social}" class="submit4">
+									<span>Social</span>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<!-- End Customer Service's Header -->
+
+					<!-- Tech Service's Header -->
+					<div th:if="${user.role} == ROLE_TECHNICALSERVICE">
+						<ul class="nav nav-pills">
+							<li class="nav-item">
+								<a th:if="${page == 'begin'}" class="submit4 nav-link active"
+									th:href="@{/employee}"><span>Employee Home</span></a>
+								<a th:unless="${page == 'begin'}" class="submit4" th:href="@{/employee}"><span>Employee
+										Home</span></a>
+							</li>
+							<li class="nav-item">
+								<a th:if="${page == 'ticket'}" class="submit4 nav-link active"
+									th:href="@{/searchTickets}"><span>View User Tickets</span></a>
+								<a th:unless="${page == 'ticket'}" class="submit4"
+									th:href="@{/searchTickets}"><span>View User Tickets</span></a>
+							</li>
+						</ul>
+					</div>
+					<!-- End Tech Service's Header -->
+
+					<!-- Help Desk Admin's Header -->
+					<div th:if="${user.role} == ROLE_HELPDESK_ADMIN">
+						<ul class="nav nav-pills">
+							<li class="nav-item">
+								<a th:if="${page == 'begin'}" class="submit4 nav-link active"
+									th:href="@{/employee}"><span>Employee Home</span></a>
+								<a th:unless="${page == 'begin'}" class="submit4" th:href="@{/employee}"><span>Employee
+										Home</span></a>
+							</li>
+							<li class="nav-item">
+								<a th:if="${page == 'ticket'}" class="submit4 nav-link active"
+									th:href="@{/searchTickets}"><span>View User Tickets</span></a>
+								<a th:unless="${page == 'ticket'}" class="submit4"
+									th:href="@{/searchTickets}"><span>View User Tickets</span></a>
+							</li>
+						</ul>
+					</div>
+					
+					<!-- Help Desk Header -->
+					<div th:if="${user.role} == ROLE_HELPDESK_REGULAR">
+						<ul class="nav nav-pills">
+							<li class="nav-item">
+								<a th:if="${page == 'begin'}" class="submit4 nav-link active"
+									th:href="@{/employee}"><span>Employee Home</span></a>
+								<a th:unless="${page == 'begin'}" class="submit4" th:href="@{/employee}"><span>Employee
+										Home</span></a>
+							</li>
+							<li class="nav-item">
+								<a th:if="${page == 'ticket'}" class="submit4 nav-link active"
+									th:href="@{/searchTickets}"><span>View User Tickets</span></a>
+								<a th:unless="${page == 'ticket'}" class="submit4"
+									th:href="@{/searchTickets}"><span>View User Tickets</span></a>
+							</li>
+						</ul>
+					</div>
+					<!-- End Help Desk Header -->
+
+					<!-- Create header for other employee roles when needed -->
+
+				</nav>
+				<!-- No Logged In User Right Justified Unordered List -->
+				<ul th:if="${user == null}" class="navbar nav ms-md-auto">
+					<li class="nav-item ms-md-auto">
+						<a class="nav-link text-white" style="font-family:'Gemunu Libre'; font-size: 1.5em"
+							th:href="@{/newUser}"> Sign Up </a>
+					</li>
+					<li class="nav-item ms-md-auto">
+						<a class="nav-link text-white" style="font-family:'Gemunu Libre'; font-size: 1.5em"
+							th:href="@{/homePage}"> Log In </a>
+					</li>
+				</ul>
+				<!-- End No Logged In User Right Justified Unordered List -->
+
+				<!-- Basic User Right Justified Unordered List -->
+				<ul th:if="${user.role} == ROLE_USER" class="navbar-nav ms-md-auto"
+					style="position: relative; z-index: 10; padding-right: 10px;">
+					<li class="nav-item pointer">
+						<div class="dropdown">
+							<a style="color:white" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+								<img th:if="${user.userImage == null}"
+									th:src="@{/images/userImages/default_user_icon.png}"
+									style="width:50px; height:50px;"></img>
+								<img th:if="${user.userImage != null}"
+									th:src="@{/images/userImages/{icon}(icon = ${user.userImage})}"
+									style="width:50px; height:50px;"></img>
+								<span style="color:white" th:text="${user.username}"></span>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+								<li>
+									<h5 class="dropdown-header">My Account</h5>
+								</li>
+								<li><a class="dropdown-item" th:href="@{/userDetails}"> Personal Info </a></li>
+								<li><a class="dropdown-item" th:href="@{/userDetails/initializePaymentDetails}"> Payment
+										Info </a></li>
+								<li><a class="dropdown-item" th:href="@{/userDetails/initializeShippingDetails}">
+										Shipping Info </a></li>
+								<li>
+									<hr class="dropdown-divider">
+									</hr>
+								</li>
+								<li><a class="dropdown-item" th:href="@{/do_the_logout}"> Log Out </a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+				<!-- Basic User Right Justified Unordered List -->
+
+				<!-- Admin Right Justified Unordered List -->
+				<ul th:if="${user.role} == ROLE_ADMIN" class="navbar-nav ms-md-auto"
+					style="position: relative; z-index: 10; padding-right: 10px;">
+					<li class="nav-item pointer">
+						<div class="dropdown">
+							<a style="color:white" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+								<img th:if="${user.userImage == null}"
+									th:src="@{/images/userImages/default_user_icon.png}"
+									style="width:50px; height:50px;"></img>
+								<img th:if="${user.userImage != null}"
+									th:src="@{/images/userImages/{icon}(icon = ${user.userImage})}"
+									style="width:50px; height:50px;"></img>
+								<span style="color:white" th:text="${user.username}"></span>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+								<li>
+									<h5 class="dropdown-header">My Account</h5>
+								</li>
+								<!-- personal info link -->
+								<li><a class="dropdown-item" th:href="@{/userDetails}"> Personal Info </a></li>
+								<li>
+									<hr class="dropdown-divider">
+									</hr>
+								</li>
+								<li><a class="dropdown-item" th:href="@{/do_the_logout}"> Log Out </a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+				<!-- End Admin Right Justified Unordered List -->
+
+				<!-- Super Admin Right Justified Unordered List -->
+				<ul th:if="${user.role} == ROLE_SUPERADMIN" class="navbar-nav ms-md-auto"
+					style="position: relative; z-index: 10; padding-right: 10px;">
+					<li class="nav-item pointer">
+						<div class="dropdown">
+							<a style="color:white" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+								<img th:if="${user.userImage == null}"
+									th:src="@{/images/userImages/default_user_icon.png}"
+									style="width:50px; height:50px;"></img>
+								<img th:if="${user.userImage != null}"
+									th:src="@{/images/userImages/{icon}(icon = ${user.userImage})}"
+									style="width:50px; height:50px;"></img>
+								<span style="color:white" th:text="${user.username}"></span>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+								<li>
+									<h5 class="dropdown-header">My Account</h5>
+								</li>
+								<!-- personal info link -->
+								<li><a class="dropdown-item" th:href="@{/userDetails}"> Personal Info </a></li>
+								<!-- paymenty info link -->
+								<li><a class="dropdown-item" th:href="@{/userDetails/initializePaymentDetails}"> Payment
+										Info </a></li>
+								<li>
+									<hr class="dropdown-divider">
+									</hr>
+								</li>
+								<li><a class="dropdown-item" th:href="@{/do_the_logout}"> Log Out </a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+				<!-- End Super Admin Right Justified Unordered List -->
+
+				<!-- Customer Service Right Justified Unordered List -->
+				<ul th:if="${user.role} == ROLE_CUSTOMERSERVICE" class="navbar-nav ms-md-auto"
+					style="position: relative; z-index: 10; padding-right: 10px;">
+					<li class="nav-item pointer">
+						<div class="dropdown">
+							<a style="color:white" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+								<img th:if="${user.userImage == null}"
+									th:src="@{/images/userImages/default_user_icon.png}"
+									style="width:50px; height:50px;"></img>
+								<img th:if="${user.userImage != null}"
+									th:src="@{/images/userImages/{icon}(icon = ${user.userImage})}"
+									style="width:50px; height:50px;"></img>
+								<span style="color:white" th:text="${user.username}"></span>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+								<li>
+									<h5 class="dropdown-header">My Account</h5>
+								</li>
+								<!-- personal info link -->
+								<li><a class="dropdown-item" th:href="@{/userDetails}"> Personal Info </a></li>
+								<!-- change info link -->
+								<li><a class="dropdown-item" th:href="@{/editUserButton/{id}(id=${user.id})}"> Change
+										Info </a></li>
+								<li>
+									<hr class="dropdown-divider">
+									</hr>
+								</li>
+								<li><a class="dropdown-item" th:href="@{/do_the_logout}"> Log Out </a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+				<!-- Customer Service Right Justified Unordered List -->
+
+				<!-- Tech Service Right Justified Unordered List -->
+				<ul th:if="${user.role} == ROLE_TECHNICALSERVICE" class="navbar-nav ms-md-auto"
+					style="position: relative; z-index: 10; padding-right: 10px;">
+					<li class="nav-item pointer">
+						<div class="dropdown">
+							<a style="color:white" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+								<img th:if="${user.userImage == null}"
+									th:src="@{/images/userImages/default_user_icon.png}"
+									style="width:50px; height:50px;"></img>
+								<img th:if="${user.userImage != null}"
+									th:src="@{/images/userImages/{icon}(icon = ${user.userImage})}"
+									style="width:50px; height:50px;"></img>
+								<span style="color:white" th:text="${user.username}"></span>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+								<li>
+									<h5 class="dropdown-header">My Account</h5>
+								</li>
+								<!-- personal info link -->
+								<li><a class="dropdown-item" th:href="@{/userDetails}"> Personal Info </a></li>
+								<!-- change info link -->
+								<li><a class="dropdown-item" th:href="@{/editUserButton/{id}(id=${user.id})}"> Change
+										Info </a></li>
+								<li>
+									<hr class="dropdown-divider">
+									</hr>
+								</li>
+								<li><a class="dropdown-item" th:href="@{/do_the_logout}"> Log Out </a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+				<!-- Tech Service Right Justified Unordered List -->
+
+				<!-- Help Desk Admin Right Justified Unordered List -->
+				<ul th:if="${user.role} == ROLE_HELPDESK_ADMIN" class="navbar-nav ms-md-auto"
+					style="position: relative; z-index: 10; padding-right: 10px;">
+					<li class="nav-item pointer">
+						<div class="dropdown">
+							<a style="color:white" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+								<img th:if="${user.userImage == null}"
+									th:src="@{/images/userImages/default_user_icon.png}"
+									style="width:50px; height:50px;"></img>
+								<img th:if="${user.userImage != null}"
+									th:src="@{/images/userImages/{icon}(icon = ${user.userImage})}"
+									style="width:50px; height:50px;"></img>
+								<span style="color:white" th:text="${user.username}"></span>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+								<li>
+									<h5 class="dropdown-header">My Account</h5>
+								</li>
+								<!-- personal info link -->
+								<li><a class="dropdown-item" th:href="@{/userDetails}"> Personal Info </a></li>
+								<!-- change info link -->
+								<li><a class="dropdown-item" th:href="@{/editUserButton/{id}(id=${user.id})}"> Change
+										Info </a></li>
+								<li>
+									<hr class="dropdown-divider">
+									</hr>
+								</li>
+								<li><a class="dropdown-item" th:href="@{/do_the_logout}"> Log Out </a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+				<!-- Help Desk Admin Right Justified Unordered List -->
+
+				<!-- Help Desk Right Justified Unordered List -->
+				<ul th:if="${user.role} == ROLE_HELPDESK_REGULAR" class="navbar-nav ms-md-auto"
+					style="position: relative; z-index: 10; padding-right: 10px;">
+					<li class="nav-item pointer">
+						<div class="dropdown">
+							<a style="color:white" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+								<img th:if="${user.userImage == null}"
+									th:src="@{/images/userImages/default_user_icon.png}"
+									style="width:50px; height:50px;"></img>
+								<img th:if="${user.userImage != null}"
+									th:src="@{/images/userImages/{icon}(icon = ${user.userImage})}"
+									style="width:50px; height:50px;"></img>
+								<span style="color:white" th:text="${user.username}"></span>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+								<li>
+									<h5 class="dropdown-header">My Account</h5>
+								</li>
+								<!-- personal info link -->
+								<li><a class="dropdown-item" th:href="@{/userDetails}"> Personal Info </a></li>
+								<!-- change info link -->
+								<li><a class="dropdown-item" th:href="@{/editUserButton/{id}(id=${user.id})}"> Change
+										Info </a></li>
+								<li>
+									<hr class="dropdown-divider">
+									</hr>
+								</li>
+								<li><a class="dropdown-item" th:href="@{/do_the_logout}"> Log Out </a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+				<!-- Help Desk Right Justified Unordered List -->
+
+				<!-- Create header for other employee roles when needed -->
+
+
+			</div>
+		</nav>
+	</th:block>
+	<th:block th:case="*">
+		<nav class="navbar navbar-expand-sm" style="background-color: #222222">
+			<div class="container-fluid">
+
+				<!-- Unbiased Left Justified Unordered List -->
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a th:href="@{/homePage}"><img th:src="@{/images/offerly-logo.png}" alt="Home"
+								style="width:64px; height:64px; border-radius: 1em;"></img></a>
+					</li>
+
+					<!-- Home -->
+					<li class="nav-item">
+						<a th:if="${page == 'home'}" th:href="@{/homePage}"
+							class="submit4 nav-link active"><span>Home</span></a>
+						<a th:unless="${page == 'home'}" th:href="@{/homePage}" class="submit4"><span>Home</span></a>
+					</li>
+					
+					<!-- Your Listings -->		
+				<li class="nav-item">
+					<a th:if="${page == 'yourListings'}" th:href="@{/yourListings}"
+						class="submit4 nav-link active"><span>Your Listings</span></a>
+					<a th:unless="${page == 'yourListings'}" th:href="@{/yourListings}"
+						class="submit4"><span>Your Listings</span></a>
+				</li>
+
+					<!-- Browse Items -->
+					<li class="nav-item">
+						<a th:if="${page == 'searchWidgetSellerMarketListing'}" th:href="@{/BrowseWidgetsButton}"
+							class="submit4 nav-link active"><span>Browse All Items</span></a>
+						<a th:unless="${page == 'searchWidgetSellerMarketListing'}" th:href="@{/BrowseWidgetsButton}"
+							class="submit4"><span>Browse All Items</span></a>
+					</li>
+
+					<!-- Sell an item -->
+					<li class="nav-item">
+						<a th:if="${page == 'addWidget'}" th:href="@{/addWidget}"
+							class="submit4 nav-link active"><span>Sell an Item</span></a>
+						<a th:unless="${page == 'addWidget'}" th:href="@{/addWidget}" class="submit4"><span>Sell an
+								Item</span></a>
+					</li>
+
+					<!-- Watchlist -->
+					<li class="nav-item">
+						<a th:if="${page == 'watchlistPage'}" th:href="@{/Watchlist}"
+							class="submit4 nav-link active"><span>Watchlist</span></a>
+						<a th:unless="${page == 'watchlistPage'}" th:href="@{/Watchlist}"
+							class="submit4"><span>Watchlist</span></a>
+					</li>
+					
+					<!-- DiscussionBoard -->
+					<li class="nav-item">
+						<a th:if="${page == 'discussionBoard'}" th:href="@{/discussionBoard}" class="submit4 nav-link active"><span>Discussion Board</span></a>
+						<a th:unless="${page == 'discussionBoard'}" th:href="@{/discussionBoard}" class="submit4"><span>Discussion Board</span></a>
+					</li>
+
+					<!-- Social -->
+					<li class="nav-item">
+						<a th:if="${page == 'social' or page == 'viewProfile' or page == 'inbox'}" th:href="@{/Social}"
+							class="submit4 nav-link active">
+							<span>Social</span>
+						</a>
+						<a th:unless="${page == 'social' or page == 'viewProfile' or page == 'inbox'}"
+							th:href="@{/Social}" class="submit4">
+							<span>Social</span>
+						</a>
+					</li>
+
+					<!-- Help -->
+					<!-- <li class="nav-item pointer" style="position: relative; z-index: 10;">
+					<a th:if="${page == 'tickets' || page == 'createTickets'}" class="submit4 nav-link dropdown-toggle active" data-bs-toggle="dropdown"><span>Need Help?</span></a>
+					<a th:unless="${page == 'tickets' || page == 'createTickets'}" class="submit4 nav-link dropdown-toggle" data-bs-toggle="dropdown"><span>Need Help?</span></a>
+					<div class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="text-align: center;">
+						<a th:if="${page == 'tickets'}" class="submit4 nav-link active" th:href="@{/tickets}"><span>My Tickets</span></a>
+	        			<a th:unless="${page == 'tickets'}" class="submit4" th:href="@{/tickets}"><span>My Tickets</span></a>
+						<a th:if="${page == 'createTickets'}" class="submit4 nav-link active" th:href="@{/createTickets}"><span>Add Ticket</span></a>
+						<a th:unless="${page == 'createTickets'}" class="submit4" th:href="@{/createTickets}"><span>Add Ticket</span></a>
+						<a th:if="${page == 'refund'}" class="submit4 nav-link active" th:href="@{/refund}"><span>Refund</span></a>
+						<a th:unless="${page == 'refund'}" class="submit4" th:href="@{/refund}"><span>Refund</span></a>
+					</div>
+				</li> -->
+					<!-- Contact Us -->
+
+					<!-- Contact Us -->
+					<!-- <li class="nav-item">
+						<a th:if="${page == 'contactUs'}" th:href="@{/contactUs}"
+							class="submit4 nav-link active"><span>Contact Us</span></a>
+						<a th:unless="${page == 'contactUs'}" th:href="@{/contactUs}"
+							class="submit4"><span>Contact Us</span></a> -->
+						<!-- <a th:href="@{/contactUs}" class="submit4 nav-link"><span>Contact Us</span></a> -->
+					<!-- </li> -->
+
+				</ul>
+				<ul class="navbar nav ms-md-auto">
+					<li class="nav-item ms-md-auto">
+						<a class="nav-link text-white" style="font-family:'Poppins'; font-size: 1.5em"
+							th:href="@{/newUser}">Sign Up</a>
+					</li>
+					<li class="nav-item ms-md-auto">
+						<a class="nav-link text-white" style="font-family:'Poppins'; font-size: 1.5em"
+							th:href="@{/login}">Log In</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		</div>
+		</nav>
+		<!-- End Guest's Header -->
+	</th:block>
+</header>
+
+</html>

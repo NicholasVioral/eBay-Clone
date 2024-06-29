@@ -1,0 +1,7 @@
+@startuml
+class ImagePacketController [[java:edu.sru.cpsc.webshopping.controller.ImagePacketController]] {
+	-packetRepo: ImagePacketRepository
+	~ImagePacketController(packetRepo: ImagePacketRepository)
+	+getImagePacketById(id: Long): ImagePacket
+}
+@enduml

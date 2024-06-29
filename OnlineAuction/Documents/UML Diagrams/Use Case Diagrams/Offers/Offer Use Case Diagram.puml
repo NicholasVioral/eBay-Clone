@@ -1,0 +1,40 @@
+@startuml
+left to right direction
+rectangle "Offers"{
+    'Creating actors'
+    rectangle "User"{
+    
+        actor Buyer  
+        actor Seller
+    }
+
+        rectangle "Employee" {
+
+            actor CustomerServiceRep
+        }
+
+        
+    rectangle "Listing" {
+
+        
+        'Use Cases for Seller'
+        Seller --> (Sell Item)
+        Seller --> (View Offers)
+        Seller --> (Send Message)
+
+
+        'Use Cases for Buyers'
+        Buyer --> (Send Message)
+        Buyer --> (View Item Listing)
+        Buyer --> (Send Offer)
+        Buyer --> (Buy Item)
+
+        'Use Cases for Customer Service Representative'
+        CustomerServiceRep -->  (Notify Users)
+        CustomerServiceRep --> (Offer Help)
+
+
+
+    }
+}
+@enduml

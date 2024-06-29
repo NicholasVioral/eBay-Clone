@@ -1,0 +1,8 @@
+@startuml
+class BackupController [[java:edu.sru.cpsc.webshopping.controller.BackupController]] {
+	-backupService: BackupService
+	-userService: UserService
+	+displayBackupPage(model: Model, principal: Principal): String
+	+scheduleBackup(date: String, time: String, repeat: String, model: Model, principal: Principal): String
+}
+@enduml

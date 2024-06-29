@@ -1,0 +1,32 @@
+@startuml
+title Refund Activity Diagram
+start
+
+:User purchases an item;
+
+if (Decides to refund?) then (yes)
+  :State reason for refund;
+  :Send refund ticket to employee page;
+else (no)
+  stop
+endif
+
+if (Employee role?) then (Admin or IT Admin)
+  :Can assign ticket to others or self;
+else (Other)
+  :Can only assign ticket to self;
+endif
+
+if (Ticket assigned to self?) then (yes)
+  if (Decide on refund) then (Accept)
+    :Notify user: Refund Accepted;
+  else (Decline)
+    :Notify user: Refund Declined;
+  endif
+else (no)
+  stop
+endif
+
+stop
+
+@enduml

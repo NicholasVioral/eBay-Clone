@@ -1,0 +1,13 @@
+@startuml
+class WidgetController [[java:edu.sru.cpsc.webshopping.controller.WidgetController]] {
+	-statControl: StatisticsDomainController
+	-widgetRepository: WidgetRepository
+	-categoryRepository: CategoryRepository
+	+addWidget(widget: Widget, result: BindingResult): Widget
+	+addWidgetnobinding(widget: Widget): Widget
+	+getWidget(id: long): Widget
+	+getAllWidgets(): Iterable<Widget>
+	+updateWidget(id: long, newWidget: Widget, result: BindingResult): Widget
+	+deleteWidget(id: long): void
+}
+@enduml

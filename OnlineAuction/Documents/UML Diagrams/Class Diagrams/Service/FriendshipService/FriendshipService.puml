@@ -1,0 +1,17 @@
+@startuml
+class FriendshipService [[java:edu.sru.cpsc.webshopping.service.FriendshipService]] {
+	-friendshipRepository: FriendshipRepository
+	-userRepository: UserRepository
+	-friendSocialRequestRepository: FriendSocialRequestRepository
+	+getAllFriendsForUser(user: User): List<User>
+	+addFriend(friendship: Friendship): void
+	+getFriendshipBetweenUsers(user1: User, userId2: Long): Friendship
+	+removeFriendship(friendship: Friendship): void
+	+sendFriendRequest(sender: User, receiver: User): boolean
+	+getPendingRequestsForUser(user: User): List<SocialFriendRequest>
+	+acceptRequest(request: SocialFriendRequest): void
+	+declineRequest(request: SocialFriendRequest): void
+	+getOutgoingPendingRequests(user: User): List<SocialFriendRequest>
+	+cancelFriendRequest(requestId: Long): void
+}
+@enduml

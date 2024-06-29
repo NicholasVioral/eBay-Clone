@@ -1,0 +1,9 @@
+@startuml
+title Verify2FA Statechart Diagram
+[*] -> Verify2FA : verification email sent
+Verify2FA -> Verify2FAError : incorrect code entered
+Verify2FA <- Verify2FAError
+Verify2FA -> UserVerified : correct code entered
+UserVerified -> [*]
+
+@enduml

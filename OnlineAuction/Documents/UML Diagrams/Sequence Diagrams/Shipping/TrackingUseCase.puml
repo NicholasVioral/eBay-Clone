@@ -1,0 +1,20 @@
+@startuml Tracking
+
+left to right direction
+
+actor Seller
+actor Buyer
+
+package "TransactionDetails" {
+    usecase "Upload Shipping Label" as UploadLabel
+    usecase "View Purchase Details" as ViewOrder
+    usecase "Track Shipping" as ViewShipping
+    usecase "No Shipping Information Uploaded" as NoShipping
+}
+
+Seller --> UploadLabel : Uploads
+Buyer --> ViewOrder : Views
+ViewOrder --> ViewShipping : <<Includes>>
+ViewShipping --> NoShipping : <<Extends>>
+
+@enduml

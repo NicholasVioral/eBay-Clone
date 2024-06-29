@@ -1,0 +1,35 @@
+@startuml
+title Login & Create Account Use Case Diagram
+actor User
+
+package "Authentication System" {
+  usecase "Login" as Login
+  usecase "Enter Username and Password" as EnterCredentials
+  usecase "Retry Credentials" as RetryCredentials
+  usecase "Redirect to Home Page" as RedirectToHome
+  usecase "Sign Up" as SignUp
+  usecase "Enter Sign Up Details" as EnterSignUpDetails
+  usecase "Verify Email" as VerifyEmail
+  usecase "Set up Shipping Address (Optional)" as SetUpShipping
+  usecase "Set up Billing Credentials (Optional)" as SetUpBilling
+  usecase "Handle Unique Username and Email" as HandleUniqueDetails
+  usecase "Handle Captcha Verification" as HandleCaptcha
+}
+
+User --> Login : chooses to
+Login --> EnterCredentials : enters
+EnterCredentials --> RedirectToHome : if valid
+EnterCredentials --> RetryCredentials : if invalid
+RetryCredentials --> EnterCredentials : retries
+User --> SignUp : chooses to
+SignUp --> EnterSignUpDetails : enters
+EnterSignUpDetails --> HandleUniqueDetails : checks uniqueness
+HandleUniqueDetails --> EnterSignUpDetails : re-enters if needed
+EnterSignUpDetails --> HandleCaptcha : completes
+HandleCaptcha --> EnterSignUpDetails : re-enters if incorrect
+EnterSignUpDetails --> SetUpShipping : optional
+EnterSignUpDetails --> SetUpBilling : optional
+EnterSignUpDetails --> VerifyEmail : proceeds to
+VerifyEmail --> User : notifies
+
+@enduml

@@ -1,0 +1,7 @@
+@startuml
+class FriendRequestController [[java:edu.sru.cpsc.webshopping.controller.FriendRequestController]] {
+	-requestRepo: FriendSocialRequestRepository
+	~FriendRequestController(requestRepo: FriendSocialRequestRepository)
+	+getAllFriendRequests(): Iterable<SocialFriendRequest>
+}
+@enduml

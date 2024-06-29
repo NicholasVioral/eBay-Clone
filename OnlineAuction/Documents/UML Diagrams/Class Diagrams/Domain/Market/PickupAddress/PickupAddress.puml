@@ -1,0 +1,22 @@
+@startuml
+class PickupAddress [[java:edu.sru.cpsc.webshopping.domain.market.PickupAddress]] {
+	-id: long
+	-streetAddress: String
+	-extraLocationInfo: String
+	-postalCode: String
+	-city: String
+	-state: StateDetails
+	+getId(): long
+	+setId(id: long): void
+	+getStreetAddress(): String
+	+setStreetAddress(streetAddress: String): void
+	+getExtraLocationInfo(): String
+	+setExtraLocationInfo(extraLocationInfo: String): void
+	+getPostalCode(): String
+	+setPostalCode(postalCode: String): void
+	+getState(): StateDetails
+	+setState(state: StateDetails): void
+	+getCity(): String
+	+setCity(city: String): void
+}
+@enduml

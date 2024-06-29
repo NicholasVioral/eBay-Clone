@@ -1,0 +1,46 @@
+@startuml
+title Login & Create Account Activity Diagram
+start
+
+:Login/Create an Account;
+
+if (Has an account?) then (yes)
+  :Click login;
+  :Enter username and password;
+  if (Credentials match?) then (yes)
+    :Redirect to home page;
+  else (no)
+    :Prompt to retry credentials;
+    repeat
+    :Enter username and password;
+    backward:Credentials match?;
+    repeat while (Credentials Incorrect)
+  endif
+else (no)
+  :Click sign up;
+  :Enter name, email, security questions, password, and captcha;
+  while (Username not unique?)
+    :Re-enter username;
+    :Enter details again;
+  endwhile
+  while (Email not unique?)
+    :Re-enter email;
+    :Enter details again;
+  endwhile
+  while (Captcha incorrect?)
+    :Prompt new captcha;
+    :Enter details again;
+  endwhile
+  :Set up shipping address (optional);
+  :Set up billing credentials (optional);
+  :Send verification code to email;
+  :User enters verification code on verify page;
+  if (Correct code and username?) then (yes)
+    :Email verified, account ready;
+  else (no)
+    :Account not usable yet;
+  endif
+endif
+
+stop
+@enduml

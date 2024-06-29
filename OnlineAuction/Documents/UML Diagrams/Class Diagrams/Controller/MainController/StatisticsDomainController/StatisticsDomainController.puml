@@ -1,0 +1,14 @@
+@startuml
+class StatisticsDomainController [[java:edu.sru.cpsc.webshopping.controller.StatisticsDomainController]] {
+	-Statisticsrepository: StatsRepository
+	-entityManager: EntityManager
+	+StatisticsDomainController(Statisticsrepository: StatsRepository)
+	+getStatistics(id: long): Statistics
+	+getStatisticsByHour(date1: LocalDateTime, date2: LocalDateTime, category: StatsCategory): Statistics[]
+	+addStatistics(Statistics: Statistics, result: BindingResult): void
+	+addStatistics(Statistics: Statistics): void
+	+getStatsByCategory(category: StatsCategory): Statistics[]
+	+getStatsByDate(date: LocalDateTime): Statistics[]
+	+deleteStatistics(id: long): void
+}
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+class SocialFriendRequest [[java:edu.sru.cpsc.webshopping.domain.misc.SocialFriendRequest]] {
+	-id: Long
+	-sender: User
+	-receiver: User
+	-status: FriendStatus
+	+getId(): Long
+	+setId(id: Long): void
+	+getSender(): User
+	+setSender(sender: User): void
+	+getReceiver(): User
+	+setReceiver(receiver: User): void
+	+getStatus(): FriendStatus
+	+setStatus(status: FriendStatus): void
+}
+@enduml

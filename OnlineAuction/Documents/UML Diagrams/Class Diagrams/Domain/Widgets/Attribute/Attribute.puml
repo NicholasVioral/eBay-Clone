@@ -1,0 +1,18 @@
+@startuml
+class Attribute [[java:edu.sru.cpsc.webshopping.domain.widgets.Attribute]] {
+	-id: long
+	-attributeKey: String
+	-dataType: AttributeDataType
+	-categories: List<AttributeRecommendation>
+	+Attribute()
+	+Attribute(name: String, dataType: AttributeDataType)
+	+getId(): long
+	+setId(id: long): void
+	+getAttributeKey(): String
+	+setAttributeKey(attributeKey: String): void
+	+getDataType(): AttributeDataType
+	+setDataType(dataType: AttributeDataType): void
+	+getCategories(): List<AttributeRecommendation>
+	+setCategories(categories: List<AttributeRecommendation>): void
+}
+@enduml

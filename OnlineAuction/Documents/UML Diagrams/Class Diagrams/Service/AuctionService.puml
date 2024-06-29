@@ -1,0 +1,21 @@
+@startuml
+
+class AuctionService {
+  - auctionRepository: AuctionRepository
+  - bidRepository: BidRepository
+  - autoBidRepository: AutoBidRepository
+  - statControl: StatisticsDomainController
+  + saveAuction(auction: Auction): Auction
+  + bid(auction: Auction, user: User, bidAmount: BigDecimal): Bid
+  + autoBid(auction: Auction, user: User, maxBid: BigDecimal): AutoBid
+  + removeAutoBid(id: long): void
+  + getAutoBidsForListing(auction: Auction): List<AutoBid>
+  + findUniqueBiddersForListing(marketListing: MarketListing): Set<User>
+  + countUniqueBiddersForListing(marketListing: MarketListing): int
+  + getTotalBidsForListing(marketListing: MarketListing): int
+  + getAllAuctions(): List<Auction>
+  + findHighestBidForAuction(auction: Auction): Bid
+  + getAllBidsForListing(marketListing: MarketListing): List<Bid>
+}
+
+@enduml

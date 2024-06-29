@@ -1,0 +1,27 @@
+@startuml
+
+
+state Offer {
+[*] --> OfferAmount
+
+
+OfferAmount -> RejectOffer
+OfferAmount : User sends offer
+
+RejectOffer -> OfferAmount : User can offer again
+RejectOffer : Seller rejects offer
+
+OfferAmount -> AcceptOffer
+AcceptOffer : Seller accepts offer
+
+    state PurchasePage{
+        AcceptOffer --> BuyItem : User can purchase item at new price
+        BuyItem : User can buy item
+
+        [*] --> BuyItem
+        BuyItem --> [*]
+    }
+
+
+}
+@enduml

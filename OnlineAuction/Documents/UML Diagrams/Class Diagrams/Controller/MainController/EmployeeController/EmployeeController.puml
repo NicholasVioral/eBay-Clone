@@ -1,0 +1,137 @@
+@startuml
+class EmployeeController [[java:edu.sru.cpsc.webshopping.controller.EmployeeController]] {
+	~userService: UserService
+	-notificationRepository: NotificationRepository
+	-notificationService: NotificationService
+	-refundService: RefundService
+	-transactionService: TransactionService
+	-revenueController: RevenueController
+	-userController: UserController
+	-appControl: ApplicantDomainController
+	-market: MarketListingDomainController
+	-widgetController: WidgetController
+	-appRepo: ApplicantRepository
+	-email: EmailController
+	-statControl: StatisticsDomainController
+	-ticketService: TicketService
+	-userRepository: UserRepository
+	-emailController: EmailController
+	-widgetRepository: WidgetRepository
+	-categories: CategoryController
+	-categoryService: CategoryService
+	-page: String
+	-mailboxPage: String
+	-page2: String
+	-page3: String
+	-masterPage: String
+	-pageSuccess: String
+	-myUserSearch: User[]
+	-searchedUserListings: List<MarketListing>
+	-searchedUserWidgets: List<Widget>
+	-searchedUserSellers: List<User>
+	-allUsers: List<User>
+	-allWidgets: List<Widget>
+	-allSellers: List<User>
+	-allMarketListings: List<MarketListing>
+	-watchlistItems: List<MarketListing>
+	-allApplicants: List<Applicant>
+	-reviewedApplicants: List<Applicant>
+	-newApplicants: List<Applicant>
+	-allMessages: List<Message>
+	-applicantPage: int
+	-searchedUser: User
+	-searchedWidget: Widget
+	-searchedMarket: MarketListing
+	-searchedSeller: User
+	-singleWidgetCheck: boolean
+	+search: String
+	~roleList: List<String>
+	~CategoryList: List<StatsCategory>
+	~dateList: List<String>
+	+preLoad(model: Model): void
+	+preLoad2(model: Model): void
+	+preLoad3(model: Model): void
+	+statButton(model: Model, principal: Principal): String
+	+StatisticsButton(date: String, category: StatsCategory, model: Model, principal: Principal): String
+	+showEmployeePage(model: Model, principal: Principal): String
+	+backButton(model: Model, principal: Principal): String
+	+createEmp(useradd: User, result: BindingResult, role: String, model: Model, principal: Principal): String
+	+createButton(model: Model, principal: Principal): String
+	+cancelButton(model: Model, principal: Principal): String
+	+searchButton(model: Model, principal: Principal): String
+	+searchWidgetButton(model: Model, principal: Principal): String
+	+widgetsInfo(model: Model, principal: Principal): String
+	+downloadDataFile(response: HttpServletResponse, Category: Category): void
+	+watchlist(model: Model, principal: Principal): String
+	+searchMessageButton(model: Model, principal: Principal): String
+	+searchApplicationsButton(id: int, model: Model, principal: Principal): String
+	+searchTickets(model: Model, principal: Principal): String
+	+searchTickets(id: Long, model: Model, principal: Principal): String
+	+getTicketsPage(id: Long, userName: String, model: Model, principal: Principal): String
+	+assignRefundTicket(id: Long, userName: String, model: Model, principal: Principal): String
+	+refundTicketDetails(id: Long, model: Model, principal: Principal): String
+	+getTicketsPage(id: Long, message: Message, model: Model, principal: Principal, redirectAttributes: RedirectAttributes): String
+	+acceptRefundTicket(refundTicketId: Long, fullRefund: boolean, redirectAttributes: RedirectAttributes): String
+	+rejectRefundTicket(refundTicketId: Long, redirectAttributes: RedirectAttributes): String
+	+resolveTicket(id: Long, model: Model, principal: Principal): String
+	+editUserButton(id: int, model: Model, principal: Principal): String
+	+editUser(id: Long, userName: String, password: String, passwordConf: String, email: String, fName: String, lName: String, phoneNumber: String, cc: String, role: String, emailVerification: String, dispName: String, userDesc: String, creationDate: String, status: String, model: Model, principal: Principal): String
+	+editWidget(widgetId: String, widgetName: String, widgetDesc: String, widgetCat: String, sellerName: String, marketId: String, marketQty: String, marketPrice: String, model: Model, principal: Principal): String
+	+escalateApplication(id: int, id2: int, model: Model, principal: Principal): String
+	+searchuser(userName: String, filterUser: String, model: Model, principal: Principal): String
+	+searchUserById(id: int, model: Model, principal: Principal): String
+	+searchMarketListingButton(id: int, model: Model, principal: Principal): String
+	+searchListing(id: int, model: Model, principal: Principal): String
+	+searchOneListing(name: String, filter: String, model: Model, principal: Principal): String
+	+getPage(): String
+	+setPage(page: String): void
+	+getPage2(): String
+	+setPage2(page2: String): void
+	+getSearchedUser(): User
+	+setSearchedUser(searchedUser: User): void
+	+getMailboxPage(): String
+	+setMailboxPage(mailboxPage: String): void
+	+getAllUsers(): List<User>
+	+setAllUsers(allUsers: List<User>): void
+	+getAllApplicants(): List<Applicant>
+	+setAllApplicants(allApplicants: List<Applicant>): void
+	+getMyUserSearch(): User[]
+	+setMyUserSearch(myUserSearch: User[]): void
+	+getAllWidgets(): List<Widget>
+	+setAllWidgets(allWidgets: List<Widget>): void
+	+getAllSellers(): List<User>
+	+setAllSellers(allSellers: List<User>): void
+	+getAllMarketListings(): List<MarketListing>
+	+setAllMarketListings(allMarketListings: List<MarketListing>): void
+	+getAllMessages(): List<Message>
+	+setAllMessages(allMessages: List<Message>): void
+	+getSearchedUserListings(): List<MarketListing>
+	+getWatchlistItems(): List<MarketListing>
+	+getSearchedUserWidgets(): List<Widget>
+	+getSearchedUserSellers(): List<User>
+	+setSearchedUserListings(searchedUserListings: List<MarketListing>): void
+	+setSearchedUserWidgets(searchedUserWidgets: List<Widget>): void
+	+setSearchedUserSellers(searchedUserSellers: List<User>): void
+	+getReviewedApplicants(): List<Applicant>
+	+getNewApplicants(): List<Applicant>
+	+setReviewedApplicants(reviewedApplicants: List<Applicant>): void
+	+setNewApplicants(newApplicants: List<Applicant>): void
+	+getApplicantPage(): int
+	+setApplicantPage(applicantPage: int): void
+	+getPageSuccess(): String
+	+setPageSuccess(pageSuccess: String): void
+	+getMasterPage(): String
+	+setMasterPage(masterPage: String): void
+	+getSearchedWidget(): Widget
+	+getSearchedMarket(): MarketListing
+	+getSearchedSeller(): User
+	+setSearchedWidget(searchedWidget: Widget): void
+	+setSearchedMarket(searchedMarket: MarketListing): void
+	+setSearchedSeller(searchedSeller: User): void
+	+isSingleWidgetCheck(): boolean
+	+setSingleWidgetCheck(singleWidgetCheck: boolean): void
+	+getPage3(): String
+	+setPage3(page3: String): void
+	+EmployeeController(userController: UserController, appControl: ApplicantDomainController, market: MarketListingDomainController, widgetController: WidgetController, appRepo: ApplicantRepository, email: EmailController, statControl: StatisticsDomainController, ticketService: TicketService, userRepository: UserRepository, emailController: EmailController, widgetRepository: WidgetRepository, categories: CategoryController)
+}
+@enduml

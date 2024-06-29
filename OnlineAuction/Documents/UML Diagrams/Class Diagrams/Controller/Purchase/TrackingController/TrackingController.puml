@@ -1,0 +1,9 @@
+@startuml
+
+  class TrackingController {
+    - shippoTrackingService: ShippoTrackingService
+    - transController: TransactionController
+    + getTrackingInformation(transId: long): TrackDTO
+  }
+
+@enduml

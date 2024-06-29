@@ -1,0 +1,19 @@
+@startuml
+title Friends Use Case Diagram
+actor User
+actor "Other User" as OtherUser
+
+package "Friends" {
+  usecase "View Friend Profile" as ViewProfile
+  usecase "Message Friend" as MessageFriend
+  usecase "Remove Friend" as RemoveFriend
+}
+
+User --> ViewProfile : views profile
+User --> MessageFriend : messages
+User --> RemoveFriend : removes friend
+OtherUser --> ViewProfile : views profile
+OtherUser --> MessageFriend : messages
+OtherUser --> RemoveFriend : removes friend
+
+@enduml

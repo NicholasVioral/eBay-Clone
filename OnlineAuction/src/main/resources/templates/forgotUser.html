@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>Forgot User Account</title>
+        
+        <!-- font import -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+        
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+        
+        <link th:href="@{/styles/login.css}" rel="stylesheet" />
+    </head>
+    <body>
+    	<div>
+ 			<div>
+ 				<th:block th:switch="${page}">
+ 					<div th:case="email">
+ 						<div class="d-flex flex-column" id="center">
+		    				<div class="card w-25 shadow bg-light mx-3 mt-3 mb-3">
+								<div class="card-header"><b>Please enter the email address associated with your account.</b></div>
+								<div class="card-body d-flex flex-column">
+		       						<form th:action="@{/findUser}"  method="post">
+				    					<label for="email">Email</label>
+										<input type="text" name="email"/>
+										<input type="submit" class="btn btn-outline-success me-1" value="Search">
+										<a class="btn btn-outline-danger ms-1" style="margin-right: 10px" th:href="@{/index}"><span>Back</span></a> 
+									</form>
+		       					</div>
+		    				</div>
+						</div>
+					</div>
+					<div th:case="findUserFail" class="d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+					    <div class="card w-25 shadow bg-light mx-3 mt-3 mb-3">
+					        <div class="card-header"><b>Let's Recover Your Account</b></div>
+					        <div class="card-body d-flex flex-column align-items-center">
+					            <form th:action="@{/findUser}" method="post">
+					                <p>That email address is not associated with an account</p>
+					                <label for="email">Email</label>
+					                <input type="text" name="email"/>
+					                <input type="submit" class="btn btn-outline-success me-1" value="Search">
+					                <a class="btn btn-outline-danger ms-1" style="margin-right: 10px" th:href="@{/index}"><span>Back</span></a>
+					            </form>
+					        </div>
+					    </div>
+					</div>
+					<div th:case="user" class="d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+					    <div class="card w-50 shadow bg-light mx-3 mt-3 mb-3">
+					        <div class="card-header text-center">
+					            <b>An email with your username has been sent to <span th:text="${maskedEmail}"></span></b>
+					        </div>
+					        <div class="card-body d-flex flex-column align-items-center">
+					            <a class="btn btn-outline-danger ms-1" th:href="@{/index}"><span>Back</span></a>
+					        </div>
+					    </div>
+					</div>
+    					<div th:case="pass">
+ 							<div class="d-flex flex-column">
+		    					<div class="card w-25 shadow bg-light mx-3 mt-3 mb-3" id="center">
+									<div class="card-header"><b>Please answer your security question</b></div>
+										<div class="card-body d-flex flex-column">
+											<form th:action="@{/answerQuestion}"  method="post">
+												<label for="answerQ" th:text="${question}"></label>
+												<input type="text" name="answer"/>
+												<input type="submit" class="btn btn-outline-success me-1" value="Answer">
+											</form>
+										</div>
+								</div>
+							</div>
+    					</div>
+    					<div th:case="wrong">
+ 							<div class="d-flex flex-column">
+		    					<div class="card w-25 shadow bg-light mx-3 mt-3 mb-3" id="center">
+									<div class="card-header"><b>Please answer your security question</b></div>
+										<div class="card-body d-flex flex-column">
+											<form th:action="@{/answerQuestion}"  method="post">
+												<label for="answer" th:text="${question}"></label>
+												<p> That answer was not a match </p>
+												<input type="text" name="answer"/>
+												<input type="submit" class="btn btn-outline-success me-1" value="Answer">
+											</form>
+										</div>
+								</div>
+							</div>
+    					</div>
+    					<div th:case="reset">
+    						<div class="d-flex flex-column">
+		    					<div class="card w-25 shadow bg-light mx-3 mt-3 mb-3" id="center">
+									<div class="card-header"><b>reset password</b></div>
+										<div class="card-body d-flex flex-column">
+											<form th:action="@{/resetPassword}"   method="post">
+												<label for="pass">Please enter a new password</label>
+												<input type="text" name="pass"/>
+												<label for="passC">Please re-enter password</label>
+												<input type="text" name="passC"/>
+												<input id = "pwordresetbutton" class="btn btn-outline-success me-1" type="submit" value="Reset Password" > 
+											</form>
+										</div>
+								</div>
+							</div>
+    					</div>
+     					<div th:case="resetfail">
+     						<div class="d-flex flex-column">
+		    					<div class="card w-25 shadow bg-light mx-3 mt-3 mb-3" id="center">
+									<div class="card-header"><b>Please enter matching passwords with a length of at least 6 characters.</b></div>
+										<div class="card-body d-flex flex-column">
+											<form th:action="@{/resetPassword}"   method="post">
+												<label for="pass">Please enter a new password</label>
+												<input type="text" name="pass"/>
+												<label for="passC">Please re-enter password</label>
+												<input type="text" name="passC"/>
+												<input id = "pwordresetbutton" class="btn btn-outline-success me-1" type="submit" value="Reset Password" > 
+											</form>
+										</div>
+								</div>
+							</div>
+  						</div>
+ 						<div th:case="resetSuccess" id="center">
+ 							<p> Your password has been updated</p>
+ 							<a class="submit" th:href="@{/index}" ><span>Return</span></a><br>
+    					</div>
+				</th:block>
+ 			</div>
+ 	 	</div>
+    </body>
+</html>

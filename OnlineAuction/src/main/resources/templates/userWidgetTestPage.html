@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="ISO-8859-1">
+		<title> User Test Page </title>
+	</head>
+	<body>
+		<form action="#" th:action="@{/add-user-test}" th:object="${user}" method="post">
+			<label for="userName">User Name</label>
+			<input type="text" th:field="*{userName}" id="userName" placeholder="Username">
+			<label for="email">Email</label>
+			<input type="text" th:field="*{email}" id="email" placeholder="Email">
+			<label for="userDescription">User Description</label>
+			<input th:field="*{userDescription}" id="userDescription" placeholder="User Description">
+			<label for="creationDate">Creation Date</label>
+			<input type="date" th:field="*{creationDate}" id="creationDate" placeholder="01/01/2022">
+			<input type="submit" value="Add New User">
+		</form>
+		
+		<div th:switch="${users}">
+			<table>
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>User Name</th>
+						<th>Email</th>
+						<th>User Description</th>
+						<th>Creation Date</th>
+						<th>Delete</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="currUser : ${users}">
+						<td th:text="${currUser.id}"></td>
+						<td th:text="${currUser.userName}"></td>
+						<td th:text="${currUser.email}"></td>
+						<td th:text="${currUser.userDescription}"></td>
+						<td th:text="${currUser.creationDate}"></td>
+						<td><a th:href="@{/delete-user-test/{id}(id=${currUser.id})}">Delete User</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<form action="#" th:action="@{/add-widget-test}" th:object="${widget}" method="post">
+			<label for="widgetName">Widget Name</label>
+			<input type="text" th:field="*{name}" id="name" placeholder="Widget Name">
+			<input type="submit" value="Add New Widget">
+		</form>
+		
+		<div th:switch="${widgets}">
+			<table>
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Widget Name</th>
+						<th>Delete</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="currWidget : ${widgets}">
+						<td th:text="${currWidget.id}"></td>
+						<td th:text="${currWidget.name}"></td>
+						<td><a th:href="@{/delete-widget-test/{id}(id=${currWidget.id})}">Delete Widget</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>

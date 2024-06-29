@@ -1,0 +1,23 @@
+@startuml
+class Statistics [[java:edu.sru.cpsc.webshopping.domain.user.Statistics]] {
+	~category: StatsCategory
+	-id: long
+	-description: String
+	-value: float
+	-date: LocalDateTime
+	-hour: int
+	+Statistics()
+	+Statistics(cat: StatsCategory, value: float)
+	+getId(): long
+	+setId(id: long): void
+	+getValue(): float
+	+setValue(value: float): void
+	+getDate(): LocalDateTime
+	+setDate(date: LocalDateTime): void
+	+getHour(): int
+	+setHour(): void
+	+getDescription(): String
+	+setDescription(description: String): void
+	+getCategory(): StatsCategory
+}
+@enduml

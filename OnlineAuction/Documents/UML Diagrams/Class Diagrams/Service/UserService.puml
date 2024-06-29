@@ -1,0 +1,17 @@
+@startuml
+
+class UserService {
+  - userRepository: UserRepository
+  - userController: UserController
+  + UserService(userRepository: UserRepository)
+  + updateUserProfile(userId: Long, user: User): User
+  + addUser(user: User): User
+  + deleteUser(userId: Long): void
+  + getUserById(userId: Long): User
+  + getUserByUsername(username: String): User
+  + rateUser(userId: Long, rating: float): User
+  + getAllUsers(): List<User>
+  + searchUsers(query: String, filterType: String): List<User>
+}
+
+@enduml

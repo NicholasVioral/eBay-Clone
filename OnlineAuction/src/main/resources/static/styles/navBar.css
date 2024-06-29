@@ -1,0 +1,77 @@
+@charset "ISO-8859-1";
+/*margin-bottom in the header element keeps the content of the page below the navigation bar.*/
+header {
+	margin-bottom: 56px;
+}
+
+#text {
+	color: #DEE2E6;
+}
+
+.ul1 {
+	list-style-type: none;
+	top: 0;
+	margin-left: -8px;
+	margin-top:0;
+	font-family: 'Poppins';
+	padding: 0;
+	position: fixed;
+	z-index: 1;
+	overflow: hidden;
+	background-color: rgb(25,41,77);
+	height: 64px;
+	width: 100%;
+	max-width:100%;  
+}
+
+li {
+	float: left;
+}
+
+/*Having different selectors (.img and .reg) allows for the text in li.reg elements to be padded downwards to
+the center of the navigation bar without affecting the positioning of the image in the li.img element. */
+.li-img a img {
+	display: block;
+	height: 64px;
+	width: 64px;
+	margin-left: 6px;
+}
+
+.li-reg a {
+  display: block;
+  color: white;
+  height: 64px;
+  width: 64px;
+  text-align: center;
+  font-size: 1.3em;
+  padding: 16px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+}
+
+.active {
+  background-color: #04AA6D;
+}
+
+.ul2 {
+	list-style-type: none;
+  	margin: 340px 0px -15px 0px;
+  	position: static;
+  	overflow: hidden;
+  	background-color: rgb(25,41,77);;
+  	height: auto;
+  	width: 100%;
+}
+
+.li2 a:hover {
+  background-color: #111;
+}
+
+footer {
+	position: absolute;
+	bottom: 0;
+	width:100%;
+}

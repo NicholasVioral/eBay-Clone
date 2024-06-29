@@ -1,0 +1,8 @@
+@startuml
+
+class PaymentService {
+  - directDepositDetailsRepository: DirectDepositDetailsRepository
+  + getDirectDepositDetails(id: long): DirectDepositDetails
+}
+
+@enduml

@@ -1,0 +1,50 @@
+@startuml
+title Group Operations via Social Page
+
+actor          User                                         as user
+participant    "Social Page (Frontend)"                    as socialPage
+participant    "GroupService (Backend)"                    as groupService
+database       "GroupRepository"                           as groupRepository
+database       "UserRepository"                            as userRepository
+
+== Create Group ==
+user            -> socialPage                              : Selects friends and group details
+socialPage       -> groupService                           : createGroup(groupDetails, memberIds)
+groupService     -> groupRepository                        : save(group)
+groupRepository  --> groupService                          : Confirm group saved
+groupService     -> userRepository                         : addMembersToGroup(groupId, memberIds)
+userRepository   --> groupService                          : Members added
+groupService     --> socialPage                            : Display "Group created successfully"
+socialPage       --> user                                  : User sees confirmation message
+
+== Edit Group ==
+user            -> socialPage                              : Initiates group edit
+socialPage       -> groupService                           : editGroup(groupId, changes)
+groupService     -> groupRepository                        : findGroupById(groupId)
+groupRepository  --> groupService                          : return group details
+groupService     -> groupRepository                        : updateGroup(groupId, changes)
+groupRepository  --> groupService                          : Confirm group updated
+groupService     --> socialPage                            : Display "Group updated successfully"
+socialPage       --> user                                  : User sees update confirmation
+
+== Archive Group ==
+user            -> socialPage                              : Requests to archive group
+socialPage       -> groupService                           : archiveGroup(groupId)
+groupService     -> groupRepository                        : findGroupById(groupId)
+groupRepository  --> groupService                          : return group details
+groupService     -> groupRepository                        : setGroupStatus(groupId, "archived")
+groupRepository  --> groupService                          : Confirm group archived
+groupService     --> socialPage                            : Display "Group archived successfully"
+socialPage       --> user                                  : User sees archival confirmation
+
+== Unarchive Group ==
+user            -> socialPage                              : Requests to unarchive group
+socialPage       -> groupService                           : unarchiveGroup(groupId)
+groupService     -> groupRepository                        : findGroupById(groupId)
+groupRepository  --> groupService                          : return group details
+groupService     -> groupRepository                        : setGroupStatus(groupId, "active")
+groupRepository  --> groupService                          : Confirm group unarchived
+groupService     --> socialPage                            : Display "Group unarchived successfully"
+socialPage       --> user                                  : User sees unarchival confirmation
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+title Group Operations State Diagram
+
+[*] -right-> Creation : Initiate
+Creation --> Created : Create Group
+Created --> Archived : Archive Group
+Archived --> Created : Unarchive Group
+Created --> Deleted : Delete Group
+Archived --> Deleted : Delete Group
+
+state Creation {
+    [*] --> Created : Group is initiated
+}
+
+state Created {
+    Created : Group is active
+}
+
+state Archived {
+    Archived : Group is read-only
+}
+
+state Deleted {
+    Deleted : Group is permanently removed
+}
+
+@enduml
+
+
+
+
+

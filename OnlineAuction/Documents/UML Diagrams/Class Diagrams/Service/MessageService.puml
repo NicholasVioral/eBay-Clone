@@ -1,0 +1,13 @@
+@startuml
+
+class MessageService {
+  - messageRepository: MessageSocialRepository
+  + getAllMessagesForUser(user: User): List<SocialMessage>
+  + getAllMessagesForUser(user1: User, user2: User): List<SocialMessage>
+  + getUnreadMessagesForUser(recipient: User): List<SocialMessage>
+  + markMessageAsRead(message: SocialMessage): void
+  + markMessageAsDelivered(message: SocialMessage): void
+  + saveMessage(message: SocialMessage): SocialMessage
+}
+
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+
+class AttributeService {
+  - attributeRepository: AttributeRepository
+  - attributeRecommendationRepository: AttributeRecommendationRepository
+  + addOrGetAttribute(attributeKey: String, dataType: AttributeDataType): Attribute
+  + associateAttributeWithCategory(attributeName: String, dataType: String, category: Category): Attribute
+  - isAttributeAssociatedWithCategory(attribute: Attribute, category: Category): boolean
+  + removeAssociationIfRecommendationIsZero(attribute: Attribute, category: Category): void
+  + updateRecommendationLevel(attribute: Attribute, category: Category, delta: Integer): void
+}
+
+@enduml

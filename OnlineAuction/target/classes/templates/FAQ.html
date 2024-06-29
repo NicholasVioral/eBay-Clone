@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>FAQ</title>
+        <link th:href="@{/styles/faq.css}" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+	    <div class="d-flex flex-column">
+		    <div class="card w-50 shadow bg-light mt-3 mb-3" style="margin: auto;">
+				<div class="card-header"><b>Does Offerly sell my data?</b></div>
+				<div class="card-body d-flex flex-column">
+		       		<p>No, all data is secured via database. </p>
+		       	</div>
+		    </div>
+		    <div class="card w-50 shadow bg-light mb-3" style="margin: auto;">
+				<div class="card-header"><b>How do I report an incident?</b></div>
+				<div class="card-body d-flex flex-column">
+		       		<p>Incidents can be reported by submitting a "ticket" in the Tickets section of your Homepage.</p>
+		       	</div>
+		    </div>
+		    <div class="card w-50 shadow bg-light mb-3" style="margin: auto;">
+				<div class="card-header"><b>What if I forget my user information?</b></div>
+				<div class="card-body d-flex flex-column">
+		       		<p>There are multiple tools for recovering account information</p>
+		 			<p>On the login screen one can recover their username and password by clicking "Forgot username?" or "Forgot password?"</p>
+		 			<p>If you cannot remember your email address that is associated with your account then you will need to submit a ticket and our customer service will work with you on restoring your account. </p>
+		       	</div>
+		    </div>
+		</div>	
+	 	<div class="d-flex mb-3">
+	 		<a class="btn btn-outline-danger" onclick="history.back()" style="margin: auto;">Back</a>
+	 	</div>
+    </body>
+</html>

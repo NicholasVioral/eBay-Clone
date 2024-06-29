@@ -1,0 +1,31 @@
+@startuml
+title Bidding Use Case Diagram
+left to right direction
+
+actor   User       as user
+actor   Database   as db
+
+package Offerly {
+	usecase "View listing"                as viewListing
+	usecase "Check for auction"           as expired
+	usecase "Place bid"                   as placeBid
+	usecase "Manual bid"                  as manualBid
+	usecase "Auto bid"                    as autoBid
+	usecase "Enter one time bid amount"   as oneTimeBid
+	usecase "Enter maximum bid amount"    as maxBid
+	usecase "Add to watchlist"            as addWatchlist
+	usecase "Set new bid price"           as setBid
+}
+
+user          --> viewListing
+viewListing   --> expired      : <<includes>>
+viewListing   --> placeBid     : Click
+placeBid      <-- manualBid    : <<extend>>
+placeBid      <-- autoBid      : <<extend>>
+manualBid     <-- oneTimeBid
+autoBid       <-- maxBid
+placeBid      --> addWatchlist
+placeBid      --> setBid
+setBid        --> db
+
+@enduml

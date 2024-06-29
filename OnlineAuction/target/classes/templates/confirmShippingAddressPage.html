@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<!-- The postal code can accept any number and is not specifically entered. 
+	 Should probably entail some type of log to keep track of fraud-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="ISO-8859-1">
+		<link th:href="@{/styles/button.css}" rel="stylesheet"/>
+		<link th:href="@{/styles/landing.css}" rel="stylesheet"/>
+		<link th:href="@{/styles/employee_page.css}" rel="stylesheet"/>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+		<!-- used a solution from https://stackoverflow.com/questions/9894339/disallow-twitter-bootstrap-modal-window-from-closing by AymKdn and edited by Peter Mortensen which stops users from clicking out of the modal after having entered their login information -->
+		<!-- https://teamtreehouse.com/community/keep-a-modal-window-open-after-form-submission helped me figure out that I should load the modal when the page reloads to keep it open after submissions / to show errors -->
+		<script th:inline="javascript"> 
+	       /*<![CDATA[*/
+	       		var relogin = /*[[${relogin}]]*/'';
+	       		var loginEr = /*[[${loginEr}]]*/'';
+	       		
+	    	   if(relogin == false || loginEr == true)
+	    		   {
+	    		   $(window).on('load', function() {
+	    			   $('#shippingModal').removeData("modal").modal({backdrop: 'static', keyboard: false});
+	    		        $('#shippingModal').modal('show');
+	    		    });
+	    		   }
+		  /*]]>*/
+	      </script>
+		<title>Confirm Shipping Information</title>
+		<style>
+			#page {
+				display: flex;
+				height: calc(100vh - 60px);
+			}
+			
+			#website-title {
+				margin-left: 8px;
+				margin-right: 8px;
+				font-size: 12px;
+			}
+			table.uniTableForm td{
+				height:50px;
+				border: 2px solid black;
+				border-color: black;
+			}
+			.buttonCancel{
+				margin-right: 4px;
+				border-radius: 12px;
+				color: black;
+				background-color: red;
+				border-color: black;
+				font-size: 15px;
+			}
+			
+			.buttonCancel:hover{
+				background-color: #8B0000;
+			}
+			
+			.buttonPurchase{
+				margin-right: 4px;
+				border-radius: 12px;
+				color: black;
+				background-color: #0BDA51;
+				border-color: black;
+				font-size: 15px
+			}
+			
+			.buttonPurchase:hover{
+				background-color: #009E60;
+			}
+		</style>
+	</head>
+	
+<body>
+	
+	
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+		<div id="page">
+			<div th:fragment="confirmShippingAddressPage" style="border:none;" class="card mx-auto h-100 w-100">
+				<div class="card-body" style="padding-top: 24px;">
+					<div id="shipping-details">
+					<div th:if="${savedShippingDetails != null}">
+								<div class="d-flex justify-content-center">
+									<h2>Current Shipping Details</h2>
+								</div>
+								<form method="post" action="#" class="row g-3 d-flex justify-content-center my-2"
+										th:action="@{/confirmShipping/existingAddress}">
+								<ul class="radio-button">
+								<li style="margin-bottom: 4px;" th:if="${defaultShippingDetails != null}" class="d-flex justify-content-center">
+									<input type="radio" th:id="${defaultShippingDetails.id}" name="selected_shipping_details" th:value="${defaultShippingDetails.id}" checked>
+									<label style="font-size: 1.17em; font-weight: bolder;" th:for="${defaultShippingDetails.id}" th:inline="text">
+									Default:&nbspAddress:&nbsp[[${defaultShippingDetails.streetAddress}]],&nbsp[[${defaultShippingDetails.city}]],&nbsp[[${defaultShippingDetails.state.stateName}]],&nbsp[[${defaultShippingDetails.postalCode}]]							
+									</label>
+									<a style="margin-left:5px; margin-right: 5px;" class="btn btn-lg btn-success" th:href="@{/confirmShipping/updateShippingDetails/{id}(id = ${defaultShippingDetails.id})}">Edit</a>
+								</li>
+								<th:block th:if="${defaultShippingDetails == null}">
+								<li style="margin-bottom: 4px;" th:each="detail: ${savedShippingDetails}" class="d-flex justify-content-center">
+									<input type="radio" th:id="${detail.id}" name="selected_shipping_details" th:value="${detail.id}"></input>
+									<label style="font-size: 1.17em; font-weight: bolder;" th:for="${detail.id}" th:inline="text">
+									Address:&nbsp[[${detail.streetAddress}]],&nbsp[[${detail.city}]],&nbsp[[${detail.state.stateName}]],&nbsp[[${detail.postalCode}]]							
+									</label>
+									<a style="margin-left:5px; margin-right: 5px;" class="btn btn-lg btn-success" th:href="@{/confirmShipping/updateShippingDetails/{id}(id = ${detail.id})}">Edit</a>
+								</li>
+								</th:block>
+								
+								<th:block th:unless="${defaultShippingDetails == null}">
+								<li style="margin-bottom: 4px;" th:each="detail: ${savedShippingDetails}" class="d-flex justify-content-center">
+								<th:block th:if="${detail.id != defaultShippingDetails.id}">
+									<input type="radio" th:id="${detail.id}" name="selected_shipping_details" th:value="${detail.id}">
+									<label style="font-size: 1.17em; font-weight: bolder;" th:for="${detail.id}" th:inline="text">
+									Address:&nbsp[[${detail.streetAddress}]],&nbsp[[${detail.city}]],&nbsp[[${detail.state.stateName}]],&nbsp[[${detail.postalCode}]]							
+									</label>
+									<a style="margin-left:5px; margin-right: 5px;" class="btn btn-lg btn-success" th:href="@{/confirmShipping/updateShippingDetails/{id}(id = ${detail.id})}">Edit</a>
+								</th:block>
+								</li>
+								</th:block>
+								</ul>
+								
+								<h2>
+									<button id="shippingModalButton" style="justify-content:center; margin-left:auto; margin-right:auto;" class="d-flex justify-content-center btn btn-primary" data-backdrop="static" data-keyboard="false" type="button" data-bs-toggle="modal" data-bs-target="#shippingModal">
+										Add New Shipping Address
+									</button>
+								</h2>
+
+										<!-- shipping decisions -->
+										<div class="d-flex justify-content-center mb-3">
+											<button class="btn btn-primary btn-lg"
+												 type="submit" name="submit">Confirm</button>
+											
+										</div>
+									</form>
+						</div>
+						
+						<div th:unless="${savedShippingDetails != null}">
+							<h2>
+									<button id="shippingModalButton" style="justify-content:center; margin-left:auto; margin-right:auto;" class="d-flex justify-content-center btn btn-primary" data-backdrop="static" data-keyboard="false" type="button" data-bs-toggle="modal" data-bs-target="#shippingModal">
+										Add New Shipping Address
+									</button>
+								</h2>
+						</div>
+						
+						<!-- Modal information and templates https://getbootstrap.com/docs/4.0/components/modal/ -->
+						<div id="shippingModal" class="modal fade" data-bs-parent="#shipping-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+						<div style="width:fit-content" class="modal-dialog modal-lg modal-dialog-centered" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h2 th:if="${update == false}">
+									Add New Shipping Address
+								</h2>
+								<h2 th:unless="${update == false}">
+									Update Shipping Address
+								</h2>
+							</div>
+									<form method="post" action="#" class="row g-3 d-flex justify-content-center my-2"
+										th:action="@{/confirmShipping/submitAddress}"  th:object="${shippingAddress}">
+										
+										<div style="width:20vw; justify-content:center; margin-left:auto; margin-right:auto;"  th:if="${shippingError != null}" class="alert alert-danger d-flex justify-content-center">
+											<h2 th:text="${shippingError}"></h2>
+										</div>
+					
+										<div th:if="${relogin == false}">
+										<div class="modal-body">
+										<table style="width:20vw; justify-content:center; margin-left:auto; margin-right:auto;" class="uniTableForm">
+											<thead>
+			              						<tr>
+			              							<td colspan="3" style="background-color: #D3D3D3;"><h4>Confirm Shipping Address</h4></td>
+			              						</tr>
+			              					</thead>
+			              					<tbody>
+			              						<tr>
+			              							<td colspan="3" style="background-color: #89CFF0"><label for="recipient" class="form-label">Recipient</label></td>
+												</tr>
+												<tr>
+													<td colspan="3"><input type="text" th:field="*{recipient}" class="form-control"></input>
+														<p th:if="${recipientErr != null}" th:text="${recipientErr}"></p></td>
+												</tr>
+												<tr>
+													<td colspan="3" style="background-color: #89CFF0"><label for="streetAddress" class="form-label">Street Address</label></td>
+												</tr>
+												<tr>
+													<td colspan="3"><input type="text" th:field="*{streetAddress}" class="form-control"></input>
+														<p th:if="${streetAddressErr != null}" th:text="${streetAddressErr}"></p></td>
+												</tr>
+												<tr>
+													<td colspan="3" style="background-color: #89CFF0"><label for="extraLocationInfo" class="form-label">Apt, suite, unit, building, floor, etc.</label></td>
+												</tr>
+												<tr>
+													<td colspan="3"><input type="text" th:field="*{extraLocationInfo}" class="form-control"></input></td>
+												</tr>
+												<tr>
+													<td style="background-color: #89CFF0"><label for="city" class="form-label">City</label></td>
+													<td style="background-color: #89CFF0"><label for="state" class="form-label">State</label></td>
+													<td style="background-color: #89CFF0"><label for="postalCode" class="form-label">Postal Code</label></td>
+												</tr>
+												<tr>
+													<td><input type="text" th:field="*{city}" class="form-control"></input>
+														<p th:if="${cityErr != null}" th:text="${cityErr}"></p></td>
+													<td><select class="form-select" id="stateId" name="stateId"><option th:each="state : ${states}" th:value="${state.stateName}" th:text="${state.stateName}"></option></select>
+														<p th:if="${stateIdErr}" th:text="${stateId}"></p></td>
+													<td><input type="number" th:field="*{postalCode}" class="form-control"></input>
+														<p th:if="${postalCodeErr != null}" th:text="${postalCodeErr}"></p></td>
+												</tr>
+			              					</tbody>
+										</table>
+										<!-- Shipping decisions -->
+										<div style="margin-top:5px;" class="d-flex justify-content-evenly mb-3">
+											<button class="btn btn-danger btn-lg" type="submit" name="cancel">Cancel</button>
+											<button th:if="${update == false}" class="btn btn-primary btn-lg"
+												 type="submit" name="submit">Confirm</button>
+											<button th:unless="${update == false}" class="btn btn-primary btn-lg"
+												 type="submit" name="update">Confirm</button>
+											
+										</div>
+										</div>
+										</div>
+										
+										<div th:if="${relogin}">
+										<div class="d-flex justify-content-center">
+												<h2>Please Confirm by Logging In</h2>
+										</div>
+										<div th:if="${loginEr}" style="text-align: center; justify-content:center; margin-left:auto; margin-right:auto;" class="d-flex justify-content-center">
+												<h3>Incorrect Username or Password Entered</h3>
+										</div>
+										<div class="d-flex justify-content-center">
+							        	<div class="card w-50 shadow bg-light mt-2 mb-3">
+							       			<div class="card-body d-flex flex-column align-items-center">
+										        <div class="form-floating shadow-sm mb-1 mt-3 w-75">
+										  			<input type="text" id="usernameSA" class="form-control" name="usernameSA">
+										  			<label for="usernameSA">username</label>
+												</div>
+												<div class="form-floating shadow-sm mt-1 mb-1 w-75">
+										  			<input type="password" id="passwordSA" class="form-control" name="passwordSA">
+										  			<label for="passwordSA">password</label>
+												</div>
+											</div>
+											<div class="d-flex justify-content-evenly mb-3">
+												<button type="submit" name="loginInfo" class="btn btn-lg btn-success">submit</button>
+												<a class="btn btn-lg btn-danger" th:href="@{/confirmShipping/submitAddress/back}">Back</a>
+											</div>
+										</div>   
+										</div>   
+					    				</div>
+									</form>
+						</div>
+						</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

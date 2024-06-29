@@ -1,0 +1,7 @@
+@startuml
+class CardType [[java:edu.sru.cpsc.webshopping.domain.billing.CardType]] {
+	-cardType: String
+	+getCardType(): String
+	+setCardType(cardType: String): void
+}
+@enduml

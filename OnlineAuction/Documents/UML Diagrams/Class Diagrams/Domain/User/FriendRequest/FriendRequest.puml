@@ -1,0 +1,19 @@
+@startuml
+class FriendRequest [[java:edu.sru.cpsc.webshopping.domain.user.FriendRequest]] {
+	-id: Long
+	-requestReceiver: User
+	-requestSender: User
+	-timeSent: LocalDateTime
+	-status: int
+	~FriendRequest(id: Long, requestReciever: User, requestSender: User, timeSent: LocalDateTime)
+	~FriendRequest(id: Long, requestReciever: User, requestSender: User)
+	+setSender(sender: User): void
+	+setReceiver(reciever: User): void
+	+getSender(): User
+	+getReceiver(): User
+	+setStatus(decision: boolean): void
+	+getStatus(): int
+	+getId(): Long
+	+getTimeSent(): LocalDateTime
+}
+@enduml

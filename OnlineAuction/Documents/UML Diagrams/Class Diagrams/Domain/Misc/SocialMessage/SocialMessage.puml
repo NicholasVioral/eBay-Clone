@@ -1,0 +1,31 @@
+@startuml
+class SocialMessage [[java:edu.sru.cpsc.webshopping.domain.misc.SocialMessage]] {
+	-id: Long
+	-sender: User
+	-receiver: User
+	-content: String
+	-sentTimestamp: LocalDateTime
+	-readTimestamp: LocalDateTime
+	-isDelivered: boolean
+	-isRead: boolean
+	+equals(o: Object): boolean
+	+hashCode(): int
+	+toString(): String
+	+getId(): Long
+	+getSender(): User
+	+getReceiver(): User
+	+getContent(): String
+	+setId(id: Long): void
+	+setSender(sender: User): void
+	+setReceiver(receiver: User): void
+	+setContent(content: String): void
+	+getSentTimestamp(): LocalDateTime
+	+setSentTimestamp(sentTimestamp: LocalDateTime): void
+	+getReadTimestamp(): LocalDateTime
+	+setReadTimestamp(readTimestamp: LocalDateTime): void
+	+isDelivered(): boolean
+	+setDelivered(isDelivered: boolean): void
+	+isRead(): boolean
+	+setRead(isRead: boolean): void
+}
+@enduml

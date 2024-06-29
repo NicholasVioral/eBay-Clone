@@ -1,0 +1,18 @@
+@startuml
+class IndexController [[java:edu.sru.cpsc.webshopping.controller.IndexController]] {
+	-userService: UserService
+	-userRepository: UserRepository
+	-twoFactorAuth: TwoFactorAuthentication
+	-appRepo: ApplicantRepository
+	~widgetController: WidgetController
+	~marketController: MarketListingDomainController
+	+showLoginPage(): String
+	+showMission(): String
+	+showFAQ(): String
+	+showApplication(model: Model): String
+	+addApplication(applicant: Applicant, result: BindingResult, model: Model): String
+	+verify2FA(code: String, request: HttpServletRequest): String
+	+showVerify2FAPage(): String
+	+IndexController()
+}
+@enduml

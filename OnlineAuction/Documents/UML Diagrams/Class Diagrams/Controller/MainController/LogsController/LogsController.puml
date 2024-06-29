@@ -1,0 +1,11 @@
+@startuml
+class LogsController [[java:edu.sru.cpsc.webshopping.controller.LogsController]] {
+	-userService: UserService
+	-statsRepository: StatsRepository
+	+viewLogs(model: Model, principal: Principal): String
+	+getLogs(): List<Statistics>
+	+getCategories(): List<String>
+	-logsToTextFile(statIterable: Iterable<Statistics>): void
+	-padRight(s: String, n: int): String
+}
+@enduml

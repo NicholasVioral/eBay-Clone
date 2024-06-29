@@ -1,0 +1,16 @@
+@startuml
+class AttributeRecommendation [[java:edu.sru.cpsc.webshopping.domain.widgets.AttributeRecommendation]] {
+	-id: long
+	-attribute: Attribute
+	-category: Category
+	-recommendation: Integer
+	+getId(): long
+	+setId(id: long): void
+	+getAttribute(): Attribute
+	+setAttribute(attribute: Attribute): void
+	+getCategory(): Category
+	+setCategory(category: Category): void
+	+getRecommendation(): Integer
+	+setRecommendation(recommendation: Integer): void
+}
+@enduml

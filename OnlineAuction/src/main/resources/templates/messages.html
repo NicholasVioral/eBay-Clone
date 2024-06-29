@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="ISO-8859-1">
+		<title>Messages</title>
+		
+		<!-- font import -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+  		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  		<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+		
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous" type="text/javascript"></script>
+		
+		<link th:href="@{/styles/button.css}" rel="stylesheet"/>
+		<link th:href="@{/styles/employee_page.css}" rel="stylesheet"/>
+		
+		<style type="text/css">
+			
+		body {
+			background-color:  rgb(13, 96, 160);
+		}
+		
+		th {
+			border: 2px solid #002147;
+			margin-top: .5em;
+			margin-bottom: .5em;
+			height: 20px;
+		}
+		
+		td {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			border: 2px solid #002147;
+			margin-top: .5em;
+			margin-bottom: .5em;
+			height: 20px;
+		}
+		
+		table.center {
+			margin-left: auto;
+			margin-right: auto;
+		}
+		</style>
+	</head>
+
+	<body>
+	
+		<!-- HEADER BAR -->
+		<div th:insert="~{header :: header}"></div>
+		<!-- END HEADER BAR -->
+	
+	  
+	  <!-- "Compose Message" Modal -->
+		<div class="modal fade bd-example-modal-xl" id="modalCompose">
+			<div class="modal-dialog modal-xl modal-dialog-centered">
+				<div class="modal-content" style="background-color: rgb(13, 96, 160);">
+					<!-- Header -->
+					<div class="modal-header" style="background-color: rgb(137, 207, 240);">
+						<h4 class="modal-title"> Compose a Message </h4>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+					</div>
+					
+					<!-- Body -->
+					<div class="modal-body">
+						<form th:action="@{/sendmail}" onsubmit="lockSend()" method="post" id="sendForm" action="">
+							<table style="background-color: rgb(137, 207, 240); border: 2px solid #002147; width: 100%;">
+								<tr>
+									<td>
+										<div>
+											<label><span style="font-size: 24px; width: 100%;"> To: </span><input type="text" name="recipient"/></label>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div>
+											<label><span style="font-size: 24px; width: 100%;"> Subject: </span><input type="text" name="subject" /></label>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="justify-content-center">
+											<textarea class="form-control" id="message" name="message" rows="4" cols="45"></textarea>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</form>
+					</div>
+					
+					<!-- Modal footer -->
+						<div class="modal-footer justify-content-center">
+							<button type="submit" form="sendForm" id="mysendmailbutton" class="btn btn-success" style="color: black; background-color: rgb(137, 207, 240);"> Send </button>
+						</div>
+				</div>
+			</div>
+		</div>
+		<!-- END MODAL -->
+	
+		<div>
+			<div class="container-fluid align-items-center" style="background-color: rgb(13, 96, 160);">
+				<div class="row" style="background-color: white;">
+					<h1 class="d-flex justify-content-center"> Message Center </h1>
+				</div>
+				
+				<!-- Message Tabs -->
+				<div class="row">
+					<div class="col-1 border border-2 border-dark" style="background-color: rgb(13, 64, 138);">
+						<a class="d-flex justify-content-center" style="font-size: 24px; color: white; text-decoration: none;" data-bs-toggle="modal" data-bs-target="#modalCompose"> Compose+ </a>
+					</div>
+					
+					<div th:if="${page == 'messages'}" class="col-1 border border-2 border-bottom-0 border-dark" style="background-color: rgb(13, 96, 160);">
+						<a class="d-flex justify-content-center" style="font-size: 24px; color: white; text-decoration: none;" th:href="@{/messages}"> Inbox </a>
+					</div>
+					<div th:unless="${page == 'messages'}" class="col-1 border border-2 border-dark" style="background-color: rgb(13, 64, 138);">
+						<a class="d-flex justify-content-center" style="font-size: 24px; color: white; text-decoration: none;" th:href="@{/messages}"> Inbox </a>
+					</div>
+					
+					<div th:if="${page == 'outbox'}" class="col-1 border border-2 border-bottom-0 border-dark" style="background-color: rgb(13, 96, 160);">
+						<a class="d-flex justify-content-center" style="font-size: 24px; color: white; text-decoration: none;" th:href="@{/outbox}"> Sent </a>
+					</div>
+					<div th:unless="${page == 'outbox'}" class="col-1 border border-2 border-dark" style="background-color: rgb(13, 64, 138);">
+						<a class="d-flex justify-content-center" style="font-size: 24px; color: white; text-decoration: none;" th:href="@{/outbox}"> Sent </a>
+					</div>
+					
+					<div th:if="${page == 'spamBox'}" class="col-1 border border-2 border-bottom-0 border-dark" style="background-color: rgb(13, 96, 160);">
+						<a class="d-flex justify-content-center" style="font-size: 24px; color: white; text-decoration: none;" th:href="@{/spambox}"> Spam </a>
+					</div>
+					<div th:unless="${page == 'spamBox'}" class="col-1 border border-2 border-dark" style="background-color: rgb(13, 64, 138);">
+						<a class="d-flex justify-content-center" style="font-size: 24px; color: white; text-decoration: none;" th:href="@{/spambox}"> Spam </a>
+					</div>
+					
+					<div th:if="${page == 'trashBox'}" class="col-1 border border-2 border-bottom-0 border-dark" style="background-color: rgb(13, 96, 160);">
+						<a class="d-flex justify-content-center" style="font-size: 24px; color: white; text-decoration: none;" th:href="@{/trashbox}"> Trash </a>
+					</div>
+					<div th:unless="${page == 'trashBox'}" class="col-1 border border-2 border-dark" style="background-color: rgb(13, 64, 138);">
+						<a class="d-flex justify-content-center" style="font-size: 24px; color: white; text-decoration: none;" th:href="@{/trashbox}"> Trash </a>
+					</div>
+					
+					<div class="col-1 border border-2 border-start-0 border-top-0 border-end-0 border-dark d-flex flex-fill" style="background-color: white;"></div>
+				</div>
+				<!-- End Message Tabs -->
+	
+				<th:block th:switch="${view}">
+					<div th:case="false">
+						<th:block th:switch="${page}">
+	
+							<table class="center" style="background-color: #faf0e6; margin-top: 20px; margin-bottom: 20px; width: 50%;">
+								<tr>
+									<th:block th:switch="${page2}">
+										<div th:case="sent">
+											<th style="background-color: #0d6efd;">Message Sent Successfully</th>
+										</div>
+									</th:block>
+									<th:block th:switch="${page2}">
+										<div th:case="fail">
+											<th style="background-color: #dc3545;">That is not a valid username</th>
+										</div>
+									</th:block>
+									<th:block th:switch="${page4}">
+										<div th:case="recoverFromSpam">
+											<th style="background-color: #0d6efd;">Message Recovered From Spam</th>
+										</div>
+									</th:block>
+									<th:block th:switch="${page4}">
+										<div th:case="recoverFromTrash">
+											<th style="background-color: #0d6efd;">Message Recovered From Trash</th>
+										</div>
+									</th:block>
+									<th:block th:switch="${page4}">
+										<div th:case="sentToSpam">
+											<th style="background-color: #dc3545;">Message Sent To Spam</th>
+										</div>
+									</th:block>
+									<th:block th:switch="${page4}">
+										<div th:case="sentToTrash">
+											<th style="background-color: #dc3545;">Message Sent To Trash</th>
+										</div>
+									</th:block>
+									<th:block th:switch="${page4}">
+										<div th:case="deleteFromSpam">
+											<th style="background-color: #dc3545;">Message Was Permanently Deleted</th>
+										</div>
+									</th:block>
+									<th:block th:switch="${page4}">
+										<div th:case="deleteFromTrash">
+											<th style="background-color: #dc3545;">Message Was Permanently Deleted</th>
+										</div>
+									</th:block>
+								</tr>
+							</table>
+							
+							<script type="text/javascript">
+								function lockSend() {
+	
+									document.getElementById('mysendmailbutton')
+											.setAttribute('disabled', 'disabled');
+								}
+	
+								var count = 0;
+								function myFunction(id, color) {
+									console.log(id);
+									var element = document.getElementById(id);
+									console.log(element.style.backgroundColor);
+									document.getElementById("trashButton").style.visibility = "visible";
+									document.getElementById("trashButton2").style.visibility = "visible";
+									document.getElementById("spamButton").style.visibility = "visible";
+									document.getElementById("spamButton2").style.visibility = "visible";
+	
+									if (element.style.backgroundColor == "rgb(220, 53, 69)") {
+										count = count - 1;
+										element.style.backgroundColor = '#0B53C3';
+										document.getElementById(id).className += "submit2";
+	
+									} else {
+										element.style.backgroundColor = '#dc3545';
+										count = count + 1;
+	
+									}
+									if (count == 0) {
+										document.getElementById("trashButton").style.visibility = "hidden";
+										document.getElementById("trashButton2").style.visibility = "hidden";
+										document.getElementById("spamButton").style.visibility = "hidden";
+										document.getElementById("spamButton2").style.visibility = "hidden";
+									}
+	
+									console.log(element.style.backgroundColor);
+									console.log(count);
+	
+								}
+							</script>
+							
+							<!--      	<form action="/spamButton" method="post">
+									<button type="submit" class="submit">spam</button>-->
+							<form th:action="@{/trash}" method="post" action="">
+								<th:block th:switch="${page}">
+									<div th:case="trashBox">
+										<input id="trashButton" th:formaction="@{/trashDelete}" style="width: 300px; bottom: 0px; visibility: hidden; z-index: 101;" class="submit3" type="submit" value="Permanently Delete" /> 
+										<input id="trashButton2" th:formaction="@{/recoverFromTrash}" style="width: 300px; bottom: 0px; visibility: hidden; z-index: 101;" class="submit3" type="submit" value="Recover From Trash" />
+										<p id="spamButton" style="visibility: hidden;"></p>
+										<p id="spamButton2" style="visibility: hidden;"></p>
+									</div>
+									<div th:case="spamBox">
+										<input id="spamButton" th:formaction="@{/spamDelete}" style="width: 300px; bottom: 0px; visibility: hidden; z-index: 101;" class="submit3" type="submit" value="Permanently Delete" />
+										<input id="spamButton2" th:formaction="@{/recoverFromSpam}" style="width: 300px; bottom: 0px; visibility: hidden; z-index: 101;" class="submit3" type="submit" value="Recover From Spam" />
+										<p id="trashButton" style="visibility: hidden;"></p>
+										<p id="trashButton2" style="visibility: hidden;"></p>
+									</div>
+									<div th:case="messages">
+										<input id="trashButton" th:formaction="@{/trash}" style="width: 300px; bottom: 0px; visibility: hidden; z-index: 101;" class="submit3" type="submit" value="Send  to Trash" />
+										<input id="spamButton" th:formaction="@{/spam}" style="width: 300px; bottom: 0px; visibility: hidden; z-index: 101;" class="submit3" type="submit" value="Send to Spam" />
+										<p id="trashButton2" style="visibility: hidden;"></p>
+										<p id="spamButton2" style="visibility: hidden;"></p>
+									</div>
+									<div th:case="outbox">
+										<input id="trashButton" th:formaction="@{/trash}" style="width: 300px; bottom: 0px; visibility: hidden; z-index: 101;" class="submit3" type="submit" value="Send  to Trash" />
+										<p id="trashButton2" style="visibility: hidden;"></p>
+										<p id="spamButton2" style="visibility: hidden;"></p>
+									</div>
+								</th:block>
+								
+								<!-- Display Table of Messages -->
+								<table class="table" style="margin-left: auto; margin-right: auto; width: 90%;">
+									<thead>
+										<tr th:switch="${page}" style="background-color: rgb(137, 207, 240);">
+											<th scope="col" style="width: 40px;">
+												<input type="checkbox">
+											</th>
+											<th scope="col" style="width: 150px;"> Open Message </th>
+											<th scope="col" th:case="outbox" style="width: 300px;"> Sent To </th>
+											<th scope="col" th:case="*" style="width: 300px;"> From </th>
+											<th scope="col" style="width: 300px;"> Subject </th>
+											<th scope="col"> Message Preview </th>
+											<th scope="col" style="width: 160px;"> Date </th>
+										</tr>
+									</thead>
+									
+									<tbody>
+										<th:block th:each="mailbox : ${mailbox}">
+											<tr th:id="${mailbox.id}" style="color: black; text-decoration: none; background-color: white;">
+												<th scope="row" th:id="${mailbox.id}" style="background-color: rgb(137, 207, 240);">
+													<input type="checkbox" name="id" th:value="${mailbox.id}" th:onclick="myFunction([[${mailbox.id}]],'red')">
+												</th>
+												<td>
+													<a type="submit" class="btn btn-primary" th:href="@{/openMessage/{id}(id = ${mailbox.id})}"> View Message </a>
+												</td>
+												<td th:switch="${page}">
+													<p th:case="outbox" th:text="${mailbox.receiverName}"></p>
+													<p th:case="*" th:text="${mailbox.sender}"></p>
+												</td>
+												<td>
+													<p th:text="${mailbox.subject}"></p>
+												</td>
+												<td>
+													<p style="width: 700px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${mailbox.content}"></p>
+												</td>
+												<td>
+													<p th:text="${mailbox.msgDate}"></p>
+												</td>
+											</tr>
+										</th:block>
+									</tbody>
+								</table>
+								<!-- End Display Table of Messages -->
+								
+							</form>
+						</th:block>
+					</div>
+					
+					<div th:case="true">
+						<table class="table" style=" margin-top: 50px; margin-left: auto; margin-right: auto; width: 50%;">
+							<thead>
+								<tr>
+									<th scope="col" style="text-align: center; font-size: 24px; height: 50px; background-color: rgb(137, 207, 240);"> Viewing Message </th>
+								</tr>
+							</thead>
+							
+							<tbody style="background-color: white;">
+								<tr>
+									<td scope="row">
+										<h4 style="float: left; text-align: left;" th:text="'From: ' + ${sentFrom}"></h4>
+										<h4 style="float: right; text-align: right;" th:text="'Date: ' + ${sentDate}"></h4>
+									</td>
+								</tr>
+								<tr>
+									<td scope="row">
+										<h4 style="text-align: left;" th:text="'Subject: ' + ${sentSubject}"></h4>
+									</td>
+								</tr>
+								<tr>
+									<td scope="row">
+										<h4 th:text="${msg}"></h4>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						
+						<div style="text-align: center;">
+							<a class="submit" style="color: black; background-color: rgb(137, 207, 240);" th:href="@{/replyButton}"> Reply </a>
+						</div>
+						
+						<th:block th:switch="${page}">
+							<div th:case="reply">
+								<table class="table" style=" margin-top: 50px; margin-left: auto; margin-right: auto; width: 50%;">
+									<form th:action="@{/sendmail}" onsubmit="lockSend()" method="post" action="">
+										<thead>
+											<tr>
+												<th scope="col" style="text-align: center; font-size: 24px; height: 50px; background-color: rgb(137, 207, 240);"> Compose Reply Message </th>
+											</tr>
+										</thead>
+										
+										<tbody style="background-color: white;">
+											<tr>
+												<td scope="row">
+													<div>
+														<label> To: <input type="text" name="recipient" th:value="${sentFrom}" /></label>
+													</div>
+												</td>
+											</tr>
+											<tr>
+												<td scope="row">
+													<div>
+														<label> Subject: <input type="text" name="subject" th:value="${sentSubject}" /></label>
+													</div>
+												</td>
+											</tr>
+											<tr>
+												<td scope="row">
+													<div>
+														<textarea id="message" name="message" rows="4" cols="47"></textarea>
+													</div>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<div style="text-align: center;">
+														<input id="mysendmailbutton" type="submit" class="submit" value="Send" style="color: black; background-color: rgb(137, 207, 240);"/>
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</form>
+								</table>
+	
+								<table class="center"
+									style="background-color: #faf0e6; border: 2px solid #002147; margin-top: 20px; margin-bottom: 20px; width: 50%;">
+									<th:block></th:block>
+									<th:block th:switch="${page3}">
+										<div th:case="sent">
+											<th style="background-color: #0d6efd;">Reply Sent Successfully</th>
+										</div>
+									</th:block>
+									<th:block th:switch="${page3}">
+										<div th:case="fail">
+											<th style="background-color: #dc3545;">That is not a valid username</th>
+										</div>
+									</th:block>
+								</table>
+								<!-- <button class="submit" ><a  th:href="@{/closeMessage}" ><span></span></a></button><br>  -->
+							</div>
+						</th:block>
+					</div>
+				</th:block>
+			</div>
+		</div>
+	</body>
+</html>
+
+<!-- <th:block th:switch="${page2}">
+ <div th:case="ticket">
+  
+  	<img align="left" th:src="@{images/widgits_logo.png}" style="width:200px;height:80px;"/>
+  	<H3> Sorry to hear you're getting spam, would you care to elaborate or just send? </H3>
+  	<a class="submit" th:href="@{/elaborate}" ><span>Explain</span></a>
+	<a class="submit" th:href="@{/justSend}" ><span>Just Send It</span></a>
+
+</div>
+<div th:case="elaborate">
+  <p>choose category</p>
+  <p>feedback</p>
+ 
+
+</div>
+</th:block>		
+-->
+<!--  <form action="/trash">						
+<button type="submit"id ="trashButton" style = "color:red; visibility: hidden;width: 300px;" class="submit" ><span>Send Selected To Trash</span></button>
+</form>-->

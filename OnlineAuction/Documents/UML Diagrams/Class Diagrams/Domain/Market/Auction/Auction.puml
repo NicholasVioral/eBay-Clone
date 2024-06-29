@@ -1,0 +1,23 @@
+@startuml
+class Auction [[java:edu.sru.cpsc.webshopping.domain.market.Auction]] {
+	-id: long
+	-marketListing: MarketListing
+	-startingBid: BigDecimal
+	-currentBid: BigDecimal
+	-startAuctionDate: LocalDateTime
+	-endAuctionDate: LocalDateTime
+	+Auction()
+	+getId(): long
+	+setId(id: long): void
+	+getMarketListing(): MarketListing
+	+setMarketListing(marketListing: MarketListing): void
+	+getStartingBid(): BigDecimal
+	+setStartingBid(startingBid: BigDecimal): void
+	+getCurrentBid(): BigDecimal
+	+setCurrentBid(currentBid: BigDecimal): void
+	+getStartAuctionDate(): LocalDateTime
+	+setStartAuctionDate(startAuctionDate: LocalDateTime): void
+	+getEndAuctionDate(): LocalDateTime
+	+setEndAuctionDate(endAuctionDate: LocalDateTime): void
+}
+@enduml

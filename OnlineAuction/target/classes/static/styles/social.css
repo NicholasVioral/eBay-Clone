@@ -1,0 +1,141 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f6f8;
+    margin: 0;
+    padding: 0;
+}
+
+h3 {
+    font-weight: 600;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #eaeaea;
+    padding-bottom: 10px;
+}
+
+.btn {
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s ease;
+    padding: 8px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 50px auto;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+ul.list-group li {
+    border-radius: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+ul.list-group li:hover {
+    background-color: #f5f5f5;
+    transform: translateX(10px);
+}
+
+.list-group-item {
+    border: none;
+    margin: 10px 0;
+}
+
+.form-control {
+    border-radius: 20px;
+    border: 2px solid #eaeaea;
+}
+
+.form-control:focus {
+    border-color: #007BFF;
+    box-shadow: none;
+}
+
+#searchResults {
+    list-style-type: none;  /* Removes bullets */
+    padding-left: 0;       /* Removes default padding */
+    margin-bottom: 15px;   /* Adds spacing below the list */
+}
+
+.user-btn {
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.user-btn:hover {
+    background-color: #f7f7f7;
+}
+
+.custom-btn-space {
+    margin: 0 5px; /* Adjust as necessary */
+    padding: 2px 10px; /* Reducing padding to make buttons smaller */
+}
+
+.fas.fa-cog:hover {
+    color: #0D6EFD;
+    cursor: pointer;
+}
+
+.fas.fa-users:hover {
+    color: #0D6EFD;
+    cursor: pointer;
+}
+
+.hoverable-list-group-item {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.hoverable-list-group-item:hover {
+    background-color: #f8f9fa; /* Light grey background on hover */
+}
+
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 220px; /* Adjust width as needed */
+    background-color: white; /* Changed to white for the background */
+    color: black; /* Changed to black for text */
+    text-align: center;
+    border-radius: 4px; /* Slightly less rounded corners for a more subtle look */
+    padding: 8px 10px; /* Adjusted padding for better text display */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Added a subtle shadow for depth */
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -110px; /* Center the tooltip */
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s linear;
+}
+
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+.timestamp {
+    font-style: italic;
+}
+
+.groups-list {
+    max-height: 25rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

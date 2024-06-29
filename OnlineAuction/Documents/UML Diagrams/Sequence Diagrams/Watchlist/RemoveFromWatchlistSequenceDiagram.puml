@@ -1,0 +1,22 @@
+@startuml
+
+title          Removing Item from Watchlist \nSequence Diagram
+
+actor          Actor                            as actor
+participant    watchlist                        as watchlist
+entity         MarketListingPageController      as marketListController
+entity         UserController                   as userController
+entity         WatchlistService                 as watchlistService
+entity         User                             as user
+database       Database                         as database
+
+actor                  ->     watchlist               : Click "Remove from Watchlist"
+watchlist              ->     marketListController    : POST: /viewMarketListing/delWishlistItem/{productId}
+marketListController   ->     userController          : userController.removeFromWishlist(product)
+userController         ->     watchlistService        : user.getWishlistedWidgets().remove(delWidget);
+watchlistService       ->     user                    : user.getWishlistedWidgets.remove(product)
+user                   ->     database                : remove(userId, productId) to widget_wishlist_entry
+marketListController   -->    watchlist               : redirect:/viewMarketListing/{productId}
+watchlist              -->    actor                   : "Remove from Watchlist" button becomes "Add to Watchlist"
+
+@enduml

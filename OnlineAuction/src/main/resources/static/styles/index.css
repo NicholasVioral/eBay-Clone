@@ -1,0 +1,35 @@
+header {
+	margin-bottom: 96px;
+}
+
+body, html {
+	max-width: 100%;
+	overflow-x: hidden;
+	background-color: white;
+	font-family: 'Poppins';
+	color: #222222;
+}
+
+.submit {
+	
+	display: inline-block;
+	color: #fff;
+    background-color: rgb(25,41,77);
+    font-weight: 400;
+    line-height: 1.5;
+    font-size: 1rem;
+    width: 20%;
+    height: 20%;
+    margin: 5px;
+	border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 2rem;
+    border-radius: .25rem;
+	text-align: center;
+	text-decoration: none;
+	transition: all .15s;
+}
+.submit:hover{
+  background-color: #0B53C3;
+  color: #fff;
+}

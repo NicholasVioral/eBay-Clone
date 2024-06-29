@@ -1,0 +1,22 @@
+@startuml Create Listing Activity Diagram
+title Create Listing Activity Diagram
+
+start
+:User logs in;
+:Create market listing;
+:Choose category;
+if (New category attribute?) then (yes)
+    :Add new category attribute;
+endif
+:Provide widget details;
+:Provide listing details;
+if (Add Pickup Option?) then (yes)
+    :Add Pickup Option;
+endif
+if (Mark Listing for Sale?) then (yes)
+    :Mark Listing for Sale;
+endif
+:Save to Database;
+stop
+
+@enduml

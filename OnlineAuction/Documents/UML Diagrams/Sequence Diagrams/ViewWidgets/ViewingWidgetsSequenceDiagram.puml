@@ -1,0 +1,30 @@
+@startuml
+title     Viewing Widgets \nSequence Diagram
+
+actor          Actor                            as actor
+participant    browseWidgets                    as browseWidgets
+participant    viewMarketListing                as viewMarketListing
+entity         MarketListingPageController      as marketListingPageController
+entity         MarketListingDomainController    as marketListingDomainController
+entity         EntityManager                    as entityManager
+entity         WidgetImageController            as widgetImageController
+entity         WidgetImageRepository            as widgetImageRepository
+entity         Widget                           as widget
+database       Database                         as database
+
+actor                           ->    browseWidgets                   : Click "view"
+browseWidgets                   ->    marketListingPageController     : th:href="@{/viewMarketListing/{id}(id = ${searchedMarkets.id})}"
+marketListingPageController     ->    marketListingDomainController   : marketListingController.getMarketListing(marketListingId)
+marketListingDomainController   ->    entityManager                   : entityManager.find(MarketListing.class, id)
+entityManager                   ->    database                        : grab the market listing with the right id
+database                        -->   marketListingPageController
+marketListingPageController     ->    widgetImageController           : widgetImageController.getwidgetImageByMarketListing(heldListing)
+widgetImageController           ->    widgetImageRepository           : widgetImageRepository.findByMarketListing(listing).toArray(WidgetImage[]::new)
+widgetImageRepository           ->    database                        : get the array of images associated with a widget
+database                        -->   marketListingPageController
+marketListingPageController     ->    widget                          : widget.getAttributes()
+widget                          -->   marketListingPageController     : return widgetAttributes
+marketListingPageController     -->   viewMarketListing               : return "viewMarketListing"
+viewMarketListing               -->   actor                           : display the information about the desired widget
+
+@enduml

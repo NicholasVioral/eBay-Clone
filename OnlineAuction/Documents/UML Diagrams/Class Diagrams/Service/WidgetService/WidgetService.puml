@@ -1,0 +1,14 @@
+@startuml
+class WidgetService [[java:edu.sru.cpsc.webshopping.service.WidgetService]] {
+	-{static} UPLOAD_DIR: String
+	-widgetRepository: WidgetRepository
+	-categoryRepository: CategoryRepository
+	-widgetImageRepository: WidgetImageRepository
+	-marketListingRepos: MarketListingRepository
+	-userController: UserController
+	-marketListingController: MarketListingDomainController
+	+addWidget(widget: Widget): void
+	+addListing(coverImage: MultipartFile, files: MultipartFile[], qty: Long, marketListing: MarketListing): void
+	-saveImage(file: MultipartFile): String
+}
+@enduml

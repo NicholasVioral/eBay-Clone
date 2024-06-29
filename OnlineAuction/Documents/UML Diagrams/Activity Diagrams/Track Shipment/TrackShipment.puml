@@ -1,0 +1,31 @@
+@startuml Track Shipment Activity Diagram
+title Track Shipment Activity Diagram
+start
+
+:Order Placed by Buyer;
+:Order Processed by Seller;
+:Shipping Label Created;
+:Package Handed to Carrier;
+
+repeat
+  :Carrier Updates Shipment Status;
+  :Status Logged in Database;
+  :Buyer and Seller View Updated Status;
+  if (Is shipment in transit?) then (yes)
+    :Continue Transit;
+  else (no)
+    :Shipment Delivered;
+  endif
+repeat while (Shipment not delivered)
+
+if (Is package received in good condition?) then (yes)
+  :Buyer Accepts Delivery;
+  :Buyer Rates Seller;
+else (no)
+  :Buyer Reports Issue;
+  :Resolve Issue;
+endif
+
+:Transaction Complete;
+stop
+@enduml

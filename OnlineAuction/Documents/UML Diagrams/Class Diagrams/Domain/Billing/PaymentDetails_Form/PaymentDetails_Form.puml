@@ -1,0 +1,22 @@
+@startuml
+class PaymentDetails_Form [[java:edu.sru.cpsc.webshopping.domain.billing.PaymentDetails_Form]] {
+	-cardType: String
+	-cardholderName: String
+	-cardNumber: String
+	-expirationDate: String
+	-securityCode: String
+	-billingAddress: long
+	+getCardType(): String
+	+setCardType(cardType: String): void
+	+getCardholderName(): String
+	+setCardholderName(cardholderName: String): void
+	+getCardNumber(): String
+	+setCardNumber(cardNumber: String): void
+	+getExpirationDate(): String
+	+setExpirationDate(expirationDate: String): void
+	+getSecurityCode(): String
+	+setSecurityCode(securityCode: String): void
+	+getBillingAddress(): long
+	+setBillingAddress(billingAddress: long): void
+}
+@enduml

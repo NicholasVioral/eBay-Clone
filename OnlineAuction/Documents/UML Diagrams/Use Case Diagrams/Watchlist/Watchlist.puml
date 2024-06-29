@@ -1,0 +1,31 @@
+@startuml
+title Watchlist Use Case Diagram
+left to right direction
+
+actor   User        as user
+actor   Database    as db
+
+package Offerly {
+	usecase   "View market listing"                     as UC1
+	usecase   "Check for if it is wishlisted already"   as UC2
+	usecase   "Add to watchlist"                        as UC3
+	usecase   "Remove from watchlist"                   as UC4
+	usecase   "Browse listings"                         as UC5
+	usecase "View watchlist"                            as UC6
+	usecase "Get watchlisted items"                     as UC7
+}
+
+user   --> UC5
+UC5    --> UC1
+UC1    --> UC2 : <<includes>>
+UC2    <-- UC3 : <<extends>> Click
+UC2    <-- UC4 : <<extends>> Click
+UC3    --> db
+UC4    --> db
+
+user   --> UC6
+UC6    <-- UC7
+db     --> UC7
+UC6    --> UC1
+
+@enduml

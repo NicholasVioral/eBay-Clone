@@ -1,0 +1,13 @@
+@startuml
+class ApplicantDomainController [[java:edu.sru.cpsc.webshopping.controller.ApplicantDomainController]] {
+	-Applicantrepository: ApplicantRepository
+	-entityManager: EntityManager
+	+ApplicantDomainController(Applicantrepository: ApplicantRepository)
+	+getApplicant(id: long): Applicant
+	+getAllBoxes(): Iterable<Applicant>
+	+addApplicant(Applicant: Applicant, result: BindingResult): void
+	+addApplicantSimple(Applicant: Applicant): void
+	+editApplicant(updatedApplicant: Applicant): void
+	+deleteApplicant(applicant: Applicant): void
+}
+@enduml

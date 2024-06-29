@@ -1,0 +1,20 @@
+@startuml
+
+title         Update Market Listing \nSequence Diagram
+
+actor         Seller                          as seller
+participant   viewMarketListing               as viewMarketListing
+entity        MarketListingPageController     as marketListingPageController
+entity        MarketListingDomainController   as marketListingDomainController
+entity        MarketListingRepository         as marketListingRepository
+database      Database                        as database
+
+seller                          ->    viewMarketListing                : Click "Update Listing"
+viewMarketListing               ->    marketListingPageController      : POST: /viewMarketListing/editListing
+marketListingPageController     ->    marketListingDomainController    : marketListingController.editMarketListing(marketListing)
+marketListingDomainController   ->    marketListingRepository          : marketRepository.save(dbListing)
+marketListingRepository         ->    database                         : Update the values of the market listing
+marketListingPageController     -->   viewMarketListing                : return "redirect:/viewMarketListing/" + marketListing.getId();
+viewMarketListing               -->   seller                           : Display the updated listing info
+
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+class Paypal_Form [[java:edu.sru.cpsc.webshopping.domain.billing.Paypal_Form]] {
+	-paypalLogin: String
+	-paypalPassword: String
+	+getPaypalLogin(): String
+	+setPaypalLogin(paypalLogin: String): void
+	+getPaypalPassword(): String
+	+setPaypalPassword(paypalPassword: String): void
+}
+@enduml

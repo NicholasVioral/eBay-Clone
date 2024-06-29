@@ -1,0 +1,16 @@
+@startuml
+class UserListDomainController [[java:edu.sru.cpsc.webshopping.controller.UserListDomainController]] {
+	-userListRepository: UserListRepository
+	-entityManager: EntityManager
+	~userService: UserService
+	~statControl: StatisticsDomainController
+	~UserListDomainController(userListRepository: UserListRepository)
+	+addFriend(friendList: UserList, friend: User): void
+	+addBlock(blockList: UserList, block: User): void
+	+getFriends(user: User): List<UserList>
+	+removeFriend(user: User, friend: User): void
+	+removeBlock(user: User, friend: User): void
+	+getBlocked(user: User): List<UserList>
+	+getBlockedCheck(user: User, block: User): Boolean
+}
+@enduml

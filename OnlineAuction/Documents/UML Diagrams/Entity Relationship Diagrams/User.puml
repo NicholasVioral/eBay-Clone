@@ -1,0 +1,55 @@
+@startuml
+
+interface UserDetails {
+    + getAuthorities() : Collection<? extends GrantedAuthority>
+    + getPassword() : String
+    + getUsername() : String
+    + isAccountNonExpired() : boolean
+    + isAccountNonLocked() : boolean
+    + isCredentialsNonExpired() : boolean
+    + isEnabled() : boolean
+}
+
+class User implements UserDetails {
+    - id : long
+    - enabled : boolean
+    - firstName : String
+    - lastName : String
+    - phoneNumber : String
+    - countryCode : String
+    - role : String
+    - hiddenCaptcha : String
+    - realCaptcha : String
+    - emailVerification : String
+    - twoFactorAuthenticationCode : String
+    - isTwoFactorEnabled : boolean
+    - displayName : String
+    - username : String
+    - password : String
+    - passwordconf : String
+    - email : String
+    - userDescription : String
+    - userImage : String
+    - creationDate : String
+    - accountExpired : boolean
+    - accountLocked : boolean
+    - credentialsExpired : boolean
+    - disabledAccount : boolean
+    - defaultPaymentDetails : PaymentDetails
+    - defaultShipping : ShippingAddress
+    - sellerRating : SellerRating
+}
+
+interface GrantedAuthority {
+    + getAuthority() : String
+}
+
+class UserRole implements GrantedAuthority {
+    - id : long
+    - authorityName : String
+    - users: Set<User>
+}
+
+User "1" -- "1..*" UserRole
+
+@enduml

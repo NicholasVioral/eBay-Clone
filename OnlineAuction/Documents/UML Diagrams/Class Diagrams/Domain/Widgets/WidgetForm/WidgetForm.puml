@@ -1,0 +1,14 @@
+@startuml
+class WidgetForm [[java:edu.sru.cpsc.webshopping.domain.widgets.WidgetForm]] {
+	-name: String
+	-description: String
+	-entries: List<AttributeFormEntry>
+	+WidgetForm()
+	+getName(): String
+	+setName(name: String): void
+	+getDescription(): String
+	+setDescription(description: String): void
+	+getEntries(): List<AttributeFormEntry>
+	+setEntries(entries: List<AttributeFormEntry>): void
+}
+@enduml

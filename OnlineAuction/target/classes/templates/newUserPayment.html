@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="ISO-8859-1">
+        <title>Sign Up!</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+            crossorigin="anonymous">
+            
+        <link th:href="@{/styles/button.css}" rel="stylesheet"/>
+        <link th:href="@{/styles/centering_styles.css}" rel="stylesheet"/>
+        <link th:href="@{/styles/wrapper.css}" rel="stylesheet"/>
+        <link th:href="@{/styles/signup.css}" rel="stylesheet"/>
+        <link th:href="@{/styles/employee_page.css}" rel="stylesheet"/>
+        <link th:href="@{/styles/landing.css}" rel="stylesheet"/>
+        <link th:href="@{/styles/userDetails.css}" rel="stylesheet"/>
+        
+        <!-- font import -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+        
+        <link href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css'>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        
+        <style>
+            th {
+	            border: 1px solid rgb(173, 210, 252);
+	            background-color: #e9ecef;
+            }
+            tr {
+	            border: 1px solid rgb(173, 210, 252);
+	            padding: 15px;
+            }
+            table {
+	            padding: 15px;
+	            margin: 50px;
+	            border-spacing: 0 15px;
+	            border-collapse: seperate;
+            }
+        </style>
+    </head>
+    
+    <body style="background-color: white">
+        <div class="card-header d-flex flex-column align-items-center justify-content-center mb-5">
+            <h1 style="font-family: 'Poppins'">Sign Up</h1>
+        </div>
+        
+        
+        
+        <!-- payment method -->
+        <form method="post" action="#" class="row g-3 d-flex justify-content-center my-2" th:action="@{/submitPurchaseSignup}" object="${paymentDetails}">
+			<input type="hidden" name="userId" th:value="${user.id}">
+            <!--<div th:if="${relogin == false}">-->
+            <div class="card shadow bg-light w-50 me-3 ms-5 mb-3">
+                <div class="card-header">
+                	<b>Payment Method</b>
+                </div>
+                <div class="card-body">
+					<div class="input-group mb-3">
+						<!-- Card Type -->
+						<select class="form-select" id="cardType" name="cardType">
+							<option
+								th:each="cardType : ${cardTypes}"
+								th:value="${cardType.cardType}"
+								th:text="${cardType.cardType}">
+							</option>
+						</select>
+						<!-- Cardholder Name -->
+	                    <input type="text" class="form-control" field="*{cardholderName}" name="cardholderName" placeholder="Cardholder Name"></input>
+					</div>
+					<div class="input-group mb-3">
+	                    <!-- Card Number -->
+	                    <input type="tel" class="form-control" field="*{cardNumber}" name="cardNumber" placeholder="Card Number" maxlength="16"></input>
+						<!-- Expiration Date -->
+	                    <input style="display:none" type="month" name="pleaseWork">
+	                    <input field="*{expirationDate}" name="expirationDate" class="form-control month-picker" placeholder="Exp. Date (MM / YY)" autocomplete="do-not-autofill"/>
+					        
+		                <!--used for learning how to use jQuery to get month and year since input type="month" doesn't work on firefox https://stackoverflow.com/questions/2208480/jquery-ui-datepicker-to-show-month-year-only --> 
+		                <script type="text/javascript"> 
+		                      $(function() {
+		                          $('.month-picker').datepicker( {
+		                              changeMonth: true,
+		                              changeYear: true,
+		                              showButtonPanel: true,
+		                              dateFormat: 'MM yy',
+		                              
+		                              onClose: function(dateText, inst) { 
+										  var year = inst.selectedYear;
+										  var month = inst.selectedMonth + 1;
+										  var lastDay = new Date(year, month, 0).getDate();
+		                                  $(this).datepicker('setDate', new Date(year, month - 1, lastDay));
+		                              }
+		                          });
+		                     });                                                                         
+		                </script>        
+						<p th:if="${cardError}" th:text="${cardError}"></p>
+					</div>
+					<div class="input-group mb-3">
+						<!-- Security Code -->
+						<input type="tel" class="form-control" id="securityCode" field="*{securityCode}" placeholder="CVV" name="securityCode" maxlength="4"></input>
+	                    <p th:text="${securityCodeErr}" th:if="${securityCodeErr != null}"></p>
+					</div>
+                    
+                    <!-- Select Saved Shipping Address -->
+                    <div class="input-group mb-3">
+                        <label for="billingAddress" class="input-group-text">Billing Address:</label>
+                        <select class="form-select" id="billingAddress" name="billingAddress">
+                            <option value="">-- Saved Addresses: --</option>
+                            <option th:each="address : ${savedShippingDetails}" th:value="${address.id}" th:text="${address.streetAddress + ', ' + address.city + ', ' + address.state.stateName + ' ' + address.postalCode}"></option>
+                        </select>
+                    </div>
+                    
+                </div>
+                <!-- Purchase decisions -->
+                <div class="d-flex justify-content-center mb-3">
+                    <a style="margin-right:50px;" class="btn btn-outline-danger ms-1" th:href="@{/emailverification}">Skip</a>
+                    <button style="margin-left:50px;" class="btn btn-outline-success me-1" type="submit" name="submit" id="mysignupbutton">Confirm</button>
+                </div>
+            </div>
+        </form>
+        
+        <script>
+            function myFunction() {           
+              document.getElementById('mysignupbutton').setAttribute('disabled', 'disabled');
+            }
+        </script>
+        </div>
+        </th:block>
+    </body>
+</html>

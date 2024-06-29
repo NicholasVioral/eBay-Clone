@@ -1,0 +1,10 @@
+@startuml
+class NotificationService [[java:edu.sru.cpsc.webshopping.service.NotificationService]] {
+	-notificationRepository: NotificationRepository
+	+NotificationService(notificationRepository: NotificationRepository)
+	+createNotification(userId: Long, message: String): Notification
+	+getUserNotifications(userId: Long): List<Notification>
+	+markNotificationAsRead(notificationId: Long): void
+	+markAllNotificationsAsReadForUser(userId: Long): void
+}
+@enduml

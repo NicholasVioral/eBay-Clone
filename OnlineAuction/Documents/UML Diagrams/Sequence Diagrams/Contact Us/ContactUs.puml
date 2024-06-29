@@ -1,0 +1,13 @@
+@startuml
+User -> ContactUsTicket: Submit Form
+ContactUsTicket --> User: Success Message
+
+ContactUsTicket -> TicketService: Send
+TicketService -> TicketRepository: Save
+
+TicketRepository -> CustomerServiceRep: Recieve
+
+CustomerServiceRep --> User: Response
+
+
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+[*] --> Login : User Logs in
+Login --> Browse : Click on Discussion Board page
+Browse --> Post : Post new thread
+Post --> Browse : Return to browse
+Browse --> Comment : Comment on existing Post
+Comment --> Browse : Return to browse
+Post --> Archived : Archive post
+Archived --> [*]
+@enduml

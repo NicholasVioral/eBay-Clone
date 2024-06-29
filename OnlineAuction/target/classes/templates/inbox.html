@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Inbox</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom Styles -->
+    <link th:href="@{/styles/button.css}" rel="stylesheet" />
+    <link th:href="@{/styles/landing.css}" rel="stylesheet" />
+    <link th:href="@{/styles/employee_page.css}" rel="stylesheet" />
+    <link th:href="@{/styles/inbox.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    
+    <!-- Web Socket Library - Real Time Messaging -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    <style>
+    </style>
+    
+</head>
+
+<body onload="selectFirstFriend()">
+
+<!-- HEADER BAR -->
+<div th:insert="~{header :: header}" th:unless="${user == null}"></div>
+
+<div class="container mt-5" style="max-height: fit-content!important;">
+    <div class="row">
+        <!-- Friends List Section -->
+		<div class="col-md-2">            
+		    <h3>Messages</h3>
+		    
+		    <!-- Search Input for Friends -->
+		    <div class="input-group mb-3">
+		        <input type="text" id="inboxFriendSearch" placeholder="Search for a friend..." class="form-control" />
+		        <div class="input-group-append">
+		            <button class="btn btn-outline-secondary" type="button" id="inboxSearchButton">
+		                <i class="fa fa-search"></i> <!-- FontAwesome icon -->
+		            </button>
+		        </div>
+		    </div>
+		    <ul class="list-group" id="inboxFriendList">
+			    <li class="list-group-item friend-item-inbox" 
+				    th:each="friend : ${friends}" 
+				    th:id="${'friend-' + friend.id}" 
+				    th:data-friend-id="${friend.id}" 
+				    onclick="highlightFriendOnClick(this)">
+				    <!-- Friend's Image and Username here -->
+				        <div class="d-inline-block mr-2" style="vertical-align: middle;">
+				            <img th:if="${friend.userImage != null}" th:src="@{/images/userImages/{icon}(icon=${friend.userImage})}" class="img-fluid" style="max-height: 40px; max-width: 40px;"></img>
+				            <img th:unless="${friend.userImage != null}" th:src="@{/images/userImages/default_user_icon.png}" class="img-fluid" style="max-height: 40px; max-width: 40px;"></img>
+				        </div>
+				        <!-- Friend's Username -->
+				        <span th:text="${friend.username}" style="vertical-align: middle;"></span>
+				    </li>
+			</ul>
+
+		</div>
+
+        
+       <!-- Groups List Section -->
+		<div class="col-md-2">            
+		    <h3>Group Messages</h3>
+		    
+		    <!-- Search Input for Groups -->
+		    <div class="input-group mb-3">
+		        <input type="text" id="inboxGroupSearch" placeholder="Search for a group..." class="form-control" />
+		        <div class="input-group-append">
+		            <button class="btn btn-outline-secondary" type="button" id="groupSearchButton">
+		                <i class="fa fa-search"></i> <!-- FontAwesome icon for search -->
+		            </button>
+		        </div>
+		    </div>
+		
+		    <ul class="list-group" id="inboxGroupList">
+		        <li class="list-group-item group-item-inbox" 
+		            th:each="group : ${groups}" 
+		            th:id="${'group-' + group.id}" 
+		            th:data-group-id="${group.id}" onclick="highlightSelectedGroup(this)">
+		            <!-- Group's Name with Archived Badge if Applicable -->
+		            <div class="group-name">
+		                <span th:text="${group.name}">Group Name</span>
+		                <span th:if="${group.status == 'archived'}" class="badge bg-secondary ms-2">Archived</span>
+		            </div>
+		            <!-- View Members Button -->
+		            <div class="view-members-button mt-2">
+		                <button type="button" class="btn btn-info btn-sm" th:attr="onclick=|viewGroupMembers('${group.id}')|">View Members</button>          
+		            </div>
+		        </li>
+		    </ul>
+		</div>
+
+				
+		<!-- Group Members Modal -->
+		<div class="modal fade" id="groupMembersModal" tabindex="-1" role="dialog" aria-labelledby="groupMembersModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="groupMembersModalLabel">Group Members</h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+		        <ul id="groupMembersList"></ul>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+        <script>	
+            function selectFirstFriend() {
+			    var urlParams = new URLSearchParams(window.location.search);
+			    var friendId = urlParams.get('friendId');
+			    var groupId = urlParams.get('groupId'); // Check for groupId in the URL
+			
+			    // Only select the first friend if no friendId or groupId is specified in the URL
+			    if (!friendId && !groupId) {
+			        var friendsList = document.getElementById("inboxFriendList");
+			        if (friendsList.children.length > 0) {
+			            var firstFriend = friendsList.children[0];
+			            var friendId = firstFriend.getAttribute('data-friend-id');
+			            highlightSelectedFriend(firstFriend);
+			            loadConversation(friendId);
+			        }
+			    }
+			}
+
+        </script>
+
+        <!-- Conversation Section -->
+        <div class="col-md-8">
+            <!-- Back Arrow Icon -->
+			<a href="#" onclick="window.history.back(); return false;" class="btn btn-link back-button">
+			    <i class="fas fa-arrow-left"></i> Back
+			</a>
+            
+            <div id="conversationBox">
+                <h3>Conversation with <span id="friendName"></span><span id="groupName" style="display:none;"></span></h3>
+                <!-- This is where the dynamic chat box will be appended -->
+            </div>
+            <form id="sendMessageForm" class="mt-2 position-relative">
+                <input type="hidden" id="currentUserId" th:value="${user.id}" />
+                <input type="hidden" id="currentUsername" th:value="${user.username}" />
+                <input type="hidden" id="currentConversationType" value=""/>
+                <input type="hidden" id="currentConversationId" value=""/>
+                <input type="text" id="messageInput" placeholder="Type a message..." class="form-control message-input-with-icon" autocomplete="off"/>
+                <button type="submit" class="btn-send-icon">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+    
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    
+<script th:inline="javascript">
+	var contextPath = /*[[ @{'/'} ]]*/ '';
+    const userId = document.getElementById("currentUserId").value;
+	const username = document.getElementById("currentUsername").value;
+
+	let stompClient = null;
+	let currentFriendId = null;
+	
+	function connectWebSocket(isGroup = false, groupId = null) {
+	    const socket = new SockJS(contextPath + 'websocket-endpoint');
+	
+	    socket.onerror = function(event) {
+	        console.error("WebSocket Error:", event);
+	    };
+	
+	    socket.onclose = function(event) {
+	        if (event.wasClean) {
+	        } else {
+	            console.error('Connection died');
+	            // It's generally not a good idea to automatically reconnect in the onclose event without backoff
+	            // as it can lead to infinite loops of connection attempts if the server is down.
+	            // connectWebSocket(isGroup, groupId); // Consider implementing a reconnection strategy
+	        }
+	    };
+	
+	    stompClient = Stomp.over(socket);
+	    stompClient.connect({}, function() {
+	        let topic = isGroup ? `/topic/groupMessages/${groupId}` : `/topic/messages`;
+	        stompClient.subscribe(topic, function(messageOutput) {
+	            const message = JSON.parse(messageOutput.body);
+	            appendMessageToChatBox(message);
+	        });
+	    });
+	}
+
+	
+	function subscribeToGroup(groupId, callback) {
+	    if (stompClient && stompClient.connected) {
+	    	console.log("hello");
+	        const groupTopic = `/topic/groupMessages/${groupId}`;
+	        let subscription = stompClient.subscribe(groupTopic, function(messageOutput) {
+	            const message = JSON.parse(messageOutput.body);
+	            // Enhance the message object with groupId before passing it
+	            message.groupId = groupId; // Add groupId to the message object
+	            appendMessageToChatBox(message); // Append the enhanced message to the chat box
+	        });
+	        if (callback && typeof callback === "function") {
+	            callback(subscription); // Pass the subscription object back through the callback
+	        }
+	    } else {
+	        console.error('STOMP client is not connected.');
+	    }
+	}
+	
+	function sendWebSocketMessage(content, receiver, isGroup = false) {
+	    try {
+	        let messageToSend = {
+	            content: content,
+	            timestamp: new Date().toISOString()
+	        };
+	
+	        let endpoint;
+	        if (isGroup) {
+	            // If it's a group message, adjust the endpoint and include groupId
+	            endpoint = contextPath + "app/send/groupMessage";
+	            messageToSend.groupId = receiver;
+	        } else {
+	            // For individual messages, use the default endpoint and include receiverId
+	            endpoint = contextPath + "app/send/message";
+	            messageToSend.receiverId = receiver;
+	        }
+	
+	
+	        // Use stompClient to send the message. Ensure stompClient is correctly initialized and connected.
+	        stompClient.send(endpoint, {}, JSON.stringify(messageToSend));
+	    } catch (error) {
+	        console.error("Error sending WebSocket message:", error);
+	    }
+	}
+
+	
+	function clearAllSelections() {
+	    // Get all the friends and groups from the list
+	    const friends = document.querySelectorAll('.list-group-item');
+	    const groups = document.querySelectorAll('.group-item-inbox');
+	
+	    // Remove the 'selected-friend' and 'selected-group' classes from all items
+	    friends.forEach(function(friend) {
+	        friend.classList.remove('selected-friend');
+	    });
+	    groups.forEach(function(group) {
+	        group.classList.remove('selected-group');
+	    });
+	}
+	
+	function highlightSelectedFriend(element) {
+	    clearAllSelections();
+	    const friends = document.querySelectorAll('.list-group-item');
+	
+	    // Remove the 'selected-friend' class from all friends
+	    friends.forEach(friend => {
+	        friend.classList.remove('selected-friend');
+	    });
+	
+	    // Add the 'selected-friend' class to the clicked friend
+	    element.classList.add('selected-friend');
+	
+	    // Use the 'data-friend-id' attribute for the friendIdentifier
+	    let friendIdentifier = element.getAttribute('data-friend-id');
+	
+	    // Update conversation context and load the conversation
+	    document.getElementById('currentConversationType').value = 'friend';
+	    document.getElementById('currentConversationId').value = friendIdentifier;
+	
+	    // Optional: Update the friend's name display if needed
+	    let friendNameElement = element.querySelector('span');
+	    let friendName = friendNameElement ? friendNameElement.textContent.trim() : "Friend";
+	    document.getElementById('friendName').textContent = friendName; // Update the friend's name
+	    document.getElementById('friendName').style.display = 'inline'; // Make sure friend's name is visible
+	    document.getElementById('groupName').style.display = 'none'; // Hide the group name span
+	
+	    loadConversation(friendIdentifier);
+	    updateURLWithFriendId(friendIdentifier); // Ensure this function exists and updates the URL as expected
+	}
+
+
+	
+	function updateURLWithFriendId(friendIdentifier) {
+	    const currentUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+	    const newUrl = `${currentUrl}?friendId=${friendIdentifier}`;
+	    window.history.pushState({path: newUrl}, '', newUrl);
+	}
+	
+	// Declare these variables at a higher scope to keep track of the current group and subscription
+	let currentGroupId = null;
+	let currentSubscription = null;
+	
+	function highlightSelectedGroup(element) {
+	    clearAllSelections(); // Assuming this function clears both 'selected-friend' and 'selected-group' classes
+	    
+	    const groupId = element.getAttribute('data-group-id');
+	
+	    // Only proceed with unsubscribing and resubscribing if the group ID has changed
+	    if (currentGroupId !== groupId) {
+	        if (currentSubscription) {
+	            currentSubscription.unsubscribe();
+	            currentSubscription = null;
+	        }
+	        // Subscription action is now within subscribeToGroup to ensure it's handled correctly
+	        subscribeToGroup(groupId, function(subscription) {
+	            currentSubscription = subscription; // Update the currentSubscription with the new subscription
+	        });
+	        currentGroupId = groupId; // Update the currentGroupId to the new group
+	
+	        // Call the function to update the URL
+	        updateURLWithGroupId(groupId);
+	    } else {
+	        // If the group ID hasn't changed, you may still want to ensure the URL is correct,
+	        // especially if the function can be called in scenarios where the URL might not have been updated.
+	        updateURLWithGroupId(groupId);
+	    }
+	
+	    // UI adjustments remain the same
+	    element.classList.add('selected-group');
+	    
+	    // Adjusted to specifically target the element with class 'group-name' to get the group name
+	    const groupName = element.querySelector('.group-name') ? element.querySelector('.group-name').textContent.trim() : '';
+	    
+	    document.getElementById('currentConversationType').value = 'group';
+	    document.getElementById('currentConversationId').value = groupId;
+	    document.getElementById('friendName').style.display = 'none';
+	    const groupNameElement = document.getElementById('groupName');
+	    groupNameElement.style.display = 'inline';
+	    groupNameElement.textContent = groupName;
+	    
+	    loadConversation(groupId, true); // Load historical messages for the group
+	}
+
+
+	
+	function updateURLWithGroupId(groupId) {
+	    const currentUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+	    const newUrl = `${currentUrl}?groupId=${groupId}`;
+	    window.history.pushState({path: newUrl}, '', newUrl);
+	}
+	
+
+	function appendMessageToChatBox(message) {
+	    // Determine if the message is for a group or individual chat.
+	    let chatBoxId;
+	    let isGroupMessage = message.groupId != null; // Checks if the message belongs to a group.
+	
+	    // Assign the chatBoxId based on whether it's a group or individual message.
+	    if (isGroupMessage) {
+	        chatBoxId = 'chatBox-group-' + message.groupId;
+	    } else {
+	        let friendId = message.sender && message.sender.id == userId ? message.receiver?.id : message.sender.id;
+	        chatBoxId = 'chatBox-' + friendId;
+	    }
+	
+	    // Retrieve or create the chat box for displaying messages.
+	    let chatBox = document.getElementById(chatBoxId);
+	    if (!chatBox) {
+	        chatBox = document.createElement('div');
+	        chatBox.id = chatBoxId;
+	        chatBox.className = 'individualChatBox';
+	        chatBox.style = 'border: 1px solid #ccc; padding: 10px; height: 200px; overflow-y: scroll;';
+	        document.getElementById('conversationBox').appendChild(chatBox);
+	    }
+	    chatBox.style.display = 'block'; // Ensure visibility of the chatBox.
+	
+	    // Create the div for the new message first to avoid the ReferenceError
+	    const messageDiv = document.createElement('div');
+	    messageDiv.className = message.sender.id == userId ? 'individualChat my-message' : 'individualChat other-message';
+	
+	    // For individual messages, create a unique identifier to prevent duplicate messages.
+	    if (!isGroupMessage) {
+	        const messageId = `message-${message.timestamp}-${message.sender.id}`;
+	        // Check if the message is already displayed in the chat box to prevent duplicates
+	        if (document.querySelector(`#${chatBoxId} div[data-message-id="${messageId}"]`)) {
+	            return; // Skip appending this message as it's already present.
+	        }
+	        messageDiv.setAttribute('data-message-id', messageId); // Set the unique identifier here after messageDiv is created
+	    }
+	
+	    // Proceed with appending details to messageDiv
+	    const profileImage = document.createElement('img');
+	    profileImage.className = 'chat-profile-img';
+	    profileImage.src = contextPath + "images/userImages/" + message.senderImage;
+	    profileImage.style = 'height: 30px; width: 30px; border-radius: 50%; margin-right: 10px;';
+	
+	    const formattedTimestamp = formatTimestamp(message.timestamp);
+	    const timestampText = document.createElement('span');
+	    timestampText.className = 'chat-timestamp';
+	    timestampText.textContent = `[${formattedTimestamp}] `;
+	
+	    const senderNameElem = document.createElement('strong');
+	    senderNameElem.className = 'chat-username';
+	    senderNameElem.textContent = `${message.sender.username}: `;
+	
+	    const messageContentText = document.createTextNode(message.content);
+	
+	    // Compile and append the message elements.
+	    messageDiv.appendChild(profileImage);
+	    messageDiv.appendChild(timestampText);
+	    messageDiv.appendChild(senderNameElem);
+	    messageDiv.appendChild(messageContentText);
+	
+	    // Finally, append the message div to the chat box.
+	    chatBox.appendChild(messageDiv);
+	}
+	
+	function formatTimestamp(timestamp) {
+	    const dateObj = new Date(timestamp);
+	    let hours = dateObj.getHours();
+	    const minutes = ('0' + dateObj.getMinutes()).slice(-2);
+	    let period = "AM";
+	    if (hours >= 12) {
+	        hours = hours > 12 ? hours - 12 : hours;
+	        period = "PM";
+	    }
+	    if (hours === 0) { hours = 12; }
+	    return ('0' + (dateObj.getMonth() + 1)).slice(-2) + '-' + ('0' + dateObj.getDate()).slice(-2) + '-' + dateObj.getFullYear().toString().substr(-2) + ' : ' + ('0' + hours).slice(-2) + ':' + minutes + period;
+	}
+
+
+	function loadConversation(conversationId, isGroup = false) {
+	    
+	    // Hide all chat boxes
+	    const chatBoxes = document.querySelectorAll('.individualChatBox, .individualChat');
+	    chatBoxes.forEach(box => box.style.display = 'none');
+	    
+	    // Determine chat box ID based on conversation type
+	    let chatBoxId = isGroup ? 'chatBox-group-' + conversationId : 'chatBox-' + conversationId;
+	    
+	    let selectedChatBox = document.getElementById(chatBoxId);
+	    
+	    // Create or display the chat box
+	    if (!selectedChatBox) {
+	        selectedChatBox = document.createElement('div');
+	        selectedChatBox.id = chatBoxId;
+	        selectedChatBox.className = 'individualChatBox';
+	        document.getElementById('conversationBox').appendChild(selectedChatBox);
+	    } else {
+	        selectedChatBox.style.display = 'block';
+	    }
+	    
+	    // Clear previous chat contents
+	    clearChatBox(conversationId);
+	    
+	    // Set conversation name or group name
+	    if (!isGroup) {
+	        const selectedFriend = document.getElementById('friend-' + conversationId);
+	        if (selectedFriend) {
+	            document.getElementById('friendName').textContent = selectedFriend.textContent.trim();
+	        }
+	    } else {
+	        // Additional handling for setting group name, if required
+	    }
+	    
+	    document.getElementById('sendMessageForm').style.display = 'block';
+	    
+	    // Fetch and display conversation history
+	    let apiEndpoint = isGroup ? 'api/groupConversations/' : 'api/conversations/';
+	    
+	    fetch(contextPath + apiEndpoint + conversationId, {
+	        method: 'GET',
+	        credentials: 'include',
+	        headers: { 'Content-Type': 'application/json' },
+	    })
+	    .then(response => {
+	        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+	        return response.json();
+	    })
+	    .then(data => {
+	        data.messages.forEach(message => {
+	            const enhancedMessage = {
+	                content: message.content,
+	                sender: { username: message.sender.username, id: message.sender.id },
+	                receiver: isGroup ? null : { username: message.receiver.username, id: message.receiver.id },
+	                timestamp: message.timestamp,
+	                senderImage: message.senderImage,
+	                // Ensure groupId is correctly set for group messages
+	                groupId: isGroup ? conversationId : null
+	            };
+	            appendMessageToChatBox(enhancedMessage, isGroup);
+	        });
+	    })
+	    .catch(error => console.error('Error fetching conversation:', error));
+	}
+
+	function clearChatBox(friendId) {
+		let chatBox = document.getElementById('chatBox-' + friendId);
+		if (chatBox) {
+			chatBox.innerHTML = '';
+		}
+	}
+	
+	document.addEventListener('DOMContentLoaded', function() {
+	    connectWebSocket();
+	
+	    // Wait for a short delay after attempting to connect before proceeding
+	    setTimeout(function() {
+	        // Handle group and friend highlighting based on URL parameters
+	        handleGroupHighlighting();
+	    }, 150);
+	    handleFriendHighlighting();
+	});
+
+	
+	function handleGroupHighlighting() {
+	    const urlParams = new URLSearchParams(window.location.search);
+	    const groupId = urlParams.get('groupId');
+	
+	    if (groupId) {
+	        const groupElement = document.querySelector(`[data-group-id='${groupId}']`);
+	        if (groupElement) {
+	            highlightSelectedGroup(groupElement);
+	        } else {
+	            console.error('Group element not found for ID:', groupId);
+	            // Fallback logic for when the group element is not found
+	        }
+	    }
+	}
+	
+	function handleFriendHighlighting() {
+	    const urlParams = new URLSearchParams(window.location.search);
+	    const friendId = urlParams.get('friendId');
+	
+	    if (friendId) {
+	        const friendElement = document.querySelector(`[data-friend-id='${friendId}']`);
+	        if (friendElement) {
+	            highlightSelectedFriend(friendElement);
+	        } else {
+	            console.error('Friend element not found for ID:', friendId);
+	            // Fallback logic for when the friend element is not found
+	        }
+	    }
+	}
+	
+
+	
+	document.getElementById('sendMessageForm').addEventListener('submit', function(e) {
+	    e.preventDefault();
+	
+	    const messageInput = document.getElementById('messageInput');
+	    const messageContent = messageInput.value.trim();
+	
+	    // Retrieve the conversation context
+	    const conversationType = document.getElementById('currentConversationType').value;
+	    const conversationId = document.getElementById('currentConversationId').value;
+	
+	
+	    if (messageContent) {
+	        // Determine if the message is for a group or an individual based on conversationType
+	        if (conversationType === 'group') {
+	            sendWebSocketMessage(messageContent, conversationId, true); // Pass true for group messages
+	        } else {
+	            sendWebSocketMessage(messageContent, conversationId); // Default is false for individual messages
+	        }
+	    }
+	
+	    messageInput.value = ''; // Clear the input field after sending
+	});
+	
+	function viewGroupMembers(groupId) {
+	    console.log("Viewing members of group ID:", groupId);
+	    // Fetch group members from the server using the groupId
+	    fetch(`/api/groupMembers/${groupId}`)
+	        .then(response => {
+	            if (!response.ok) {
+	                throw new Error('Network response was not ok');
+	            }
+	            return response.json();
+	        })
+	        .then(data => {
+		    const membersList = document.getElementById('groupMembersList');
+		    membersList.innerHTML = ''; // Clear existing members
+		    data.forEach(member => {
+		        const memberItem = document.createElement('li');
+		        memberItem.textContent = member.username; // Use 'username' as defined in your UserDto
+		        membersList.appendChild(memberItem);
+		    });
+		    $('#groupMembersModal').modal('show');
+		})
+	        .catch(error => console.error('Error fetching group members:', error));
+	}
+	
+	function highlightFriendOnClick(element) {
+	    const friendId = element.getAttribute('data-friend-id');
+	    highlightSelectedFriend(element);
+	    loadConversation(friendId);
+	}
+	
+
+	document.addEventListener("DOMContentLoaded", function() {
+	    var closeButton = document.querySelector('[data-bs-dismiss="modal"]');
+	    closeButton.addEventListener("click", function() {
+	        var modalElement = document.getElementById('groupMembersModal');
+	        var modalInstance = bootstrap.Modal.getInstance(modalElement); // Get the modal instance
+	        modalInstance.hide();
+	    });
+	});
+
+	$(document).ready(function(){
+		$("#inboxSearchButton").click(function() {
+			var value = $("#inboxFriendSearch").val().toLowerCase();
+			
+			$("#inboxFriendList .friend-item-inbox").each(function() { 
+				var username = $(this).find('span').text().toLowerCase();
+				if (username.indexOf(value) !== -1) {
+					$(this).show(); // Show the item if it matches
+				} else {
+					$(this).hide(); // Hide the item if it does not match
+				}
+			});
+		});
+	});
+
+
+	$(document).ready(function(){
+		$("#groupSearchButton").click(function() { // Bind click event to the search button
+			var value = $("#inboxGroupSearch").val().toLowerCase(); // Get the value from the search input
+			
+			$("#inboxGroupList .group-item-inbox").each(function() { // Iterate over each group item in the list
+				// Assuming the group name is wrapped in a div with class 'group-name'
+				var groupName = $(this).find('.group-name').text().toLowerCase();
+				if (groupName.indexOf(value) !== -1) {
+					$(this).show(); // Show the group if the name matches the search query
+				} else {
+					$(this).hide(); // Hide the group if the name does not match
+				}
+			});
+		});
+	});
+
+</script>
+</body>
+</html>

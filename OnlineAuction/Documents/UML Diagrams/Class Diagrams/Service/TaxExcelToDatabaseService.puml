@@ -1,0 +1,8 @@
+@startuml
+
+class TaxExcelToDatabaseService {
+  - taxDetailRepository: StateDetailsRepository
+  + loadFromExcelFile(excelFile: Resource): void
+}
+
+@enduml

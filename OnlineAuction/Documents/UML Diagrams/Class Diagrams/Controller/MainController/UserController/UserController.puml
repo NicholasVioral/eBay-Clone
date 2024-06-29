@@ -1,0 +1,36 @@
+@startuml
+class UserController [[java:edu.sru.cpsc.webshopping.controller.UserController]] {
+	-userRepository: UserRepository
+	-statControl: StatisticsDomainController
+	-paypalController: PaypalController
+	-paymentDetailsController: PaymentDetailsController
+	-directDepositDetailsController: DirectDepositController
+	-sellerRatingController: SellerRatingController
+	-util: UtilityController
+	-watchlistService: WatchlistService
+	-entityManager: EntityManager
+	-userService: UserService
+	-groupService: GroupService
+	-passwordEncoder: PasswordEncoder
+	~UserController(userRepository: UserRepository, statControl: StatisticsDomainController, paymentDetailsController: PaymentDetailsController, directDepositDetailsController: DirectDepositController, sellerRatingController: SellerRatingController, util: UtilityController, paypalController: PaypalController, watchlistService: WatchlistService)
+	+addToWishlist(marketListing: MarketListing, principal: Principal): void
+	+removeFromWishlist(marketListing: MarketListing, principal: Principal): void
+	+updatePaypalDetails(paypal: Paypal, principal: Principal): void
+	+updateDefaultPaymentDetails(details: PaymentDetails, principal: Principal): void
+	+deletePaypal(user: User): void
+	+deleteDirectDepositDetails(user: User): void
+	+verifyPaypalDetails(details: Paypal, principal: Principal): boolean
+	+updateDirectDepositDetails(details: DirectDepositDetails, principal: Principal): void
+	+verifyDirectDepositDetails(details: DirectDepositDetails, principal: Principal): boolean
+	+getUser(id: long, model: Model): User
+	+getUserByUsername(name: String): User
+	+getUserByEmail(email: String): User
+	+getAllUsers(): Iterable<User>
+	+addUser(user: User, result: BindingResult): User
+	+editUser(user: User, oldPass: String): User
+	+updateUser(id: long, returnPath: String, user: User, result: BindingResult, model: Model): void
+	+deleteUser(id: long, model: Model): void
+	+getSellerRating(user: User): SellerRating
+	~getCaptcha(user: User): void
+}
+@enduml

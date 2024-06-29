@@ -1,0 +1,11 @@
+@startuml
+
+class NotificationService {
+  - notificationRepository: NotificationRepository
+  + createNotification(userId: Long, message: String): Notification
+  + getUserNotifications(userId: Long): List<Notification>
+  + markNotificationAsRead(notificationId: Long): void
+  + markAllNotificationsAsReadForUser(userId: Long): void
+}
+
+@enduml

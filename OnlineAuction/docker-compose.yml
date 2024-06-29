@@ -1,0 +1,40 @@
+#From https://www.bezkoder.com/docker-compose-spring-boot-mysql/
+version: "3.8"
+
+services:
+  app:
+    depends_on:
+        - mysql
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - 6868:8080
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url"  : "jdbc:mysql://mysql:3306/online-auction?useSSL=false&&allowPublicKeyRetrieval=true",
+        "spring.datasource.username" : "root",
+        "spring.datasource.password" : "ThePassword",
+        "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQL5InnoDBDialect",
+        "spring.jpa.hibernate.ddl-auto" : "update"
+        }'
+    volumes:
+      - .m2:/root/.m2
+    stdin_open: true
+    tty: true
+
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "ThePassword"
+      MYSQL_DATABASE: "online-auction"
+    ports:
+      - 3307:3306
+    volumes:
+      - ./src/main/resources/import.sql:/docker-entrypoint-initdb.d/import.sql
+      - online-auction-db:/var/lib/mysql
+
+volumes:
+  online-auction-db:

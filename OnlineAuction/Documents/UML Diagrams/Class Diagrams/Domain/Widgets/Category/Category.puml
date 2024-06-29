@@ -1,0 +1,14 @@
+class Category [[java:edu.sru.cpsc.webshopping.domain.widgets.Category]] {
+    -id: long
+    -name: String
+    -parent: Category
+    -attributes: List<AttributeReccomendation>
+    +getId(): long
+    +setId(id: long): void
+    +getName(): String
+    +setName(name: String): void
+    +getParent(): Category
+    +setParent(parent: Category): void
+    +getAttributes(): List<AttributeReccomendation>
+    +setAttributes(attributes: List<AttributeReccomendation>): void
+}

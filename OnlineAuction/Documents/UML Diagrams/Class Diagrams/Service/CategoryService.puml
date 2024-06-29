@@ -1,0 +1,9 @@
+@startuml
+
+class CategoryService {
+  + generateCategoryStack(category: Category): List<String>
+  + getRecommendedAttributes(category: Category): List<Attribute>
+  + getTopRecommendedAttributes(category: Category, offset: int): List<Attribute>
+}
+
+@enduml

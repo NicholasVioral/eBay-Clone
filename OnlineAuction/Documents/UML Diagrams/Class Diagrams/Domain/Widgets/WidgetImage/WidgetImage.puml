@@ -1,0 +1,16 @@
+@startuml
+class WidgetImage [[java:edu.sru.cpsc.webshopping.domain.widgets.WidgetImage]] {
+	-id: Long
+	-imageName: String
+	-imageData: Blob
+	-marketListing: MarketListing
+	+getImageData(): Blob
+	+setImageData(imageData: Blob): void
+	+getId(): Long
+	+setId(id: Long): void
+	+getImageName(): String
+	+setImageName(imageName: String): void
+	+getMarketListing(): MarketListing
+	+setMarketListing(marketListing: MarketListing): void
+}
+@enduml

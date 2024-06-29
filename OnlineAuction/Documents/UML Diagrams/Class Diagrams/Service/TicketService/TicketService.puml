@@ -1,0 +1,11 @@
+@startuml
+class TicketService [[java:edu.sru.cpsc.webshopping.service.TicketService]] {
+	-{static} log: org.slf4j.Logger
+	-ticketRepository: TicketRepository
+	+getAllTickets(): Iterable<Ticket>
+	+getTicketById(id: Long): Ticket
+	+findById(id: Long): Optional<Ticket>
+	+save(ticket: Ticket): void
+	+TicketService(ticketRepository: TicketRepository)
+}
+@enduml

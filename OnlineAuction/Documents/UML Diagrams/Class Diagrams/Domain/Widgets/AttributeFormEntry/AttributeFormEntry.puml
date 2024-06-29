@@ -1,0 +1,13 @@
+@startuml
+class AttributeFormEntry [[java:edu.sru.cpsc.webshopping.domain.widgets.AttributeFormEntry]] {
+	-attribute: Attribute
+	-widgetAttribute: WidgetAttribute
+	+AttributeFormEntry()
+	+AttributeFormEntry(attribute: Attribute, widgetAttribute: WidgetAttribute)
+	+getWidgetAttribute(): WidgetAttribute
+	+setWidgetAttribute(widgetAttribute: WidgetAttribute): void
+	+getAttribute(): Attribute
+	+setAttribute(attribute: Attribute): void
+	+toString(): String
+}
+@enduml

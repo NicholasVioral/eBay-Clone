@@ -1,0 +1,75 @@
+@startuml
+class LandingPageController [[java:edu.sru.cpsc.webshopping.controller.LandingPageController]] {
+	-userService: UserService
+	-marketService: MarketListingService
+	-notificationRepository: NotificationRepository
+	-notificationService: NotificationService
+	~widgetImageRepository: WidgetImageRepository
+	~userRepository: UserRepository
+	~widgetController: WidgetController
+	~marketController: MarketListingDomainController
+	~userListController: UserListDomainController
+	~emailController: EmailController
+	-allUsers: List<User>
+	-transController: TransactionController
+	-userController: UserController
+	-page: String
+	-page2: String
+	-page3: String
+	-masterPage: String
+	-allWidgets: List<Widget>
+	-allWidgetImages: List<List<WidgetImage>>
+	-allEncodedImages: List<String>
+	-allSellers: List<User>
+	-allMessages: List<Message>
+	+search: String
+	~roleList: List<String>
+	-count: int
+	-allMarketListings: List<MarketListing>
+	~LandingPageController(userRepository: UserRepository, widgetController: WidgetController, marketController: MarketListingDomainController, transController: TransactionController, userController: UserController, userListController: UserListDomainController, emailController: EmailController)
+	+friendsOff(model: Model, principal: Principal): String
+	+blockList(model: Model, principal: Principal): String
+	+friends(model: Model, principal: Principal): String
+	+suggested(model: Model, principal: Principal): String
+	+friend(friendName: String, model: Model, principal: Principal): String
+	+sendFriendMessage(name: String, content: String, subject: String, model: Model, principal: Principal): String
+	+addAFriend(id: int, model: Model, principal: Principal): String
+	+sendMessageToFriend(id: int, model: Model, principal: Principal): String
+	+removeFriend(id: int, model: Model, principal: Principal): String
+	+block(blockName: String, model: Model, principal: Principal): String
+	+homePage(widgetModel: Model, listingModel: Model, tempSearch: String, principal: Principal): String
+	+browseWidgetsButton(model: Model, principal: Principal, currentPage: int): String
+	+getFirstPage(model: Model, principal: Principal): String
+	+yourListingsButton(model: Model, principal: Principal): String
+	+yourListingsFiltered(model: Model, principal: Principal, filter: String): String
+	+search(searchString: String, operator: String, price: String, category: String, subCategory: String, length: String, width: String, height: String, capacity: String, color: String, condition: String, tempModel: String, make: String, memory: String, storage: String, processor: String, gpu: String, developer: String, gameTitle: String, console: String, yardSize: String, powerSource: String, year: String, brand: String, madeIn: String, material: String, warranty: String, model: Model, listingModel: Model, tempWidget: Widget, searchModel: Model, tempListing: MarketListing, principal: Principal): String
+	+onlyCategory(tempWidget: Widget, tempListing: MarketListing, category: String, widgets: List<Widget>, allWidgets: List<Widget>, allListings: List<MarketListing>): List<Widget>
+	+stringOnly(tempWidget: Widget, widgets: List<Widget>, tempListing: MarketListing, searchString: String, category: String, allWidgets: List<Widget>, allListings: List<MarketListing>): List<Widget>
+	+priceOnly(tempWidget: Widget, widgets: List<Widget>, tempListing: MarketListing, searchString: String, operator: String, bigPrice: BigDecimal, category: String, allWidgets: List<Widget>, allListings: List<MarketListing>): List<Widget>
+	+stringAndPrice(tempWidget: Widget, widgets: List<Widget>, tempListing: MarketListing, searchString: String, operator: String, bigPrice: BigDecimal, category: String, allWidgets: List<Widget>, allListings: List<MarketListing>): List<Widget>
+	+getPage(): String
+	+setPage(page: String): void
+	+getCount(): int
+	+setCount(count: int): void
+	+getAllMarketListings(): List<MarketListing>
+	+setAllMarketListings(allMarketListings: List<MarketListing>): void
+	+getAllWidgets(): List<Widget>
+	+setAllWidgets(allWidgets: List<Widget>): void
+	+getAllWidgetImages(): List<List<WidgetImage>>
+	+setAllWidgetImages(allWidgetImages: List<List<WidgetImage>>): void
+	+getAllEncodedImages(): List<String>
+	+setAllEncodedImages(allEncodedImages: List<String>): void
+	+getAllSellers(): List<User>
+	+setAllSellers(allSellers: List<User>): void
+	+getAllMessages(): List<Message>
+	+setAllMessages(allMessages: List<Message>): void
+	+getPage2(): String
+	+setPage2(page2: String): void
+	+getPage3(): String
+	+setPage3(page3: String): void
+	+getAllUsers(): List<User>
+	+setAllUsers(allUsers: List<User>): void
+	+getMasterPage(): String
+	+setMasterPage(masterPage: String): void
+}
+@enduml

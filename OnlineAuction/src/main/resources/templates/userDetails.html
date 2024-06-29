@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+	<head>
+		<meta charset="ISO-8859-1">
+		<title>My Account</title>
+		
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	  	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+	  	
+	  	<!-- font import -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.css"></link>
+		
+		<link th:href="@{/styles/button.css}" rel="stylesheet"/>
+		<link th:href="@{/styles/landing.css}" rel="stylesheet"/>
+		<link th:href="@{/styles/employee_page.css}" rel="stylesheet"/>
+		<link th:href="@{/styles/userDetails.css}" rel="stylesheet"/>
+		
+	  	<link href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css'>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	  	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+	  	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+		
+		<style>
+		input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+  
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+        
+		#website-title {
+			margin-left: 8px;
+			margin-right: 8px;
+			font-size: 12px;
+		}
+			
+		.ui-datepicker-calendar {
+	        display: none;
+	    }
+    
+      	table.uniTableForm td{
+        	height:50px;
+        	border: 2px solid black;
+        	border-color: black;
+        	padding-left: 8px;
+        	width: 120px;
+		}
+		</style>
+	</head>
+
+	<body class="pageBody">
+	
+		<!-- HEADER BAR -->
+		<div th:insert="~{header :: header}"></div>
+		<!-- END HEADER BAR -->
+	
+	
+		<!-- Paypal Delete popup -->
+		<div class="modal fade" id="paypalDetailsModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="paypalDetailsModal">Delete PayPal Details</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>This will delete your currently saved PayPal details - are you sure?
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+						<form method="post" action="#"
+							th:action="@{/submitPaypalDetailsAction}" th:object="${paypalDetails}">
+							<button type="submit" class="btn btn-danger" name="delete">Delete</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- CC Delete popup -->
+		<div class="modal fade" id="paymentDetailsModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="paymentDetailsModal">Delete Card Details</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>This will delete your currently saved card details - are you sure?
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+						<form method="post" action="#"
+							th:action="@{/submitPaymentDetailsAction}" th:object="${paymentDetails}">
+							<button type="submit" class="btn btn-danger" name="delete">Delete</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Direct deposit delete popup -->
+		<div class="modal fade" id="depositDetailsModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="depositDetailsModal">Delete Direct Deposit Details</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>This will delete your currently saved direct deposit details - are you sure?
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+						<form method="post" action="#"
+							th:action="@{/submitDepositDetailsAction}" th:object="${depositDetails}">
+							<button type="submit" class="btn btn-danger" name="delete">Delete</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+			<!-- set page (account info, card info, deposit info) -->
+			<div class="card my-4 mx-4">
+				<div class="card-header d-flex justify-content-center">
+					<h1 th:if="${selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).USER_DETAILS}">Personal Info</h1>
+					<h1 th:if="${selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).PAYMENT_DETAILS}">Edit Payment Details</h1>
+					<!--<h1 th:if="${selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).PAYPAL_DETAILS}">PayPal Info</h1>-->
+					<h1 th:if="${selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).SHIPPING_DETAILS}">Shipping</h1>
+					<h1 th:if="${selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).DEPOSIT_DETAILS}">Direct Deposit Info</h1>
+				</div>
+				
+				<div class="card-body">
+					<div th:if="${errMessage != null}" th:text="${errMessage}" class="alert alert-danger d-flex justify-content-center h3">
+					</div>
+						
+					<!-- User account details submenu -->
+					<form th:if="${selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).USER_DETAILS}"
+						action="#" th:action="@{/updateUser}" enctype="multipart/form-data" method="post">
+						<div class="row my-2">
+							<div class="col-sm-2">
+								<div class="card my-2 h-100">
+									<img th:if="${user.userImage != null}" th:src="@{/images/userImages/{icon}(icon = ${user.userImage})}" ></img>
+									<img th:unless="${user.userImage != null}" th:src="@{/images/userImages/default_user_icon.png}"  ></img>
+								</div>
+							</div>
+							
+							<div class="col-sm-5">
+								<div class="card my-2 h-100">
+									<div class="card-body d-flex justify-content-center">
+										<ul class="list-group w-100">
+											<li class="list-group-item">Username: <span th:text="${currUser.username}"></span></li>
+											<li class="list-group-item">Display Name: <span th:text="${displayName}"></span></li>
+											<li class="list-group-item">Email: <span th:text="${email}"></span></li>
+											<li class="list-group-item">Account Created: <span th:text="${creationDate}"></span></li>
+											<li class="list-group-item">Rating: 
+												<!-- Rating Value -->
+												<span th:text="${sellerRating.rating}"></span>
+												<!-- Filled Stars -->
+		                                        <th:block th:if="${sellerRating.rating > 0}" th:each="star : ${#numbers.sequence(1, sellerRating.rating)}">
+		                                            <span class="text-warning">★</span>
+		                                        </th:block>
+		                                        <!-- Unfilled Stars -->
+		                                        <th:block th:each="star : ${#numbers.sequence(sellerRating.rating + 1, 5)}">
+		                                            <span class="text-muted">★</span>
+		                                        </th:block>
+		                                        <!-- Number of Ratings -->
+	                                        	<span class="ms-2 text-muted" th:text=" ${sellerRating.numRatings} + ' rating(s)'"></span>
+											</li>
+										</ul>	
+									</div>
+								</div>
+							</div>
+		
+							<div class="col-sm-5">
+								<div class="card w-100 my-2 h-100" >
+									<div class="card-header">
+										User Description
+									</div>
+									<div class="card-body">
+										<p th:text="${userDescription}"></p>
+									</div>
+								</div>
+							</div>		
+						</div>
+						<br>
+						<div class="mb-3">
+							<label for="fileUpload">Choose an image to change profile picture:</label>
+							<input type="file" id="fileUpload" name="imageName" accept=".jpg,.img,.png">
+						</div>
+						<div class="mb-3">
+							<label for="fileUpload">Enable 2-Factor Authentication:</label>
+							<input type="checkbox" id="2FA" name="2FA" th:checked="${twoFactorAuth}">
+						</div>
+						<br>
+						<div class="row mb-3">
+							<div class="col-sm-4">
+								<label class="form-label" for="username">Username: </label>
+								<input class="form-control" type="text" name="username" th:value="${userName}" id="username" maxlength="20">
+							</div>
+							<div class="col-sm-4">
+								<label class="form-label" for="display">Display Name: </label>
+								<input class="form-control" type="text" name="displayName" th:value="${displayName}" id="display" maxlength="20">
+							</div>
+							<div class="col-sm-4">
+							    <label class="form-label" for="email">Email Address: </label>
+							    <input class="form-control" type="text" name="email" id="email" th:value="${email}" maxlength="50" oninput="togglePasswordSection()">
+							</div>
+							<div class="mb-3" id="passwordSection" style="display: none;">
+							    <label class="form-label" for="currentPassword">To change email, enter your password: </label>
+							    <input class="form-control" type="password" name="currentPassword" id="currentPassword">
+							</div>
+						</div>
+						<div class="mb-3">
+							<label class="form-label" for="desc">User Description: </label>
+							<textarea class="form-control" name="description" th:text="${userDescription}" id="desc" rows="4" cols="5" maxlength="250" style="resize: none;"></textarea>
+						</div>
+						<div class="d-flex justify-content-evenly mb-3">
+							<button type="submit" name="submit" class="btn btn-lg btn-success" value="Update Information">Update</button>
+							<a class="btn btn-lg btn-danger" th:href="@{/homePage}">Return Home</a>
+						</div>
+					</form>
+					
+				<!-- Payment details submenu -->
+				<form method="post" action="#" th:if="${selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).PAYMENT_DETAILS}"
+					th:action="@{/submitPaymentDetailsAction}" th:object="${paymentDetails}">
+					<div class="card" th:if="${addNew == false and relogin == false and update == false}">
+						
+
+						<!-- Saved Payments -->
+						<div class="mb-3 mx-3 mt-3">
+							<h3><strong>Saved Payment Methods:</strong></h3>
+							<!-- Default Card Details -->
+							<div th:if="${defaultPaymentDetails} != null" class="mb-3 mx-3 mt-4">
+								<div class="card my-3" style="max-width: 540px; border: 2px solid #6c9fec">
+									<div class="row g-0">
+										<div class="col-md-4">
+											<!-- Display Card Image -->
+											<img th:src="@{/images/cardTypes/{image}.png(image = ${defaultPaymentDetails.cardType.toLowerCase()})}" alt="Card Image" src="" style="width: 100%">
+										</div>
+										<div class="col-md-6">
+											<div class="card-body">
+												<h4 th:text="${defaultPaymentDetails.cardType}"></h4>
+												<!-- Card Details -->
+												<p class="card-text">**** **** **** <span th:text="${defaultPaymentDetails.last4Digits}"></span></p>
+												<p class="card-text">Expires <span th:text="${defaultPaymentDetails.expirationDate}"></span></p>
+												<p style="color: #6c9fec;">[Default]</p>
+												<a class="btn btn-sm btn-outline-secondary" th:href="@{/updatePaymentDetails/{id}(id = ${defaultPaymentDetails.id})}">
+													<i class="fa fa-gear"></i>
+												</a>
+												<a class="btn btn-sm btn-outline-danger" th:href="@{/deleteExistingPaymentDetails/{id}(id = ${defaultPaymentDetails.id})}">
+													<i class="fa fa-trash"></i>
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div th:each="payment : ${savedDetails}">
+								<div th:if="${payment.id} != ${defaultPaymentDetails.id}">
+									<div class="card my-3 mx-3" style="max-width: 540px;">
+										<div class="row g-0">
+											<div class="col-md-4">
+												<!-- Display Card Image -->
+												<img th:src="@{/images/cardTypes/{image}.png(image = ${payment.cardType.toLowerCase()})}" alt="Card Image" src="" style="width: 100%">
+											</div>
+											<div class="col-md-6">
+												<div class="card-body">
+													<h4 th:text="${payment.cardType}"></h4>
+													<!-- Card Details -->
+													<p class="card-text">**** **** **** <span th:text="${payment.last4Digits}"></span></p>
+													<p class="card-text">Expires <span th:text="${payment.expirationDate}"></span></p>
+													<a class="btn btn-sm btn-outline-primary" th:href="@{/makeDefaultPaymentDetails/{id}(id = ${payment.id})}">Set as Default</a>
+													<a class="btn btn-sm btn-outline-secondary" th:href="@{/updatePaymentDetails/{id}(id = ${payment.id})}">
+														<i class="fa fa-gear"></i>
+													</a>
+													<a class="btn btn-sm btn-outline-danger" th:href="@{/deleteExistingPaymentDetails/{id}(id = ${payment.id})}">
+														<i class="fa fa-trash"></i>
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<h3 class="d-flex mx-3"><a class="btn btn-success" th:href="@{/addNewCard}">+</a></h3>
+						</div>
+						
+
+						<!-- Direct Deposit saved--> 
+						<div class="mb-3 mx-3">
+							<h3><strong>Direct Deposit Details:</strong></h3>
+							<div th:if="${savedDirectDepositDetails} != null">
+								<div class="card my-3 mx-3" style="max-width: 540px;">
+									<div class="row g-0">
+										<div class="col-md-4">
+											<!-- Display Bank Image -->
+											<img th:src="@{/images/cardTypes/bank.png}" alt="Bank Image" src="" style="width: 100%">
+										</div>
+										<div class="col-md-6">
+											<div class="card-body">
+												<h4 th:text="${savedDirectDepositDetails.bankName}"></h4>
+												<a class="btn btn-sm btn-outline-secondary" th:href="@{/userDetails/depositDetails}">
+													<i class="fa fa-gear"></i>
+												</a>
+												<a href="#" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#depositDetailsModal">
+													<i class="fa fa-trash"></i>
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<h3 class="d-flex mx-3" th:if="${savedDirectDepositDetails} == null"><a class="btn btn-success" th:href="@{/userDetails/depositDetails}">+</a></h3>
+						</div>
+						
+
+					</div>
+					
+					<div th:if="${addNew and relogin == false or update and relogin == false}">
+						<!-- payment method -->
+						<form method="post" action="#" class="row g-3 d-flex justify-content-center my-2" th:action="@{/submitPurchaseSignup}" object="${paymentDetails}">
+							<!--<div th:if="${relogin == false}">-->
+							<div class="card shadow bg-light" style="justify-content: center;">
+								<div class="card-header">
+									<b>Payment Method</b>
+								</div>
+								<div class="card-body">
+									<!-- Select Saved Shipping Address -->
+									<div class="input-group mb-3">
+										<label for="billingAddress" class="input-group-text">Billing Address:</label>
+										<select class="form-select" id="billingAddress" name="billingAddress" >
+											<option value="">-- Saved Addresses: --</option>
+											<option th:each="address : ${savedShippingDetails}" th:value="${address.id}" th:text="${address.streetAddress + ', ' + address.city + ', ' + address.state.stateName + ' ' + address.postalCode}" th:selected="${detailsToUpdate != null and detailsToUpdate.billingAddress.id == address.id}"></option>
+										</select>
+										<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#billingAddressModal">Add a New Billing Address</button>
+									</div>
+
+									<div class="input-group mb-3">
+										<!-- Card Type -->
+										<select class="form-select" id="cardType" name="cardType">
+											<option
+												th:each="cardType : ${cardTypes}"
+												th:value="${cardType.cardType}"
+												th:text="${cardType.cardType}"
+												th:selected="${detailsToUpdate != null and detailsToUpdate.cardType == cardType.cardType}">
+											</option>
+										</select>
+										<!-- Cardholder Name -->
+										<input type="text" class="form-control" field="*{cardholderName}" name="cardholderName" placeholder="Cardholder Name" th:value="${detailsToUpdate != null ? detailsToUpdate.cardholderName : ''}"></input>
+									</div>
+									<div class="input-group mb-3">
+										<!-- Card Number -->
+										<input type="tel" class="form-control" field="*{cardNumber}" name="cardNumber" placeholder="Card Number" maxlength="19" minlength="8"></input>
+										<!-- Expiration Date -->
+										<input style="display:none" type="month" name="pleaseWork">
+										<input field="*{expirationDate}" name="expirationDate" class="form-control month-picker" placeholder="Exp. Date (MM / YY)" autocomplete="do-not-autofill" th:value="${detailsToUpdate != null ? detailsToUpdate.expirationDate : ''}"/>
+											
+										<!--used for learning how to use jQuery to get month and year since input type="month" doesn't work on firefox https://stackoverflow.com/questions/2208480/jquery-ui-datepicker-to-show-month-year-only --> 
+										<script type="text/javascript"> 
+											$(function() {
+												$('.month-picker').datepicker( {
+													changeMonth: true,
+													changeYear: true,
+													showButtonPanel: true,
+													dateFormat: 'mm/yy',
+													
+													onClose: function(dateText, inst) { 
+														var year = inst.selectedYear;
+														var month = inst.selectedMonth + 1;
+														var lastDay = new Date(year, month, 0).getDate();
+														$(this).datepicker('setDate', new Date(year, month - 1, lastDay));
+													}
+												});
+											});
+										</script>        
+										<p th:if="${cardError}" th:text="${cardError}"></p>
+									</div>
+									<div class="input-group mb-3">
+										<!-- Security Code -->
+										<input type="tel" class="form-control" id="securityCode" field="*{securityCode}" placeholder="CVV" name="securityCode" maxlength="4"></input>
+										<p th:text="${securityCodeErr}" th:if="${securityCodeErr != null}"></p>
+									</div>
+								</div>
+								<!-- buttons -->
+								<div class="d-flex justify-content-center mb-3">
+									<!-- cancel -->
+									<a style="margin-right:50px;" class="btn btn-outline-danger ms-1" th:href="@{/userDetails/initializePaymentDetails}" >Cancel</a>
+									<!-- update -->
+									<button th:if="${update}" style="margin-left:50px;" class="btn btn-outline-success me-1" type="submit" name="update" id="mysignupbutton">Update</button>
+									<!-- add -->
+									<button th:unless="${update}" style="margin-left:50px;" class="btn btn-outline-success me-1" type="submit" name="submit" id="mysignupbutton">Confirm</button>
+								</div>
+							</div>
+						</form>
+					</div>
+					
+					<div th:if="${relogin}">
+						<div class="d-flex justify-content-center">
+								<h2 th:if="${delete == false}">Please Confirm by Logging In</h2>
+								<h2 th:unless="${delete == false}">Please Confirm That You Wish To Delete by Logging In</h2>
+						</div>
+						<div th:if="${loginError}" class="d-flex justify-content-center">
+								<h3>Incorrect Username or Password Entered</h3>
+						</div>
+						<div class="d-flex justify-content-center">
+						<div class="card w-30 shadow bg-light mt-2 mb-3">
+							<div class="card-body d-flex flex-column align-items-center">
+								<div class="form-floating shadow-sm mb-1 mt-3 w-75">
+									<input type="text" id="usernamePD" class="form-control" name="usernamePD">
+									<label for="usernamePD">username</label>
+								</div>
+								<div class="form-floating shadow-sm mt-1 mb-1 w-75">
+									<input type="password" id="passwordPD" class="form-control" name="passwordPD">
+									<label for="passwordPD">password</label>
+								</div>
+							</div>
+							<div class="d-flex justify-content-evenly mb-3">
+								<button th:unless="${delete == false}" type="submit" name="delete" class="btn btn-lg btn-success">delete</button>
+								<a class="btn btn-outline-danger ms-1" th:href="@{/goBackToMainPD}">Back</a>
+								<button th:if="${delete == false}" type="submit" name="loginInfo" class="btn btn-outline-success me-1">Submit</button>
+							</div>
+						</div>   
+						</div>   
+					</div>
+				</form>
+				
+				<!-- Paypal submenu -->
+				<!-- <form method="post" action="#" th:if="${selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).PAYPAL_DETAILS}"
+					th:action="@{/submitPaypalDetailsAction}" th:object="${paypalDetails}">
+					<div class="d-flex justify-content-center">
+						<h2>Update Paypal Details</h2>
+					</div>
+					<div class="mb-3">
+						<label class="form-label" for="paypalLogin">
+							Paypal Email
+						</label>
+						<input class="form-control" type="email" th:field="*{paypalLogin}">
+						<p th:if="${#fields.hasErrors('paypalLogin')}" th:errors="*{paypalLogin}">
+					</div>
+					<div class="mb-3">
+						<label class="form-label" for="paypalPassword">Paypal Password</label>
+						<input class="form-control" type="password" th:field="*{paypalPassword}">
+						<p th:if="${#fields.hasErrors('paypalPassword')}" th:errors="*{paypalPassword}">
+					</div>
+					<div class="d-flex justify-content-evenly mb-3">
+						<button type="submit" name="submit" class="btn btn-lg btn-success">Update</button>
+						<button type="button" class="btn btn-lg btn-danger" data-bs-toggle="modal" 
+								data-bs-target="#paypalDetailsModal"
+								th:if="${currUser.paypal != null}">Delete Existing</button>
+						<button type="button" class="btn btn-lg btn-danger" disabled
+								th:if="${currUser.paypal == null}">No Paypal Account Added</button>
+					</div>
+				</form>-->
+					
+				<!-- Deposit details submenu -->
+				<form method="post" action="#" th:if="${selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).DEPOSIT_DETAILS}" th:action="@{/submitDepositDetailsAction}" th:object="${directDepositDetails}">
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<label for="bankName" class="form-label">Bank Name:</label>
+							<input class="form-control" name="bankName" type="text" field="*{bankName}" th:value="${savedDirectDepositDetails != null ? savedDirectDepositDetails.bankName : ''}">
+							<p th:if="${#fields.hasErrors('bankName')}" th:errors="*{bankName}"></p>
+						</div>
+						<div class="col-md-6 mb-3">
+							<label class="form-label" for="state">Bank State</label>
+							<select class="form-select" id="stateId" name="stateId">
+								<option th:each="state : ${states}" th:value="${state.stateName}" th:text="${state.stateName}" th:selected="${savedDirectDepositDetails != null and savedDirectDepositDetails.bankAddress.state.stateName == state.stateName}"></option>
+							</select>
+							<p th:if="${#fields.hasErrors('state')}" th:errors="*{state}"></p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<label class="form-label" for="streetAddress">Bank Address</label>
+							<input class="form-control" name="streetAddress" type="text" field="*{streetAddress}" th:value="${savedDirectDepositDetails != null ? savedDirectDepositDetails.bankAddress.streetAddress : ''}">
+							<p th:if="${#fields.hasErrors('streetAddress')}" th:errors="*{streetAddress}"></p>
+						</div>
+						<div class="col-md-6 mb-3">
+							<label class="form-label" for="extraLocationInfo">Bank Address Line 2 (optional)</label>
+							<input class="form-control" name="extraLocationInfo" type="text" field="*{extraLocationInfo}" th:value="${savedDirectDepositDetails != null ? savedDirectDepositDetails.bankAddress.extraLocationInfo : ''}">
+							<p th:if="${#fields.hasErrors('extraLocationInfo')}" th:errors="*{extraLocationInfo}"></p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<label class="form-label" for="postalCode">Bank Postal Code</label>
+							<input type="tel" field="*{postalCode}" name="postalCode" class="form-control" maxlength="5" th:value="${savedDirectDepositDetails != null ? savedDirectDepositDetails.bankAddress.postalCode : ''}"></input>
+							<p th:if="${#fields.hasErrors('postalCode')}" th:errors="*{postalCode}"></p>
+						</div>
+						<div class="col-md-6 mb-3">
+							<label class="form-label" for="city">Bank City</label>
+							<input class="form-control" name="city" type="text" field="*{city}" th:value="${savedDirectDepositDetails != null ? savedDirectDepositDetails.bankAddress.city : ''}">
+							<p th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></p>
+						</div>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-md-12 mb-3">
+							<!-- Account holder Name -->
+							<label class="form-label" for="accountholderName">Account holder Name</label>
+							<input class="form-control" name="accountholderName" type="text" field="*{accountholderName}" th:value="${savedDirectDepositDetails != null ? savedDirectDepositDetails.accountholderName : ''}">
+							<p th:if="${#fields.hasErrors('accountholderName')}" th:errors="*{accountholderName}"></p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<!-- Account Number -->
+							<label class="form-label" for="accountNumber">Account Number</label>
+							<input class="form-control" name="accountNumber" type="number" field="*{accountNumber}">
+							<p th:if="${#fields.hasErrors('accountNumber')}" th:errors="*{accountNumber}"></p>
+						</div>
+						<div class="col-md-6 mb-3">
+							<!-- Routing Number -->
+							<label class="form-label" for="routingNumber">Routing Number</label>
+							<input class="form-control" name="routingNumber" type="number" field="*{routingNumber}" maxlength="9">
+							<p th:if="${#fields.hasErrors('routingNumber')}" th:errors="*{routingNumber}"></p>
+						</div>
+					</div>
+					<div class="d-flex justify-content-center mb-3">
+						<a class="btn btn-lg btn-danger" th:href="@{/goBackToMainPD}">Back</a>
+						<button type="submit" name="submit" class="btn btn-lg btn-success" style="margin-left:50px;">Update</button>
+					</div>
+				</form>
+				
+				<!-- Shipping Details Submenu -->
+				<form method="post" action="#" th:if="${selectedMenu == T(edu.sru.cpsc.webshopping.controller.SUB_MENU).SHIPPING_DETAILS}"
+					th:action="@{/submitShippingAddressAction}" th:object="${shippingDetails}">
+					<div th:if="${savedShippingDetails != null and addNew == false and relogin == false}">
+						<div class="d-flex justify-content-center">
+							<h2>Current Shipping Details</h2>
+						</div>
+						<div style="margin-bottom: 4px; background-color: #FBD8B4; width:fit-content; margin-left:auto; margin-right:auto;" th:if="${defaultShippingDetails != null}" class="d-flex justify-content-center">
+						<th:block th:if="${updateId == -1 or updateId == defaultShippingDetails.id}">
+							<h3 th:inline="text">Default:&nbspAddress:&nbsp[[${defaultShippingDetails.streetAddress}]],&nbsp[[${defaultShippingDetails.city}]],&nbsp[[${defaultShippingDetails.state.stateName}]],&nbsp[[${defaultShippingDetails.postalCode}]]</h3>
+							<a style="margin-left:5px; margin-right: 5px;" class="btn btn-lg btn-success" th:href="@{/updateShippingDetails/{id}(id = ${defaultShippingDetails.id})}">Edit</a>
+							<a style="margin-left:5px; margin-right: 5px;" class="btn btn-lg btn-danger" th:href="@{/deleteExistingShippingDetails/{id}(id = ${defaultShippingDetails.id})}">X</a>
+							</th:block>
+						</div>
+						<th:block th:if="${defaultShippingDetails == null}">
+						<div style="margin-bottom: 4px" th:each="detail: ${savedShippingDetails}" class="d-flex justify-content-center">
+						<th:block th:if="${updateId == -1 or updateId == detail.id}">
+							<h3 th:inline="text">Address:&nbsp[[${detail.streetAddress}]],&nbsp[[${detail.city}]],&nbsp[[${detail.state.stateName}]],&nbsp[[${detail.postalCode}]]</h3>
+							<a style="margin-left:5px; margin-right: 5px;" class="btn btn-lg btn-success" th:href="@{/makeDefaultShippingDetails/{id}(id = ${detail.id})}">Make Default</a>
+							<a style="margin-left:5px; margin-right: 5px;" class="btn btn-lg btn-success" th:href="@{/updateShippingDetails/{id}(id = ${detail.id})}">Edit</a>
+							<a style="margin-left:5px; margin-right: 5px;" class="btn btn-lg btn-danger" th:href="@{/deleteExistingShippingDetails/{id}(id = ${detail.id})}">X</a>
+							</th:block>
+						</div>
+						</th:block>
+						
+						<th:block th:unless="${defaultShippingDetails == null}">
+						<div style="margin-bottom: 4px" th:each="detail: ${savedShippingDetails}" class="d-flex justify-content-center">
+						<th:block th:if="${detail.id != defaultShippingDetails.id}">
+						<th:block th:if="${updateId == -1 or updateId == detail.id}">
+							<h3 th:inline="text">Address:&nbsp[[${detail.streetAddress}]],&nbsp[[${detail.city}]],&nbsp[[${detail.state.stateName}]],&nbsp[[${detail.postalCode}]]</h3>
+							<a style="margin-left:5px; margin-right: 5px;" class="btn btn-lg btn-success" th:href="@{/makeDefaultShippingDetails/{id}(id = ${detail.id})}">Make Default</a>
+							<a style="margin-left:5px; margin-right: 5px;" class="btn btn-lg btn-success" th:href="@{/updateShippingDetails/{id}(id = ${detail.id})}">Edit</a>
+							<a style="margin-left:5px; margin-right: 5px;" class="btn btn-lg btn-danger" th:href="@{/deleteExistingShippingDetails/{id}(id = ${detail.id})}">X</a>
+							</th:block>
+						</th:block>
+						</div>
+						</th:block>
+					</div>
+					<div th:unless="${savedShippingDetails != null}">
+					<div class="d-flex justify-content-center">
+						<h2>Currently No Saved Shipping Details</h2>
+					</div>
+					</div>
+					<div th:if="${!addNew and !update and !delete}">
+							<h3 class="d-flex justify-content-center"><a class="btn btn-lg btn-success" th:href="@{/addShippingDetails}">Add Shipping Details</a></h3>
+					</div>
+					
+					<div th:if="${addNew and relogin == false or update and relogin == false}">
+						<div class="d-flex justify-content-center">
+							<h2 th:if="${!update}">Add New Shipping Details</h2>
+							<h2 th:unless="${!update}">Update Shipping Details</h2>
+						</div>
+						<div style="width:20vw; justify-content:center; margin-left:auto; margin-right:auto;"  th:if="${shippingError != null}" class="alert alert-danger d-flex justify-content-center">
+							<h2 th:text="${shippingError}"></h2>
+						</div>
+										
+						<!-- add shipping -->
+						<form method="post" action="#" th:action="@{/submitShippingAddressSignUp}" object="${shippingDetails}" class="row g-3 d-flex justify-content-center my-2">
+					        <div class="card shadow bg-light" style="justify-content: center;">
+					            <div class="card-header">
+									<!-- card header -->
+					            	<b>Shipping Address</b>
+					            </div>
+					            <div class="card-body">
+					                <div class="input-group mb-3">
+										<!-- shipping recipient -->
+				                        <input type="text" field="*{recipient}" name="recipient" class="form-control" placeholder="Recipient"></input> 
+				                        <p th:if="${recipientErr != null}" th:text="${recipientErr}"></p>
+				                        <!-- street address -->
+				                        <input type="text" field="*{streetAddress}" name="streetAddress" class="form-control" placeholder="Street Address"></input>
+				                        <p th:if="${streetAddressErr != null}" th:text="${streetAddressErr}"></p>
+					                </div>
+					            	<div class="input-group mb-3">
+										<!-- apt, building, etc (optional) -->
+										<input type="text" field="*{extraLocationInfo}" name="extraLocationInfo" class="form-control" placeholder="Apt, suite, unit, building, etc. (optional)"></input>
+										<!-- city -->
+										<input type="text" field="*{city}" name="city" class="form-control" placeholder="City"></input>
+					                    <p th:if="${cityErr != null}" th:text="${cityErr}"></p>
+									</div>
+					             	<div class="input-group mb-3">
+										<!-- state -->
+										<select class="form-select" id="stateId" name="stateId">
+				                            <option th:each="state : ${states}" th:value="${state.stateName}" th:text="${state.stateName}"></option>
+				                        </select>
+				                        <p th:if="${stateIdErr}" th:text="${stateId}"></p>
+										<!-- postal code -->
+										<input type="tel" field="*{postalCode}" name="postalCode" class="form-control" maxlength="5" placeholder="Postal Code"></input>
+					                    <p th:if="${postalCodeErr != null}" th:text="${postalCodeErr}"></p>
+					             	</div>
+				
+					            </div>
+					        	<!-- submit and cancel buttons  -->
+						        <div style="margin-top:5px;" class="d-flex justify-content-center mb-3">
+									<!-- back button -->
+						            <a style="margin-right:50px;" class="btn btn-outline-danger ms-1" th:href="@{/goBackToMainSD}">Cancel</a>
+									<!-- add button -->
+						            <button style="margin-left:50px;" type="submit" name="submit" class="btn btn-outline-success me-1" id="mysignupbutton">Submit</button>	            
+						        </div>
+					        </div>
+						</form>
+					</div>
+					
+					<div th:if="${relogin}">
+						<div class="d-flex justify-content-center">
+								<h2 th:if="${delete == false}">Please Confirm by Logging In</h2>
+								<h2 th:unless="${delete == false}">Please Confirm That You Wish To Delete by Logging In</h2>
+						</div>
+						<div th:if="${loginError}" class="d-flex justify-content-center">
+								<h3>Incorrect Username or Password Entered</h3>
+						</div>
+						<div class="d-flex justify-content-center">
+			        	<div class="card w-30 shadow bg-light mt-2 mb-3">
+			       			<div class="card-body d-flex flex-column align-items-center">
+						        <div class="form-floating shadow-sm mb-1 mt-3 w-75">
+						  			<input type="text" id="usernameSA" class="form-control" name="usernameSA">
+						  			<label for="usernameSA">username</label>
+								</div>
+								<div class="form-floating shadow-sm mt-1 mb-1 w-75">
+						  			<input type="password" id="passwordSA" class="form-control" name="passwordSA">
+						  			<label for="passwordSA">password</label>
+								</div>
+							</div>
+							<div class="d-flex justify-content-evenly mb-3">
+								<button th:unless="${delete == false}" type="submit" name="delete" class="btn btn-lg btn-success">delete</button>
+								<a class="btn btn-outline-danger ms-1" th:href="@{/goBackToMainPD}">Back</a>
+								<button th:if="${delete == false}" type="submit" name="loginInfo" class="btn btn-outline-success me-1">Submit</button>
+							</div>
+						</div>   
+						</div>   
+    				</div>
+				</form>
+			</div>
+		</div>
+
+	<!--Billing Address Modal-->
+	<div class="modal fade" id="billingAddressModal" tabindex="-1" aria-labelledby="billingAddressModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="billingAddressModalLabel">Billing Address</h5>
+					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<form method="post" action="#" th:action="@{/addBillingAddress}" object="${billingAddress}" class="py-3">
+					<input type="hidden" name="userId" th:value="${user.id}">
+					<!--Pass the selectedMenu object-->
+					<input type="hidden" name="selectedMenu" th:value="${selectedMenu}">
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<input type="text" field="*{recipient}" name="recipient" class="form-control" placeholder="Recipient"></input>
+							<p th:if="${recipientErr != null}" th:text="${recipientErr}"></p>
+						</div>
+						<div class="col-md-6 mb-3">
+							<input type="text" field="*{streetAddress}" name="streetAddress" class="form-control" placeholder="Street Address"></input>
+							<p th:if="${streetAddressErr != null}" th:text="${streetAddressErr}"></p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<input type="text" field="*{extraLocationInfo}" name="extraLocationInfo" class="form-control" placeholder="Apt, suite, unit, building, etc. (optional)"></input>
+						</div>
+						<div class="col-md-6 mb-3">
+							<input type="text" field="*{city}" name="city" class="form-control" placeholder="City"></input>
+							<p th:if="${cityErr != null}" th:text="${cityErr}"></p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<select class="form-select" id="stateId" name="stateId">
+								<option th:each="state : ${states}" th:value="${state.stateName}" th:text="${state.stateName}"></option>
+							</select>
+							<p th:if="${stateIdErr}" th:text="${stateId}"></p>
+						</div>
+						<div class="col-md-6 mb-3">
+							<input type="tel" field="*{postalCode}" name="postalCode" class="form-control" maxlength="5" placeholder="Postal Code"></input>
+							<p th:if="${postalCodeErr != null}" th:text="${postalCodeErr}"></p>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" name="submit" class="btn btn-success" id="confirmBillingAddressButton">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<script>
+	    function togglePasswordSection() {
+	        var emailInput = document.getElementById("email");
+	        var passwordSection = document.getElementById("passwordSection");
+	
+	        // Check if the email input is not empty
+	        if (emailInput.value.trim() !== "") {
+	            passwordSection.style.display = "block";  // Show the password section
+				// set the focus to the password input
+				document.getElementById("password").focus();
+				// set password to required
+				document.getElementById("password").required = true;
+	        } else {
+	            passwordSection.style.display = "none";   // Hide the password section
+	        }
+	    }
+	</script>
+	</body>
+</html> 

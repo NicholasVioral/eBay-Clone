@@ -1,0 +1,73 @@
+@startuml
+class SignUpController [[java:edu.sru.cpsc.webshopping.controller.SignUpController]] {
+	-passwordEncoder: PasswordEncoder
+	-userService: UserService
+	-userController: UserController
+	-userRepository: UserRepository
+	-widgetController: WidgetController
+	-email: EmailController
+	-util: UtilityController
+	-payDetController: PaymentDetailsController
+	-address: ShippingAddress
+	-validatedDetails: PaymentDetails
+	-details: PaymentDetails
+	-userDetController: UserDetailsController
+	-cardController: CardTypeController
+	-purchase: Transaction
+	-prevListing: MarketListing
+	-payDetRepository: PaymentDetailsRepository
+	-paypal: Paypal_Form
+	-{static} phoneNumberUtil: PhoneNumberUtil
+	-showedSuccess: boolean
+	~findUser: User
+	-allSelected: boolean
+	-modifyPayment: boolean
+	-relogin: boolean
+	-depositPicked: boolean
+	-loginEr: boolean
+	-toShipping: boolean
+	-answer: String
+	-question: String
+	-theId: int
+	-page: String
+	-stateDetailsController: StateDetailsController
+	-shippingController: ShippingAddressDomainController
+	-addNewSA: boolean
+	-updateSA: boolean
+	-reloginSA: boolean
+	-delSA: boolean
+	-updateIdSA: long
+	~countryCodesMap: Map<String,String>
+	~secretQuestion1: List<String>
+	~secretQuestion2: List<String>
+	~secretQuestion3: List<String>
+	+SignUpController(userController: UserController, widgetController: WidgetController, email: EmailController, util: UtilityController, payDetController: PaymentDetailsController, userRepository: UserRepository, cardController: CardTypeController, userDetController: UserDetailsController, stateDetailsController: StateDetailsController, shippingController: ShippingAddressDomainController)
+	+preLoad(model: Model): void
+	+preLoad2(model: Model): void
+	+preLoad3(model: Model): void
+	+preLoad4(model: Model): void
+	+newUser(model: Model): String
+	+addUser(user: User, result: BindingResult, file: MultipartFile, attributes: RedirectAttributes, model: Model): String
+	+submitPurchaseSignup(paymentDetails: PaymentDetails_Form, userId: Long, result: BindingResult, model: Model): String
+	+createShippingDetails(details: ShippingAddress_Form, result: BindingResult, stateId: String, userId: Long, model: Model): String
+	+forgotUser(id: int, model: Model): String
+	+findUser(model: Model, email2: String): String
+	-maskEmail(email: String): String
+	+answerQuestion(answer2: String, model: Model): String
+	+resetPassword(pass: String, pass2: String, model: Model): String
+	+showverify(model: Model): String
+	+verifyUser(name: String, verification: String, model: Model): String
+	+paymentDetailsInvalid(form: PaymentDetails_Form): boolean
+	+paymentDetailsExpired(form: PaymentDetails_Form): boolean
+	+getPage(): String
+	+setPage(page: String): void
+	+getAnswer(): String
+	+setAnswer(answer: String): void
+	+getQuestion(): String
+	+setQuestion(question: String): void
+	+getTheId(): int
+	+setTheId(theId: int): void
+	+isShowedSuccess(): boolean
+	+setShowedSuccess(showedSuccess: boolean): void
+}
+@enduml

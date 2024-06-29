@@ -1,0 +1,40 @@
+@startuml
+class FriendsController [[java:edu.sru.cpsc.webshopping.controller.FriendsController]] {
+	~log: Logger
+	-friendshipService: FriendshipService
+	-messageService: MessageService
+	-userRepository: UserRepository
+	-friendSocialRequestRepository: FriendSocialRequestRepository
+	-userService: UserService
+	-groupService: GroupService
+	-marketListingRepository: MarketListingRepository
+	~statControl: StatisticsDomainController
+	-groupRepository: GroupRepository
+	-objectMapper: ObjectMapper
+	-notificationService: NotificationService
+	-{static} logger: Logger
+	+FriendsController(groupService: GroupService)
+	+getSocialPage(model: Model, principal: Principal): String
+	+addFriend(value: String, filterType: String, model: Model, redirectAttributes: RedirectAttributes, principal: Principal): String
+	+removeFriend(friendId: Long, model: Model, principal: Principal): String
+	+displayInboxPage(model: Model, principal: Principal, createdGroupId: Optional<Long>): String
+	+viewFriendProfile(friendId: Long, model: Model, principal: Principal, marketListing: MarketListing): String
+	+getGroupConversation(groupId: Long, principal: Principal): ResponseEntity<Map<String,Object>>
+	+getConversation(userId: Long, principal: Principal): ResponseEntity<Map<String,Object>>
+	+getGroupMembers(groupId: Long): ResponseEntity<?>
+	+acceptFriendRequest(requestId: Long): String
+	+declineFriendRequest(requestId: Long): String
+	+searchUser(value: String, filterType: String): List<String>
+	+cancelFriendRequest(requestId: Long, principal: Principal, redirectAttributes: RedirectAttributes): String
+	+createGroup(groupName: String, groupDescription: String, friendsIds: List<Long>, principal: Principal, redirectAttributes: RedirectAttributes): String
+	+showGroupsPage(model: Model, principal: Principal): String
+	+getGroupDetails(groupId: Long): ResponseEntity<?>
+	+deleteGroup(groupId: Long, redirectAttributes: RedirectAttributes): String
+	+loadMessages(groupId: Long, friendId: Long, redirectAttributes: RedirectAttributes, principal: Principal): String
+	+removeMemberFromGroup(removalDto: MemberRemovalDto, principal: Principal): ResponseEntity<?>
+	+addMemberToGroup(additionDto: MemberAdditionDto, principal: Principal): ResponseEntity<?>
+	+archiveGroup(groupId: Long, redirectAttributes: RedirectAttributes): String
+	+unarchiveGroup(groupId: Long, redirectAttributes: RedirectAttributes): String
+	+showInbox(model: Model, principal: Principal): String
+}
+@enduml

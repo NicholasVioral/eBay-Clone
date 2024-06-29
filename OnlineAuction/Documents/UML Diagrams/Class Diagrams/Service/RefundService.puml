@@ -1,0 +1,12 @@
+@startuml
+
+class RefundService {
+  - refundTicketRepository: RefundTicketRepository
+  + processRefundRequest(transaction: Transaction, refundReason: String): boolean
+  + getAllRefunds(): Iterable<RefundTicket>
+  + getRefundTicketById(id: Long): RefundTicket
+  + save(refundTicket: RefundTicket): void
+  - createRefundTicket(user: User, totalPriceAfterTaxes: Double, refundReason: String): RefundTicket
+}
+
+@enduml

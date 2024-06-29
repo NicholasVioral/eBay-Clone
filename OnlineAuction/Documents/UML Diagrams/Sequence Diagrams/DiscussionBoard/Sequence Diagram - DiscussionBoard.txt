@@ -1,0 +1,39 @@
+@startuml
+actor User
+participant "PostController" as Controller
+participant "PostService" as PostService
+participant "CommentService" as CommentService
+database "Repository" as Repo
+
+== Save Post ==
+User -> Controller : POST /post
+activate Controller
+
+Controller -> PostService : save(post)
+activate PostService
+PostService -> Repo : save(post)
+activate Repo
+Repo --> PostService : post
+deactivate Repo
+PostService --> Controller : post
+deactivate PostService
+
+Controller --> User : redirect:/discussionBoard
+deactivate Controller
+
+== Save Comment ==
+User -> Controller : POST /post/{postId}/comment
+activate Controller
+
+Controller -> CommentService : addCommentToPost(postId, comment)
+activate CommentService
+CommentService -> Repo : save(comment)
+activate Repo
+Repo --> CommentService : comment
+deactivate Repo
+CommentService --> Controller : 
+deactivate CommentService
+
+Controller --> User : redirect:/discussionBoard
+deactivate Controller
+@enduml

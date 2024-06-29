@@ -1,0 +1,15 @@
+@startuml
+class AttributeSuggestion {
+- long id
+- Attribute associatedAttribute
+- String value
++ long getId()
++ void setId(long)
++ Attribute getAssociatedAttribute()
++ void setAssociatedAttribute(Attribute)
++ String getValue()
++ void setValue(String)
+}
+
+
+@enduml

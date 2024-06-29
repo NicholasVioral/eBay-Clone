@@ -1,0 +1,8 @@
+@startuml
+class RevenueController [[java:edu.sru.cpsc.webshopping.controller.RevenueController]] {
+	-percent: float
+	~userService: UserService
+	+viewRevenue(model: Model, principal: Principal): String
+	+calculateRevenueEarned(transaction: Transaction): float
+}
+@enduml

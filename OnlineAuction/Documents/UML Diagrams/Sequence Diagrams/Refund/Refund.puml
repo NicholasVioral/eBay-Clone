@@ -1,0 +1,30 @@
+@startuml
+
+actor User
+participant "refund.html" as Browser
+participant "LandingPageController.java" as LPC
+participant "UserController (Java)" as UC
+participant "TransactionController (Java)" as TC
+participant "WidgetController (Java)" as WC
+participant "MarketController (Java)" as MC
+
+User -> Browser: Visit /refund page
+Browser -> LPC: GET /refund
+
+LPC -> UC: getCurrently_Logged_In()
+UC --> LPC: Return current User
+
+LPC -> WC: getAllWidgets()
+WC --> LPC: Return all widgets
+
+LPC -> MC: getAllListings()
+MC --> LPC: Return all listings
+
+LPC -> TC: getUserPurchases(User)
+TC --> LPC: Return User's Purchases
+
+LPC --> Browser: Render page with user's details, purchases, widgets, and listings
+
+note over User, Browser: User views the purchased items.
+
+@enduml

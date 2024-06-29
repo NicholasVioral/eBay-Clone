@@ -1,0 +1,16 @@
+@startuml
+class Bid [[java:edu.sru.cpsc.webshopping.domain.market.Bid]] {
+	-id: long
+	-auction: Auction
+	-bidder: User
+	-bidAmount: BigDecimal
+	+Bid()
+	+Bid(auction: Auction, bidder: User, bidAmount: BigDecimal)
+	+getAuction(): Auction
+	+setAuction(auction: Auction): void
+	+getBidder(): User
+	+setBidder(bidder: User): void
+	+getBidAmount(): BigDecimal
+	+setBidAmount(bidAmount: BigDecimal): void
+}
+@enduml

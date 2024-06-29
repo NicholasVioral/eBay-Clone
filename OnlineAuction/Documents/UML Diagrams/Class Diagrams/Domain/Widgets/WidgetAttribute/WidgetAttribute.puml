@@ -1,0 +1,22 @@
+@startuml
+class WidgetAttribute [[java:edu.sru.cpsc.webshopping.domain.widgets.WidgetAttribute]] {
+	-id: long
+	-attributeKey: String
+	-value: String
+	-widget: Widget
+	-attribute: Attribute
+	+WidgetAttribute()
+	+WidgetAttribute(attribute: Attribute)
+	+WidgetAttribute(widget: Widget, attribute: Attribute)
+	+getId(): long
+	+setId(id: long): void
+	+getAttributeKey(): String
+	+setAttributeKey(attributeKey: String): void
+	+getAttribute(): Attribute
+	+setAttribute(attribute: Attribute): void
+	+getValue(): String
+	+setValue(value: String): void
+	+getWidget(): Widget
+	+setWidget(widget: Widget): void
+}
+@enduml

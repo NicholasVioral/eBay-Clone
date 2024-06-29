@@ -1,0 +1,5 @@
+@startuml
+class UtilityController [[java:edu.sru.cpsc.webshopping.controller.UtilityController]] {
+	+randomStringGenerator(): String
+}
+@enduml

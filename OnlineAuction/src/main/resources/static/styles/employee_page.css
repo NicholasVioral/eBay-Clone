@@ -1,0 +1,450 @@
+body {
+	font-family: 'Poppins', sans-serif;
+	background-color: #f4f6f8;
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	font-family: 'Poppins';
+	color:#222222;
+}
+
+h2 {
+	font-family: 'Poppins';
+	color:#222222;
+	margin-top: 0.5rem;
+	font-weight: 600;
+}
+
+text {
+	font-family: 'Poppins';
+	color:#222222;
+}
+
+li.pointer {
+	cursor: pointer;
+}
+
+#bg-color {
+	background-color: #0d6efd;
+	color: #f4f6f8;
+}
+
+#addToWatchlistButton {
+	/* Allow the button to resize based on content */
+	width: auto; 
+	height: auto;
+   	
+}
+
+#middle {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+#table-head {
+	background-color: #0d6efd;
+}
+
+.grid-container {
+	display: grid;
+	background-color: #ffffff;
+	position: relative;
+	width:100%;
+	height:100%;
+	margin:-10px;
+	font-family: 'Poppins';
+	font-size: 18px;
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.5;
+}
+
+.grid-item {
+  	background-color: #ffffff;
+  	text-align: center;
+  	width: 100%;
+  	height: 100%;
+  	position: relative;
+}
+
+/* used https://www.w3schools.com/howto/howto_css_next_prev.asp as a resource */
+.img-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.item1 {
+ 	background-color: #212529;
+ 	color:#ced4da;
+	width:100%;
+ 	height:62px;
+	margin-left:30px;
+  	grid-column: 2;
+  	grid-row: 1;
+}
+
+.item2 {
+	background-color: #66ff99;
+  	grid-column: 3;
+  	grid-row: 1;
+}
+
+.item3 {
+  	z-index: 100;
+  	top: 0px;
+  	height: 100%;
+  	position: fixed;
+  	width:142px;
+  	grid-column: 1;
+  	grid-row: 1 / span 2;
+  	background-color: #212529;
+  	padding: 0px;
+}
+
+.item4 {
+	grid-column: 2 / span 4;
+  	grid-row: 2;
+ 	margin-left: 200px;
+}
+
+.item5 {
+	grid-row: 2;  
+}
+
+.item6 {
+	width: 1800px;
+ 	grid-column: 3 / span 2;
+  	grid-row: 2 ;
+
+}
+
+.item7 {
+background-color: #ced4da;
+  	grid-column: 2;
+  	grid-row: 3;
+}
+
+.item8 {
+	background-color: #ced4da;
+  	grid-column: 3;
+  	grid-row: 3;
+}
+
+.item9 {
+	background-color: #ced4da;
+  	grid-column: 4;
+  	grid-row: 3;
+}
+
+.submit {
+	display: inline-block;
+	color: #fff;
+    background-color: #0B53C3;
+    font-weight: 400;
+    line-height: 1.5;
+    font-size: 1rem;
+    width: 10%;
+    height: 50%;
+    margin: 5px;
+	border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+	text-align: center;
+	text-decoration: none;
+	transition: all .15s;
+}
+
+.submit5 {
+	display: inline-block;
+	color: #fff;
+    background-color: #28a745;
+    font-weight: 400;
+    line-height: 1.5;
+    font-size: 1rem;
+    width: 10%;
+    height: 50%;
+    margin: 5px;
+	border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+	text-align: center;
+	text-decoration: none;
+	transition: all .15s;
+}
+
+.submit6 {
+	display: inline-block;
+	color: #fff;
+    background-color: #ffc107;
+    font-weight: 400;
+    line-height: 1.5;
+    font-size: 1rem;
+    width: 10%;
+    height: 50%;
+    margin: 5px;
+	border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+	text-align: center;
+	text-decoration: none;
+	transition: all .15s;
+}
+
+.submit7 {	
+	display: inline-block;
+	color: #fff;
+    background-color: #dc3545;
+    font-weight: 400;
+    line-height: 1.5;
+    font-size: 1rem;
+    width: 10%;
+    height: 50%;
+    margin: 5px;
+	border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+	text-align: center;
+	text-decoration: none;
+	transition: all .15s;
+}
+
+.submit8 {	
+	display: inline-block;
+	color: #fff;
+    background-color: #00bbff;
+    font-weight: 400;
+    line-height: 1.5;
+    font-size: 1rem;
+    width: 10%;
+    height: 50%;
+    margin: 5px;
+	border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+	text-align: center;
+	text-decoration: none;
+	transition: all .15s;
+}
+
+.submit4 {
+	display: inline-block;
+	margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+	padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+	color: #DEE2E6; /*color: #0d6efd;*/
+	text-decoration: none;
+	text-align: center;
+	transition: all .15s;
+}
+
+.submit2 {
+	color: #9b9d9e;
+	text-align: left;
+    padding: .2rem ;
+    padding-top: 0.5rem;
+    padding-right: .5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0rem;
+    font-size:15px;
+ 	text-decoration: none;
+	transition: all .15s;
+}
+
+.submit:hover{
+  background-color: #100095;
+  color: #fff;
+}
+
+.submit5:hover{
+  background-color: #100095;
+  color: #fff; 
+}
+
+.submit6:hover{
+  background-color: #100095;
+  color: #fff; 
+}
+
+.submit7:hover{
+  background-color: #100095;
+  color: #fff; 
+}
+
+.submit8:hover{
+  background-color: #100095;
+  color: #fff;  
+}
+
+.submit4:hover{
+  color: #0a58ca;
+}
+
+.submit2:hover{
+  color: #c7c8c9;
+}
+
+.submit3 {
+	color: #fff;
+    background-color: #dc3545;
+    font-weight: 400;
+    line-height: 1.5;
+    font-size: 1rem;
+    width: 92%;
+    height: 70%;
+	border: 2px solid black;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+	text-align: center;
+	text-decoration: none;
+	transition: all .15s;
+}
+
+.submit3:hover{
+  background-color: #100095;
+  color: #fff;
+}
+
+th {
+  /*border: 2px solid rgb(173, 210, 252);*/
+  background-color: #e9ecef;
+  height: 60px;
+}
+
+td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /*border: 2px solid rgb(173, 210, 252);*/
+  height: 85px;
+  margin-bottom: .5em;
+}
+
+table.center {
+  table-layout: fixed;
+  width: 75%;
+  text-align: center;
+  margin: auto;
+}
+
+table.left {
+  width: 30%;
+  table-layout: fixed;
+  margin-top: 50px;
+  margin-left: 100px;
+}
+
+table.middle {
+  width: 20%;
+  table-layout: fixed;
+  margin-top: 50px;
+
+}
+
+table.right {
+  width: 25%;
+  table-layout: fixed;
+  margin-top: 50px;
+  margin-right: auto;
+}
+
+table.addUserTable td{
+	height:50px;
+	border: 2px solid black;
+	border-color: black;
+	width: 120px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+table.addUserCreateFail td{	
+	height:50px;
+	border-color: black;
+	padding-left: 8px;
+	width: 361px;
+	background-color: #ff372e;
+	text-align: center
+}
+
+table.uniTableForm td{
+	height:50px;
+	border-color: black;
+	padding-left: 8px;
+	width: 120px;
+}
+
+table.addUserSuccess td{	
+	height:50px;
+	border-color: black;
+	padding-left: 8px;
+	width: 361px;
+	background-color: #50C878;
+	text-align: center
+}
+
+.buttonCancelUser{
+	margin-right: 4px;
+	border-radius: 12px;
+	color: black;
+	background-color: red;
+	border-color: black;
+	font-size: 15px;
+}
+
+.buttonCancelUser:hover{
+	background-color: #8B0000;
+}
+
+.buttonAddUser{
+	margin-right: 4px;
+	border-radius: 12px;
+	color: black;
+	background-color: #0BDA51;
+	border-color: black;
+	font-size: 15px
+}
+
+.buttonAddUser:hover{
+	background-color: #009E60;
+}
+
+.buttonSearchUser{
+	border-radius: 12px;
+	color: black;
+	background-color: white;
+	border-color: black;
+	font-size: 15px;
+}
+
+.buttonSearchUser:hover{
+	background-color: #D3D3D3;
+}
+
+.message-content {
+    margin-bottom: 0; /* Removes bottom margin */
+    padding-bottom: 0; /* Removes bottom padding */
+    line-height: 1.2; /* Adjust line height to make text lines closer together */
+    display: block; /* This will treat the span like a block element, which may help in certain layouts */
+}
+
+
+.scrollable-table-container {
+    max-height: 400px; /* Adjust the height as needed */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.clickable:hover {
+    background-color: #f5f5f5; /* Light grey on hover */
+    cursor: pointer;
+}
+
+.details {
+    background-color: #e9ecef; /* Lighter grey for details */
+}

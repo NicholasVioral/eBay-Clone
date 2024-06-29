@@ -1,0 +1,12 @@
+@startuml
+
+class TicketService {
+  - ticketRepository: TicketRepository
+  + TicketService(ticketRepository: TicketRepository)
+  + getAllTickets(): Iterable<Ticket>
+  + getTicketById(id: Long): Ticket
+  + findById(id: Long): Optional<Ticket>
+  + save(ticket: Ticket): void
+}
+
+@enduml

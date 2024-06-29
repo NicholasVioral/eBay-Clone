@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="ISO-8859-1">
+<title>Employee Center</title>
+
+<!-- Font import -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins&amp;display=swap"
+	rel="stylesheet">
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+	crossorigin="anonymous">
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+	type="text/javascript"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+	type="text/javascript"></script>
+
+
+<!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+<script
+	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+	type="text/javascript"></script>
+<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>-->
+
+<link th:href="@{/styles/button.css}" rel="stylesheet" />
+<link th:href="@{/styles/landing.css}" rel="stylesheet" />
+<link th:href="@{/styles/employee_page.css}" rel="stylesheet" />
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+	type="text/javascript"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
+	type="text/javascript"></script>
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+	type="text/javascript"></script>
+<link rel="stylesheet"
+	href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+	type="text/javascript"></script>
+
+<script th:inline="javascript" type="text/javascript">
+	var real_data = /*[[${names}]]*/'noValue';
+	var real_data2 = /*[[${widgetNames}]]*/'noValue';
+	$(document).ready(function() {
+		$("#nameInput").autocomplete({
+			minLength : 1,
+			source : real_data,
+			select : function(e, ui) {
+				$("#nameOutput").text('You have selected : ' + ui.item.value);
+				return ui.item.value;
+			}
+		})
+		$("#widgetNameInput").autocomplete({
+			minLength : 1,
+			source : real_data2,
+			select : function(e, ui) {
+				$("#nameOutput2").text('You have selected : ' + ui.item.value);
+				return ui.item.value;
+			}
+		})
+	});
+</script>
+<script th:inline="javascript" type="text/javascript">
+	var contextPath = /*[[ @{'/'} ]]*/'';
+	var timer = 0; //timer intializer set to zero
+	var idleCheck = setInterval(function() {
+		++timer; //increases variable timer via interval
+		document.onmousemove = resetIdleClock; //resets timer on user mouse move
+		document.onload = resetIdleClock; //resets timer when page is intialized
+		document.onclick = resetIdleClock; //resets timer on user click
+		document.onkeydown = resetIdleClock; //when key is pressed on page
+
+		if (timer == 75000) { //if statement captures when idle timer reaches 5 mins
+			lockUserAccount(); //alert message indictating to user they have been logged out
+			window.location.href = contextPath + "do_the_logout"; //logs user out and redircts to home page
+		}
+
+		function resetIdleClock() { //function to reset timer variable
+			timer = 0;
+		}
+
+		function lockUserAccount() { //function to alert use they have been logged out
+			window
+					.alert("logged-out due to inactivity, re-validation required")
+		}
+		// javascript function has been modified, is within the references document
+	});
+</script>
+</head>
+
+<body>
+
+	<!-- HEADER BAR -->
+	<div th:insert="~{header :: header}"></div>
+	<!-- END HEADER BAR -->
+
+	<div>
+		<th:block th:switch="${masterPage}">
+			<div th:case="base">
+				<th:block th:switch="${page}">
+					<div th:case="begin">
+						<table style="text-align: center;">
+							<tr>
+								<th>Welcome to the Employee Home Page</th>
+							</tr>
+							<tr>
+								<td>Click the buttons on the top navigation bar to get
+									started</td>
+							</tr>
+							<tr>
+								<th>Clicking the <i>Offerly</i> logo in the top-left will
+									bring you back to this screen
+								</th>
+							</tr>
+							<tr>
+								<td>Various employee roles share this workspace. Depending
+									on your role you may not have proper authority to access
+									everything that you click on. In that case, you may see a
+									screen saying you do not have the proper authority. To get
+									back, either click home or one of the other buttons on the top
+									navigation bar.</td>
+							</tr>
+							<tr>
+								<th>To prevent 'Tailgating,' all administrators will be
+									logged out if idle.</th>
+							</tr>
+							<tr>
+								<td>To re-gain access to administrator page, sign back in
+									using administrative credentials.</td>
+							</tr>
+						</table>
+					</div>
+				</th:block>
+			</div>
+
+			<div th:case="query">
+				<th:block th:switch="${page}">
+					<div th:case="notAuthorized">
+						<table class="center">
+							<tr>
+								<th>You do not have the proper authority to view this page</th>
+							</tr>
+						</table>
+					</div>
+					<div th:case="searchMarketListing">
+						<form th:action="@{/searchListing}" method="post" action="">
+							<label for="widgetName">Enter widget name<la></la> <input
+								type="text" name="widgetName" id="widgetNameInput"><br>
+								<input type="submit" class="submit" value="Search">
+							</label>
+						</form>
+					</div>
+
+					<!-- tickets page -->
+					<div th:case="ticket">
+						<div class="card my-4 mx-4">
+							<div class="card-header">
+								<h2>Tickets</h2>
+							</div>
+							<div class="card-body" style="padding-top: 24px;">
+								<div class="card"
+									style="height: fit-content; margin-left: auto; margin-right: auto;">
+									<table class="table table-striped">
+										<thead>
+											<tr>
+												<th scope="col"><h5>Ticket ID:</h5></th>
+												<th scope="col"><h5>Reporter:</h5></th>
+												<th scope="col"><h5>Assigned To:</h5></th>
+												<th scope="col"><h5>User Level:</h5></th>
+												<th:block th:if="${user.role == 'ROLE_CUSTOMERSERVICE'}">
+													<th scope="col"><h5>Update Assignee:</h5></th>
+												</th:block>
+												<th scope="col"><h5>State:</h5></th>
+												<th scope="col"><h5>Ticket Actions:</h5></th>
+											</tr>
+										</thead>
+										<tbody>
+											<th:block th:each="ticket: ${tickets}">
+												<tr>
+													<td><a
+														th:href="@{/searchTickets/{id}(id = ${ticket.id})}"
+														th:text="${ticket.id}"></a></td>
+													<td><a th:text="${ticket.createdBy.username}"></a></td>
+													<!-- Null Pointer Check - https://stackoverflow.com/questions/20636456/using-thymeleaf-when-the-value-is-null -->
+													<td><p
+															th:text="${ticket.assignedTo} ? ${ticket.assignedTo.username} : 'None'"></p></td>
+													<td><p
+															th:text="${ticket.assignedTo} ? ${ticket.assignedTo.role} : 'None'"></p></td>
+													<!-- Check if the ticket is not resolved -->
+													<th:block th:if="${!ticket.isResolved()}">
+														<td>
+															<form method="post"
+																th:action="@{/assignTicket/{id}(id = ${ticket.id})}"
+																action="">
+																<select class="form-select" th:name="username"
+																	style="max-width: 70%; display: inline;">
+																	<!-- Display this block if the user is ROLE_HELPDESK_ADMIN or ROLE_ADMIN -->
+																	<th:block
+																		th:if="${user.role == 'ROLE_HELPDESK_ADMIN' or user.role == 'ROLE_ADMIN'}">
+																		<option th:each="assignuser : ${users}"
+																			th:value="${assignuser.username}"
+																			th:text="${assignuser.username != user.username} ? ${assignuser.role} + ' - ' + ${assignuser.username} : 'Assign To Me'"></option>
+																	</th:block>
+																	<!-- Display this option for any other role that is not ROLE_HELPDESK_ADMIN or ROLE_ADMIN -->
+																	<th:block
+																		th:unless="${user.role == 'ROLE_HELPDESK_ADMIN' or user.role == 'ROLE_ADMIN'}">
+																		<option th:value="${user.username}"
+																			th:text="'Assign To Me'"></option>
+																	</th:block>
+																</select> <input class="btn btn-outline-secondary" type="submit"
+																	value="Submit" />
+															</form>
+														</td>
+													</th:block>
+													<!-- If the ticket is resolved, show 'None' -->
+													<th:block th:unless="${!ticket.isResolved()}">
+														<td><p>None</p></td>
+													</th:block>
+													<td><p th:text="${ticket.state}"></p></td>
+													<td><th:block
+															th:if="${!ticket.isResolved() &amp;&amp; ticket.assignedTo != null ? ticket.assignedTo.username == user.username : false}">
+															<form method="post"
+																th:action="@{/resolveTicket/{id}(id = ${ticket.id})}"
+																action="">
+																<input type="submit" value="Resolve Ticket" />
+															</form>
+														</th:block> <th:block
+															th:unless="${!ticket.isResolved() &amp;&amp; ticket.assignedTo != null ? ticket.assignedTo.username == user.username : false}">
+															<p>None</p>
+														</th:block></td>
+												</tr>
+											</th:block>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+					<!-- ticket details page -->
+					<div th:case="ticketdetail">
+						<div class="card my-4" style="margin: auto; max-width: 600px;">
+							<!-- Center the card on the page -->
+							<div class="card-header text-center">
+								<h2>Ticket Details</h2>
+							</div>
+							<div class="card-body">
+								<div class="table-responsive">
+									<table class="table">
+										<tbody>
+											<tr>
+												<th scope="row"
+													style="border-right: 1px solid #dee2e6; width: 50%;">Ticket
+													ID</th>
+												<td style="text-align: left;"><p th:text="${ticket.id}"></p></td>
+											</tr>
+											<tr>
+												<th scope="row"
+													style="border-right: 1px solid #dee2e6; width: 50%;">Subject</th>
+												<td style="text-align: left;"><p
+														th:text="${ticket.subject}"></p></td>
+											</tr>
+											<tr>
+												<th scope="row"
+													style="border-right: 1px solid #dee2e6; width: 50%;">Reporter</th>
+												<td style="text-align: left;"><p
+														th:text="${ticket.createdBy.username}"></p></td>
+											</tr>
+											<tr>
+												<th scope="row"
+													style="border-right: 1px solid #dee2e6; width: 50%;">State</th>
+												<td style="text-align: left;"><p
+														th:text="${ticket.state}"></p></td>
+											</tr>
+											<tr>
+												<th scope="row"
+													style="border-right: 1px solid #dee2e6; width: 50%;">Created
+													At</th>
+												<td style="text-align: left;"><p
+														th:text="${ticket.createdAt}"></p></td>
+											</tr>
+											<tr>
+												<th scope="row"
+													style="border-right: 1px solid #dee2e6; width: 50%;">Assigned
+													At</th>
+												<td style="text-align: left;"><p
+														th:text="${ticket.assignedAt} ? ${ticket.assignedAt} : 'UNASSIGNED'"></p></td>
+											</tr>
+											<tr>
+												<th scope="row"
+													style="border-right: 1px solid #dee2e6; width: 50%;">Updated
+													At</th>
+												<td style="text-align: left;"><p
+														th:text="${ticket.updatedAt}"></p></td>
+											</tr>
+											<tr>
+												<th scope="row"
+													style="border-right: 1px solid #dee2e6; width: 50%;">Resolved
+													At</th>
+												<td style="text-align: left;"><p
+														th:text="${ticket.resolvedAt} ? ${ticket.resolvedAt} : 'IN PROGRESS'"></p></td>
+											</tr>
+											<tr>
+												<th style="border-right: 1px solid #dee2e6; width: 50%;">Messages</th>
+												<td>
+													<div style="white-space: pre-wrap; text-align: left;">
+														<th:block th:each="message : ${ticket.messages}">
+															<span class="message-content"
+																th:text="${message.sender} + ' : ' + ${message.content} + ' (' + ${message.msgDate} + ')'"></span>
+															<br>
+														</th:block>
+													</div> <th:block
+														th:if="${!ticket.isResolved() &amp;&amp; ticket.assignedTo != null ? ticket.assignedTo.username == user.username : false}">
+														<form method="post"
+															th:action="@{/reply/{id}(id = ${ticket.id})}"
+															th:object="${message}"
+															style="display: flex; align-items: center; gap: 8px;"
+															action="">
+															<label for="reply" style="margin-bottom: 0;">Reply:</label>
+															<input type="text" id="reply" name="reply"
+																style="flex-grow: 1;" placeholder="Reply to the ticket"
+																th:field="*{content}" /> <input type="submit"
+																class="btn btn-primary btn-sm" value="Submit" />
+														</form>
+													</th:block>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="card-footer text-center">
+								<a th:href="@{/searchTickets}" class="btn btn-primary">Back</a>
+							</div>
+						</div>
+					</div>
+
+					<!-- resolved tickets page -->
+					<div th:case="resolvedTickets">
+						<table class="center">
+							<th:block th:switch="${pageSuccess}">
+								<div th:case="ticketMovedToUnresolved">
+									<tr>
+										<th colspan="3" style="background-color: rgb(128, 128, 192);">Ticket
+											was moved back to unresolved</th>
+									</tr>
+								</div>
+								<div th:case="ticketEscalated">
+									<tr>
+										<th colspan="3" style="background-color: rgb(128, 128, 192);">Ticket
+											was escalated</th>
+									</tr>
+								</div>
+							</th:block>
+							<tr>
+								<th colspan="9">Tickets</th>
+							</tr>
+							<tr>
+								<th>Reporter</th>
+								<th>Offender</th>
+								<th>Ticket Category</th>
+								<th>Feedback</th>
+								<th>Date Created</th>
+								<th>Resolve Tickets</th>
+								<th colspan="3">Escalate Tickets</th>
+							</tr>
+							<th:block th:each="tickets: ${tickets}">
+								<tr>
+									<td><a
+										th:href="@{/searchUser(userName = ${tickets.spamReporter})}"
+										th:text="${tickets.spamReporter}"></a></td>
+									<td><a
+										th:href="@{/searchUser(userName = ${tickets.offender})}"
+										th:text="${tickets.offender}"></a></td>
+									<td><p th:text="${tickets.ticketCategory}"></p></td>
+									<td><p th:text="${tickets.userFeedback}"></p></td>
+									<td><p th:text="${tickets.dateSentToTrashOwner}"></p></td>
+									<td><a class="submit7" style="width: 75%; height: 50%"
+										th:href="@{/escalateTicket(id = ${tickets.id}, id2 = ${6})}">Un-Resolve</a></td>
+									<th:block th:switch="${user.role}">
+										<div th:case="ROLE_CUSTOMERSERVICE">
+											<td><a class="submit" style="width: 75%; height: 50%"
+												th:href="@{/escalateTicket(id = ${tickets.id}, id2 = ${1})}">Escalate
+													To Technical Support</a></td>
+											<td><a class="submit5" style="width: 75%; height: 50%"
+												th:href="@{/escalateTicket(id = ${tickets.id}, id2 = ${2})}">Escalate
+													To Manager</a></td>
+											<td><a class="submit7" style="width: 75%; height: 50%"
+												th:href="@{/escalateTicket(id = ${tickets.id}, id2 = ${4})}">Escalate
+													To Security</a></td>
+										</div>
+										<div th:case="ROLE_ADMIN">
+											<td><a class="submit" style="width: 75%; height: 50%"
+												th:href="@{/escalateTicket(id = ${tickets.id}, id2 = ${1})}">Escalate
+													To Technical Support</a></td>
+											<td><a class="submit5" style="width: 75%; height: 50%"
+												th:href="@{/escalateTicket(id = ${tickets.id}, id2 = ${3})}">Escalate
+													To Customer Service</a></td>
+											<td><a class="submit7" style="width: 75%; height: 50%"
+												th:href="@{/escalateTicket(id = ${tickets.id}, id2 = ${4})}">Escalate
+													To Security</a></td>
+										</div>
+										<div th:case="ROLE_TECHNICALSERVICE">
+											<td><a class="submit" style="width: 75%; height: 50%"
+												th:href="@{/escalateTicket(id = ${tickets.id}, id2 = ${3})}">Escalate
+													To Customer Service</a></td>
+											<td><a class="submit5" style="width: 75%; height: 50%"
+												th:href="@{/escalateTicket(id = ${tickets.id}, id2 = ${2})}">Escalate
+													To Manager</a></td>
+											<td><a class="submit7" style="width: 75%; height: 50%"
+												th:href="@{/escalateTicket(id = ${tickets.id}, id2 = ${4})}">Escalate
+													To Security</a></td>
+										</div>
+										<div th:case="ROLE_SECURITY">
+											<td><a class="submit" style="width: 75%; height: 50%"
+												th:href="@{/escalateTicket(id = ${tickets.id}, id2 = ${1})}">Escalate
+													To Technical Support</a></td>
+											<td><a class="submit5" style="width: 75%; height: 50%"
+												th:href="@{/escalateTicket(id = ${tickets.id}, id2 = ${2})}">Escalate
+													To Manager</a></td>
+											<td><a class="submit" style="width: 75%; height: 50%"
+												th:href="@{/escalateTicket(id = ${tickets.id}, id2 = ${3})}">Escalate
+													To Customer Service</a></td>
+										</div>
+									</th:block>
+								</tr>
+							</th:block>
+						</table>
+					</div>
+					<div th:case="statistics">
+						<form th:action="@{/lookupStatistics}" method="post" action="">
+							<table class="center">
+								<tr>
+									<th>Select statistic type</th>
+								</tr>
+								<tr>
+									<td>
+										<div>
+											<select name="category">
+												<option th:each="catList : ${catList}" th:text="${catList}" />
+											</select>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th>Select date to filter by</th>
+								</tr>
+								<tr>
+									<td>
+										<div>
+											<select name="date">
+												<option th:each="dateList : ${dateList}"
+													th:text="${dateList}" />
+											</select>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td><input type="submit" class="submit"
+										value="lookUpStats"></td>
+								</tr>
+							</table>
+						</form>
+					</div>
+					<div th:case="listingResult">
+						<table class="center">
+							<tr>
+								<th>Widget Id</th>
+								<th>Name</th>
+								<th>Description</th>
+								<th>Category</th>
+								<th>Listing Id</th>
+								<th>Listing Seller</th>
+								<th>Listing Quantity</th>
+								<th>Listing Price</th>
+								<th>Edit Widget</th>
+							</tr>
+							<tr>
+								<td th:text="${searchedWidget.id}"></td>
+								<td th:text="${searchedWidget.name}"></td>
+								<td th:text="${searchedWidget.description}"></td>
+								<td th:text="${searchedWidget.category}"></td>
+								<td th:text="${searchedMarket.id}"></td>
+								<td th:text="${seller.username}"></td>
+								<td th:text="${searchedMarket.qtyAvailable}"></td>
+								<td th:text="${searchedMarket.pricePerItem}"></td>
+								<td><a th:href="@{/viewListing/{id}(id = ${user.id})}">Edit
+										Listing</a></td>
+							</tr>
+						</table>
+					</div>
+					<div th:case="createfail">
+						<h1>Employee Creation Failed</h1>
+					</div>
+
+					<!-- Refund Tickets table -->
+					<div th:if="${page == 'ticket'}">
+						<div class="card my-4 mx-4">
+							<div class="card-header">
+								<h2>Refund Tickets</h2>
+							</div>
+							<div class="card-body">
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th scope="col">Refund ID</th>
+											<th scope="col">Reporter</th>
+											<th scope="col">Assigned To</th>
+											<th scope="col">User Level</th>
+											<th scope="col">Update Assignee</th>
+											<th scope="col">State</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="refundTicket : ${refundTickets}">
+											<td><a
+												th:href="@{/refundTickets/{id}(id=${refundTicket.id})}"
+												th:text="${refundTicket.id}"></a></td>
+											<td th:text="${refundTicket.createdBy.username}"></td>
+											<td
+												th:text="${refundTicket.assignedTo != null ? refundTicket.assignedTo.username : 'None'}"></td>
+											<td
+												th:text="${refundTicket.assignedTo != null ? refundTicket.assignedTo.role : 'None'}"></td>
+											<td>
+												<form
+													th:if="${user.role == 'ROLE_HELPDESK_ADMIN' or user.role == 'ROLE_ADMIN'}"
+													method="post"
+													th:action="@{/assignRefundTicket/{id}(id=${refundTicket.id})}"
+													style="display: inline;" action="">
+													<select class="form-select" name="assignedTo"
+														style="max-width: 70%; display: inline;">
+														<option th:each="assignUser : ${users}"
+															th:value="${assignUser.username}"
+															th:text="${assignUser.username}"></option>
+													</select>
+													<button type="submit" class="btn btn-outline-secondary">Assign</button>
+												</form>
+												<form
+													th:unless="${user.role == 'ROLE_HELPDESK_ADMIN' or user.role == 'ROLE_ADMIN'}"
+													method="post"
+													th:action="@{/assignRefundTicket/{id}(id=${refundTicket.id})}"
+													style="display: inline;" action="">
+													<select class="form-select" name="assignedTo"
+														style="max-width: 70%; display: none;">
+														<option th:value="${user.username}"
+															th:text="'Assign To Me'"></option>
+													</select>
+													<button type="submit" class="btn btn-outline-secondary">Assign
+														To Me</button>
+												</form>
+											</td>
+											<td th:text="${refundTicket.state}"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+
+
+					<!-- Refund Tickets Deatils Page -->
+					<div th:if="${page == 'refundTicketDetail'}">
+						<div class="card my-4" style="margin: auto; max-width: 600px;">
+							<div class="card-header text-center">
+								<h2>Refund Ticket Details</h2>
+							</div>
+							<div class="card-body">
+								<div class="table-responsive">
+									<table class="table">
+										<tbody>
+											<tr>
+												<th scope="row">Refund ID</th>
+												<td th:text="${refundTicket.id}"></td>
+											</tr>
+											<tr>
+												<th scope="row">Reporter</th>
+												<td th:text="${refundTicket.createdBy.username}"></td>
+											</tr>
+											<tr>
+												<th scope="row">Assigned To</th>
+												<td
+													th:text="${refundTicket.assignedTo != null ? refundTicket.assignedTo.username : 'None'}"></td>
+											</tr>
+											<tr>
+												<th scope="row">Refund Price</th>
+												<td><span
+													th:text="'$' + ${refundTicket.totalPriceAfterTaxes}"></span></td>
+											</tr>
+											<tr>
+												<th scope="row">State</th>
+												<td th:text="${refundTicket.state}"></td>
+											</tr>
+											<tr>
+												<th scope="row">Created At</th>
+												<td th:text="${refundTicket.createdAt}"></td>
+											</tr>
+											<tr>
+												<th scope="row">Assigned At</th>
+												<td
+													th:text="${refundTicket.assignedAt != null ? refundTicket.assignedAt : 'UNASSIGNED'}"></td>
+											</tr>
+											<tr>
+												<th scope="row">Updated At</th>
+												<td th:text="${refundTicket.updatedAt}"></td>
+											</tr>
+											<tr>
+												<th scope="row">Refund Description</th>
+												<td th:text="${refundTicket.subject}"></td>
+											</tr>
+											<tr>
+												<th scope="row">Resolved At</th>
+												<td
+													th:text="${refundTicket.resolvedAt != null ? refundTicket.resolvedAt : 'IN PROGRESS'}"></td>
+											</tr>
+											<tr
+												th:if="${refundTicket.state != 'ANSWERED' and refundTicket.state != 'REJECTED' and refundTicket.state != 'APPROVED'}">
+												<td colspan="2" class="text-center">
+													<!-- Reject form -->
+													<form
+														th:action="@{/rejectRefundTicket(refundTicketId=${refundTicket.id})}"
+														method="post" style="display: inline;" action="">
+														<button type="submit" class="btn btn-danger">Reject</button>
+													</form> <!-- Accept form -->
+													<form
+														th:action="@{/acceptRefundTicket(refundTicketId=${refundTicket.id})}"
+														method="post" style="display: inline;" action="">
+														<button type="submit" class="btn btn-success">Accept
+															Refund</button>
+													</form>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="card-footer text-center">
+								<a th:href="@{/searchTickets}" class="btn btn-primary">Back</a>
+							</div>
+						</div>
+					</div>
+
+					<div th:case="postLayout">
+						<div>
+							<h2>Discussion Board</h2>
+							<div>
+								<form th:action="@{/admin/deleteOldPosts}" method="post"
+									action="">
+									<label for="days">Delete posts that have not had a
+										comment in this number of days:</label> <input type="number" id="days"
+										name="days" min="0">
+									<button type="submit" class="btn btn-danger">Delete
+										Posts</button>
+								</form>
+							</div>
+							<div class="scrollable-table-container">
+								<table id="postsTable" class="table table-striped">
+									<thead>
+										<tr>
+											<th scope="col"><h5>ID</h5></th>
+											<th scope="col"><h5>User</h5></th>
+											<th scope="col"><h5>Title</h5></th>
+											<th scope="col"><h5>Date</h5></th>
+											<th scope="col"><h5>Last Commented On</h5></th>
+											<th scope="col"><h5>Archived</h5></th>
+											<th scope="col"><h5>Content</h5></th>
+											<th scope="col"><h5>Load Comments</h5></th>
+											<th scope="col"><h5>Archive</h5></th>
+											<th scope="col"><h5>Delete</h5></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="post : ${posts}" class="post-row">
+											<td th:text="${post.id}"></td>
+											<td th:text="${post.user.username}"></td>
+											<td th:text="${post.title}"></td>
+											<td
+												th:text="${#dates.format(post.createdOn, 'dd MMM yyyy HH:mm:ss')}"></td>
+											<td
+												th:text="${#dates.format(post.lastCommentedOn, 'dd MMM yyyy HH:mm:ss')}"></td>
+											<td th:text="${post.archived ? 'Yes' : 'No'}"></td>
+											<td th:text="${post.content}"></td>
+											<td>
+											<!-- this doesn't work yet  -->
+												<button class="btn btn-info load-comments"
+													th:data-post-id="${post.id}">Show Comments</button>							
+											</td>
+											<td>
+												<form
+													th:action="@{/admin/archive/{postId}(postId=${post.id})}"
+													method="post" action="">
+													<button type="submit" class="btn-warning"
+														th:text="${post.archived ? 'Unarchive' : 'Archive'}"></button>
+												</form>
+											</td>
+											<td>
+												<form
+													th:action="@{/admin/delete/{postId}(postId=${post.id})}"
+													method="post" action="">
+													<button type="submit" class="btn-danger">Delete</button>
+												</form>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+
+								<!-- Comments Table (initially empty) -->
+								<div class="scrollable-table-container">
+									<table id="commentsTable" class="table table-striped">
+										<thead>
+											<tr>
+												<th scope="col"><h5>ID</h5></th>
+												<th scope="col"><h5>User</h5></th>
+												<th scope="col"><h5>Date</h5></th>
+												<th scope="col"><h5>Content</h5></th>
+											</tr>
+										</thead>
+										<tbody>
+											<!-- Rows to be filled by JavaScript -->
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+
+
+					<!-- adding a user page -->
+					<div th:case="create">
+						<form th:action="@{/createEmployee}" th:object="${useradd}"
+							method="post" class="container" action="">
+							<div class="card my-4 mx-4">
+								<div class="card-body" style="padding-top: 24px;">
+									<div class="card"
+										style="width: fit-content; height: fit-content; margin: 0 auto;">
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<td colspan="2" class="bg-light text-center"><h4>Add
+															User</h4></td>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td class="bg-light"><label for="userName">Username:</label></td>
+													<td><input type="text" th:field="*{username}"
+														id="username" class="form-control"
+														placeholder="Enter username"></td>
+												</tr>
+												<tr>
+													<td class="bg-light"><label for="password">Password:</label></td>
+													<td><input type="text" th:field="*{password}"
+														id="password" class="form-control"
+														placeholder="Enter password"></td>
+												</tr>
+												<tr>
+													<td class="bg-light"><label for="email">Email:
+													</label></td>
+													<td><input type="text" th:field="*{email}" id="email"
+														class="form-control" placeholder="Enter email"></td>
+												</tr>
+												<!-- role selection -->
+												<tr>
+													<td class="bg-light">Select Role:</td>
+													<td style="padding-right: 8px;">
+														<div>
+															<select th:field="*{role}" class="form-select">
+																<option th:each="role : ${roleList}" th:text="${role}"
+																	th:value="${role}" />
+															</select>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+										<!-- add button -->
+										<input type="submit" class="btn btn-outline-success"
+											value="Add" style="float: right">
+									</div>
+								</div>
+							</div>
+							<span style="color: red" th:if="${#fields.hasErrors('username')}"
+								th:errors="*{username}"></span> <span style="color: red"
+								th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+							<span style="color: red" th:if="${#fields.hasErrors('email')}"
+								th:errors="*{email}"></span>
+						</form>
+						<th:block th:switch="${page2}">
+							<div th:case="create">
+								<div class="card h-100 w-100">
+									<div class="card-body" style="padding-top: 24px;">
+										<div class="card"
+											style="width: fit-content; height: fit-content; margin: 0 auto;">
+											<table class="table table-bordered">
+												<tr>
+													<td colspan="3" style="background-color: rgb(4, 179, 87);">Creation
+														Successful</td>
+												</tr>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div th:case="createFail">
+								<div class="card h-100 w-100">
+									<div class="card-body" style="padding-top: 24px;">
+										<div class="card"
+											style="width: fit-content; height: fit-content; margin: 0 auto;">
+											<table class="table table-bordered">
+												<tr>
+													<td colspan="3">Creation Fail</td>
+												</tr>
+												<tr>
+													<td colspan="3"><p th:text="${createStringError}"></p></td>
+												</tr>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</th:block>
+					</div>
+
+
+
+
+
+
+
+					<!-- view market listings -->
+					<div th:case="searchWidgetSellerMarketListing">
+						<form th:action="@{/viewWidgetListing}" method="post" action="">
+							<div class="card my-4 mx-4">
+								<div class="card-body" style="padding-top: 24px;">
+									<div class="card"
+										style="height: fit-content; margin-left: auto; margin-right: auto;">
+										<div class="card-header">
+											<h2>Search Widgets</h2>
+										</div>
+										<table class="table">
+											<thead>
+												<!-- searching table -->
+												<table class="table">
+													<!-- choose to search by name, description, or category -->
+													<td style="height: 55px;"><label for="userName">Search
+															By:</label> <input type="radio" value="name" name="filterSearch"
+														id="name" checked> <label for="name">Name</label>
+														<input type="radio" value="description"
+														name="filterSearch" id="description"> <label
+														for="description">Description</label> <input type="radio"
+														value="category" name="filterSearch" id="category">
+														<label for="category">Category</label></td>
+													<!-- search bar -->
+													<td style="height: 55px;"><input class="form-control"
+														type="text" id="widgetNameInput" name="name"
+														style="width: 97%" placeholder="Search here"></td>
+													<!-- search button -->
+													<td style="height: 55px;"><input type="submit"
+														style="text-align: center;"
+														class="btn btn-outline-primary" value="Search"> <a
+														class="btn btn-outline-secondary"
+														th:href="@{/searchWidgetButton}">Reset</a></td>
+												</table>
+
+												<!-- All User's information table -->
+												<div class="card mx-4"
+													style="margin-bottom: 1.5rem !important;">
+													<div class="card-header">
+														<h3>Listings</h3>
+													</div>
+													<div class="card-body">
+														<table class="table table-striped">
+															<thead>
+																<tr>
+																	<th scope="col"><h5>View Listing</h5></th>
+																	<th scope="col"><h5>Listing Name</h5></th>
+																	<th scope="col"><h5>Description</h5></th>
+																	<th scope="col"><h5>Category</h5></th>
+																</tr>
+															</thead>
+															<tbody>
+																<th:block th:each="searchedWidgets: ${allWidgets}">
+																	<tr>
+																		<td><a
+																			th:href="@{/viewOneListing/{id}(id = ${searchedWidgets.id})}">View</a>
+																		</td>
+																		<td>
+																			<p th:text="${searchedWidgets.name}"></p>
+																		</td>
+																		<td>
+																			<p th:text="${searchedWidgets.description}"></p>
+																		</td>
+																		<td>
+																			<p th:text="${searchedWidgets.category.name}"></p>
+																		</td>
+																	</tr>
+																</th:block>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</thead>
+										</table>
+									</div>
+								</div>
+							</div>
+						</form>
+						<th:block th:switch="${page2}">
+							<div th:case="widget">
+								<p
+									style="text-align: center; text-transform: uppercase; color: green;">Search
+									Successful</p>
+							</div>
+							<div th:case="widgetSearchFailed">
+								<p
+									style="text-align: center; text-transform: uppercase; color: red;">Search
+									Result Provided no Results</p>
+							</div>
+						</th:block>
+					</div>
+
+					<div th:case="widgetsInfo">
+						<div class="card h-100 w-100">
+							<div class="card-body d-flex justify-content-center">
+								<form action="#" th:action="@{/widgetsInfoCategory}"
+									method="post">
+									<div class="card"
+										style="width: fit-content; height: fit-content; margin-left: auto; margin-right: auto;">
+										<div class="card-header d-flex justify-content-center">
+											<h2>Select a Widget Category</h2>
+										</div>
+										<div class="card-body">
+											<th:block th:each="category: ${categories}">
+												<div class="col">
+													<input type="radio" class="btn-check" name="category"
+														th:id="category.name" th:value="${category.name}" checked>
+													<label class="btn btn-outline-primary w-100 mb-2"
+														for="${category.name}" th:text="${category.display}"></label>
+												</div>
+											</th:block>
+											<th:block>
+												<div class="d-flex justify-content-center">
+													<button class="btn btn-outline-danger" type="button"
+														th:onclick="'location.href=\'' + @{/employee} + '\''"
+														style="float: left; margin-right: 16px;">Home</button>
+													<input type="submit" class="btn btn-outline-success"
+														value="Next" style="float: left;">
+												</div>
+											</th:block>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+
+					<div th:case="widgetsInfoCategory">
+						<div class="card h-100 w-100">
+							<div class="card-body d-flex justify-content-center">
+								<th:block th:switch="${page2}">
+									<div class="card"
+										style="width: fit-content; height: fit-content; margin-left: auto; margin-right: auto;">
+										<div class="card-header d-flex justify-content-center">
+											<h2>Select a Widget Subcategory</h2>
+										</div>
+										<form action="#" th:action="@{/widgetsInfoSubCategory}"
+											method="post" class="form">
+											<th:block th:each="category: ${categories}">
+												<div th:case="${category.name}" class="card-body">
+													<th:block th:each="subcategory: ${subcategories}">
+														<div class="col">
+															<input type="radio" class="btn-check" name="subCategory"
+																th:id="${subcategory.name}"
+																th:value="${subcategory.name}" checked> <label
+																class="btn btn-outline-primary w-100 mb-2"
+																for="${subcategory.name}"
+																th:text="${subcategory.display}"></label>
+														</div>
+													</th:block>
+													<th:block>
+														<div class="d-flex justify-content-center">
+															<button class="btn btn-outline-danger" type="button"
+																th:onclick="'location.href=\'' + @{/widgetsInfo} + '\''"
+																style="float: left; margin-right: 16px;">Back</button>
+															<input type="submit" class="btn btn-outline-success"
+																value="Next" style="float: left;">
+														</div>
+													</th:block>
+												</div>
+											</th:block>
+										</form>
+									</div>
+								</th:block>
+							</div>
+						</div>
+					</div>
+
+					<div th:case="widgetsInfoSubCategory">
+						<div class="card h-100 w-100">
+							<div class="card-body" style="padding-top: 24px;">
+								<div class="card"
+									style="width: 500px; height: fit-content; margin-left: auto; margin-right: auto;">
+									<table class="uniTableForm">
+										<tbody>
+											<form action="#" th:action="@{/updateWidgetsInfo}"
+												th:object="${widgetsInfos}" method="post">
+												<tr style="background-color: #89CFF0">
+													<td colspan="5"><h2>Widget Sub Category Details</h2></td>
+												</tr>
+											</form>
+											<tr>
+												<td colspan="3"><p
+														th:text="${subCategory} + ' Data File Download'"></p></td>
+												<form method="get" th:action="@{/downloadDataFile}"
+													enctype="multipart/form-data" action="">
+													<input hidden type="text" th:name="subCategory"
+														th:value="${subCategory}">
+													<td colspan="2">
+														<button class="btn btn-outline-success" type="submit"
+															style="float: left">Download</button>
+														<button class="btn btn-outline-danger" type="button"
+															th:onclick="'location.href=\'' + @{/widgetsInfo} + '\''"
+															style="float: right; margin-right: 16px;">Return</button>
+													</td>
+												</form>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div th:case="search">
+						<div class="card h-100 w-100">
+							<div class="card-body" style="padding-top: 24px;">
+								<div class="card" style="margin-left: auto; margin-right: auto;">
+									<!-- Main card for "Search for Users" -->
+									<div class="card-header">
+										<h2>Search For Users</h2>
+									</div>
+									<form th:action="@{/searchUser}" method="post" action="">
+										<div class="card-body">
+											<table class="table">
+												<!-- choose to search between username or email -->
+												<td style="height: 55px;"><label for="userName">Search
+														By:</label> <input type="radio" value="name" name="filterUser"
+													id="name" checked> <label for="name">Name</label> <input
+													type="radio" value="email" name="filterUser" id="email">
+													<label for="email">Email</label></td>
+												<!-- search bar -->
+												<td style="height: 55px;"><input class="form-control"
+													type="text" id="nameInput" name="userName"
+													style="width: 97%" placeholder="Search here"></td>
+												<!-- search button -->
+												<td style="height: 55px;"><input type="submit"
+													class="btn btn-outline-primary" value="Search"></td>
+											</table>
+										</div>
+									</form>
+									<!-- All User's information table -->
+									<div class="card mx-4"
+										style="margin-bottom: 1.5rem !important;">
+										<div class="card-header">
+											<h3>All User's Information</h3>
+										</div>
+										<div class="card-body">
+											<table class="table table-striped">
+												<thead>
+													<tr>
+														<th scope="col"><h5>Username</h5></th>
+														<th scope="col"><h5>Email Address</h5></th>
+														<th scope="col"><h5>View Messages</h5></th>
+														<th scope="col"><h5>Edit User</h5></th>
+														<th scope="col"><h5>View Profile</h5></th>
+													</tr>
+												</thead>
+												<tbody>
+													<th:block th:each="user: ${users}">
+														<tr>
+															<td><a
+																th:href="@{/searchUser/{id}(id = ${user.id})}"
+																th:text="${user.username}"></a></td>
+															<td>
+																<p th:text="${user.email}"></p>
+															</td>
+															<td><a
+																th:href="@{'viewLogs?category=MESSAGE&amp;username=' + ${user.username}}">Messages</a>
+															</td>
+															<td><a
+																th:href="@{/editUserButton/{id}(id = ${user.id})}">Edit
+																	User</a></td>
+															<td><a
+																th:href="@{/viewUserProfile/{id}(id = ${user.id})}">View</a>
+															</td>
+														</tr>
+													</th:block>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- failed user search -->
+					<div th:case="userSearchfailed">
+						<div class="card h-100 w-100">
+							<div class="card-body" style="padding-top: 24px;">
+								<div class="card"
+									style="width: fit-content; height: fit-content; margin-left: auto; margin-right: auto;">
+									<table class="uniTableForm">
+										<tr>
+											<td colspan="7" style="background-color: #D3D3D3"><h2>Search
+													Returned No Results</h2></td>
+										</tr>
+										<tr>
+											<form th:action="@{/searchUser}" method="post" action="">
+												<td colspan="2"><label for="userName">Search
+														Again</label>
+													<div>
+														<input type="radio" value="name" name="filterUser"
+															id="name" checked> <label for="name">Name</label>
+													</div>
+													<div>
+														<input type="radio" value="email" name="filterUser"
+															id="email"> <label for="email">Email</label>
+													</div></td>
+												<td colspan="2" style="padding-right: 8px;"><input
+													id="nameInput" type="text" name="userName"></td>
+												<td colspan="2"><input type="submit"
+													class="buttonSearchUser" value="Search"></td>
+												<td colspan="1"><button class="buttonSearchUser"
+														type="button"
+														th:onclick="'location.href=\'' + @{/searchButton} + '\''">Go
+														Back</button></td>
+											</form>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- search user result page -->
+					<div th:case="userResult">
+						<di class="card h-100 w-100">
+						<div class="card-body" style="padding-top: 24px;">
+							<div class="card" style="margin-left: auto; margin-right: auto;">
+								<!-- Main card for "Search for Users" -->
+								<div class="card-header">
+									<h2>Searched for User's Information</h2>
+								</div>
+								<form th:action="@{/searchUser}" method="post" action="">
+									<div class="card-body">
+										<table class="table">
+											<!-- choose to search between username or email -->
+											<td style="height: 55px;"><label for="userName">Search
+													By:</label> <input type="radio" value="name" name="filterUser"
+												id="name" checked> <label for="name">Name</label> <input
+												type="radio" value="email" name="filterUser" id="email">
+												<label for="email">Email</label></td>
+											<!-- search bar -->
+											<td style="height: 55px;"><input class="form-control"
+												type="text" id="nameInput" name="userName"
+												style="width: 97%" placeholder="Search here"></td>
+											<!-- search button -->
+											<td style="height: 55px;"><input type="submit"
+												class="btn btn-outline-primary" value="Search"></td>
+										</table>
+									</div>
+								</form>
+								<!-- All User's information table -->
+								<div class="card mx-4" style="margin-bottom: 1.5rem !important;">
+									<div class="card-header">
+										<h3>Search Results</h3>
+									</div>
+									<div class="card-body">
+										<table class="table table-striped">
+											<thead>
+												<tr>
+													<th scope="col"><h5>Username</h5></th>
+													<th scope="col"><h5>Email Address</h5></th>
+													<th scope="col"><h5>View Inbox</h5></th>
+													<th scope="col"><h5>View Outbox</h5></th>
+													<th scope="col"><h5>View Trash</h5></th>
+													<th scope="col"><h5>Edit User</h5></th>
+													<th scope="col"><h5>View User Profile</h5></th>
+												</tr>
+											</thead>
+											<tbody>
+												<th:block th:each="myusers: ${myusers}">
+													<tr>
+														<td><a
+															th:href="@{/searchUser/{id}(id = ${myusers?.id})}"
+															th:text="${myusers?.username}"></a></td>
+														<td style="padding-right: 8px;"><p
+																th:text="${myusers?.email}"></p></td>
+														<td><a
+															th:href="@{/viewSpecificUserInbox/{id}(id = ${myusers?.id})}">Inbox</a></td>
+														<td><a
+															th:href="@{/viewSpecificUserOutbox/{id}(id = ${myusers?.id})}">Outbox</a></td>
+														<td><a
+															th:href="@{/viewSpecificUserTrash/{id}(id = ${myusers?.id})}">Trash</a></td>
+														<td><a
+															th:href="@{/editUserButton/{id}(id = ${myusers?.id})}">Edit
+																User</a></td>
+														<td><a
+															th:href="@{/viewUserProfile/{id}(id = ${myusers?.id})}">View</a></td>
+													</tr>
+												</th:block>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+
+						</div>
+						</di>
+					</div>
+
+					<!-- viewing a single user -->
+					<div th:case="singleUserResult">
+						<div class="card  my-4 mx-4">
+							<div class="card-header">
+								<h2>User View</h2>
+							</div>
+							<div class="card-body" style="padding-top: 24px;">
+								<div class="card"
+									style="width: 100%; height: fit-content; float: left">
+									<table class="table">
+										<thead>
+											<tr>
+												<th scope="col"><h5>Username</h5></th>
+												<th scope="col"><h5>Email Address</h5></th>
+												<th scope="col"><h5>View Inbox</h5></th>
+												<th scope="col"><h5>View Outbox</h5></th>
+												<th scope="col"><h5>View Trash</h5></th>
+												<th scope="col"><h5>Edit User</h5></th>
+												<th scope="col"><h5>View Profile</h5></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td><a
+													th:href="@{/searchUser/{id}(id = ${searchedUser.id})}"
+													th:text="${searchedUser.username}"></a></td>
+												<td style="padding-right: 8px;"><p
+														th:text="${searchedUser.email}"></p></td>
+												<td><a
+													th:href="@{/viewSpecificUserInbox/{id}(id = ${searchedUser.id})}">Inbox</a></td>
+												<td><a
+													th:href="@{/viewSpecificUserOutbox/{id}(id = ${searchedUser.id})}">Outbox</a></td>
+												<td><a
+													th:href="@{/viewSpecificUserTrash/{id}(id = ${searchedUser.id})}">Trash</a>
+												</td>
+												<td><a
+													th:href="@{/editUserButton/{id}(id = ${searchedUser.id})}">Edit
+														User</a></td>
+												<td><a
+													th:href="@{/viewUserProfile/{id}(id = ${searchedUser.id})}">View</a></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div th:case="searchMessage">
+						<div class="card h-100 w-100">
+							<div class="card-body" style="padding-top: 24px;">
+								<div class="card"
+									style="width: fit-content; height: fit-content; margin-left: auto; margin-right: auto;">
+									<table class="uniTableForm">
+										<tr>
+											<td colspan="5"
+												style="background-color: #D3D3D3; text-align: center;"><h2>View
+													Messages</h2></td>
+										</tr>
+										<tr>
+											<td style="background-color: #89CFF0">Username</td>
+											<td style="background-color: #89CFF0">Email Address</td>
+											<td style="background-color: #89CFF0">View Inbox</td>
+											<td style="background-color: #89CFF0">View Outbox</td>
+											<td style="background-color: #89CFF0">View Trash</td>
+										</tr>
+										<th:block th:each="user: ${users}">
+											<tr>
+												<td><p th:text="${user.username}"></p></td>
+												<td><p th:text="${user.email}"></p></td>
+												<td><a
+													th:href="@{/viewSpecificUserInbox/{id}(id = ${user.id})}">Inbox</a></td>
+												<td><a
+													th:href="@{/viewSpecificUserOutbox/{id}(id = ${user.id})}">Outbox</a></td>
+												<td><a
+													th:href="@{/viewSpecificUserTrash/{id}(id = ${user.id})}">Trash</a></td>
+											</tr>
+										</th:block>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div th:case="applications">
+						<table class="center">
+							<th:block th:switch="${pageSuccess}">
+								<div th:case="reviewedApplication">
+									<tr>
+										<th colspan="3" style="background-color: #0d6efd;">
+											Application Was Reviewed!</th>
+									</tr>
+								</div>
+							</th:block>
+							<tr>
+								<th colspan="13">Applications</th>
+							</tr>
+							<tr>
+								<th>Applicant Id</th>
+								<th>First Name</th>
+								<th>Last Name</th>
+								<th>Phone Number</th>
+								<th>Email Address</th>
+								<th>Application Date</th>
+								<th>Role Applied For</th>
+								<th>Answer 1</th>
+								<th>Answer 2</th>
+								<th>Answer 3</th>
+								<th>Answer 4</th>
+								<th>Accept</th>
+								<th>Decline</th>
+							</tr>
+
+							<th:block th:each="applicants: ${applicants}">
+								<tr>
+									<td><p th:text="${applicants.id}"></p></td>
+									<td><p th:text="${applicants.firstName}"></p></td>
+									<td><p th:text="${applicants.lastName}"></p></td>
+									<td><p th:text="${applicants.phoneNumber}"></p></td>
+									<td><p th:text="${applicants.email}"></p></td>
+									<td><p th:text="${applicants.applicationDate}"></p></td>
+									<td><p th:text="${applicants.roleAppliedfor}"></p></td>
+									<td><p th:text="${applicants.answer1}"></p></td>
+									<td><p th:text="${applicants.answer2}"></p></td>
+									<td><p th:text="${applicants.answer3}"></p></td>
+									<td><p th:text="${applicants.answer4}"></p></td>
+									<td><a class="submit" style="width: 75%; height: 50%"
+										th:href="@{/escalateApplication(id = ${applicants.id},id2 = ${1})}">Accept</a></td>
+									<td><a class="submit7" style="width: 75%; height: 50%"
+										th:href="@{/escalateApplication(id = ${applicants.id},id2 = ${2})}">Decline</a></td>
+								</tr>
+							</th:block>
+						</table>
+					</div>
+
+					<!-- Add more here -->
+				</th:block>
+			</div>
+
+
+			<div th:case="result">
+				<th:block th:switch="${page}">
+					<div th:case="notAuthorized">
+						<h1>You do not have the proper authority to view this page</h1>
+					</div>
+				</th:block>
+
+				<!-- Edit User page -->
+				<th:block th:switch="${page2}">
+					<div th:case="user">
+						<form id="editUserForm" th:action="@{/editUser}" method="post"
+							action="">
+							<div style="height: fit-content; margin-left: auto;">
+								<div class="card my-4 mx-4">
+									<div class="card-header">
+										<h2>Edit User:</h2>
+									</div>
+									<div class="card-body">
+										<table class="table">
+											<div class="row">
+												<div class="col-sm" style="display: none;">
+													<b>ID</b>
+												</div>
+												<div class="col-sm">
+													<b>Username</b>
+												</div>
+												<div class="col-sm">
+													<b>Password</b>
+												</div>
+												<div class="col-sm">
+													<b>Password Confirmation</b>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm"
+													style="padding-right: 8px; display: none;">
+													<input class="form-control" type="text" name="id"
+														th:value="${searchedUser.id}">
+												</div>
+												<div class="col-sm" style="padding-right: 8px;">
+													<input class="form-control" type="text" name="userName"
+														th:value="${searchedUser.username}">
+												</div>
+												<div class="col-sm" style="padding-right: 8px;">
+													<input class="form-control" type="password" name="password"
+														placeholder="Enter password">
+												</div>
+												<div class="col-sm" style="padding-right: 8px;">
+													<input class="form-control" type="password"
+														name="passwordConf" placeholder="Enter password conf">
+												</div>
+											</div>
+											<div class="row" style="margin-top: 1%;">
+												<div class="col-sm">
+													<b>Email Address</b>
+												</div>
+												<div class="col-sm">
+													<b>First Name</b>
+												</div>
+												<div class="col-sm">
+													<b>Last Name</b>
+												</div>
+												<div class="col-sm">
+													<b>Phone Number</b>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm" style="padding-right: 8px;">
+													<input class="form-control" type="text" name="email"
+														th:value="${searchedUser.email}">
+												</div>
+												<div class="col-sm" style="padding-right: 8px;">
+													<input class="form-control" type="text" name="fName"
+														th:value="${searchedUser.firstName}">
+												</div>
+												<div class="col-sm" style="padding-right: 8px;">
+													<input class="form-control" type="text" name="lName"
+														th:value="${searchedUser.lastName}">
+												</div>
+												<div class="col-sm" style="padding-right: 8px;">
+													<input class="form-control" type="text" name="phoneNumber"
+														th:value="${searchedUser.phoneNumber}">
+												</div>
+											</div>
+											<div class="row" style="margin-top: 1%;">
+												<div class="col-sm">
+													<b>Country Code</b>
+												</div>
+												<div class="col-sm">
+													<b>Role</b>
+												</div>
+												<div class="col-sm">
+													<b>Email Verification</b>
+												</div>
+												<div class="col-sm">
+													<b>Display Name</b>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm" style="padding-right: 8px;">
+													<input class="form-control" type="text" name="cc"
+														th:value="${searchedUser.countryCode}">
+												</div>
+												<div class="col-sm" style="padding-right: 8px;">
+													<select class="form-select" name="role">
+														<option th:each="role : ${roleList}" th:text="${role}" />
+													</select>
+												</div>
+												<div class="col-sm" style="padding-right: 8px;">
+													<input class="form-control" type="text"
+														name="emailVerification"
+														th:value="${searchedUser.emailVerification}">
+												</div>
+												<div class="col-sm" style="padding-right: 8px;">
+													<input class="form-control" type="text" name="dispName"
+														th:value="${searchedUser.displayName}"
+														placeholder="Enter display name">
+												</div>
+											</div>
+											<div class="row" style="margin-top: 1%;">
+												<div class="col-sm">
+													<b>User Description</b>
+												</div>
+												<div class="col-sm">
+													<b>Creation Date</b>
+												</div>
+												<div class="col-sm">
+													<b>Set User Status</b>
+												</div>
+												<div class="col-sm"></div>
+											</div>
+											<div class="row">
+												<div class="col-sm" style="padding-right: 8px;">
+													<input class="form-control" type="text" name="userDesc"
+														th:value="${searchedUser.userDescription}">
+												</div>
+												<div class="col-sm" style="padding-right: 8px;">
+													<input class="form-control" type="text" name="creationDate"
+														th:value="${searchedUser.creationDate}">
+												</div>
+												<div class="form-group col-sm">
+													<select class="form-select" id="statusDropdown"
+														name="status">
+														<option value="enabled">Enabled</option>
+														<option value="disabled">Disabled</option>
+													</select>
+												</div>
+												<div class="col-sm"></div>
+												<script type="text/javascript">
+													document
+															.getElementById(
+																	'statusDropdown')
+															.addEventListener(
+																	'change',
+																	function() {
+																		var selectedValue = this.value;
+																		document
+																				.getElementById('statusLabel').innerText = selectedValue
+																				.charAt(
+																						0)
+																				.toUpperCase()
+																				+ selectedValue
+																						.slice(1);
+																	});
+												</script>
+												<td colspan="1"
+													style="display: flex; justify-content: space-between; margin-top: 1%; height: 55px;">
+													<button class="btn btn-outline-danger" type="button"
+														th:onclick="'location.href=\'' + @{/searchButton} + '\''">Discard
+														Changes</button> <!-- New Cancel Changes Button -->
+													<button type="button" class="btn btn-outline-primary"
+														onclick="resetForm()">Cancel Changes</button> <input
+													type="submit" class="btn btn-outline-success"
+													value="Save Changes" />
+												</td>
+											</div>
+										</table>
+									</div>
+								</div>
+
+								<script type="text/javascript">
+									function resetForm() {
+										document.getElementById("editUserForm")
+												.reset();
+									}
+								</script>
+
+							</div>
+							<th:block th:switch="${page3}">
+								<div th:case="editSuccess">
+									<table class="center" style="float: left;">
+										<tr>
+											<th colspan="3" style="background-color: rgb(4, 179, 87);">
+												Edit Successful</th>
+										</tr>
+									</table>
+								</div>
+								<div th:case="editFail">
+									<table class="center" style="float: left;">
+										<tr>
+											<th colspan="3" style="background-color: red;">Edit
+												Failed</th>
+											<th colspan="3" style="background-color: red;"><p
+													th:text="${error}"></p></th>
+										</tr>
+									</table>
+								</div>
+							</th:block>
+						</form>
+					</div>
+
+					<div th:case="stats">
+						<table class="center">
+							<tr>
+								<th colspan="3"><a class="submit7" th:href="@{/backButton}"><span>Go
+											Back</span></a><br></th>
+							</tr>
+							<tr>
+								<th colspan="3">
+									<p th:text="${cat}"></p> Statistics for
+									<p th:text="${date}"></p>
+								</th>
+							</tr>
+							<tr>
+								<td>Value total:</td>
+								<td colspan="2"><p th:text="${total}"></p></td>
+							</tr>
+							<tr>
+								<th>Description</th>
+								<th>Value</th>
+								<th>Date</th>
+							</tr>
+
+							<th:block th:each="allStats: ${allStats}">
+								<tr>
+									<td>
+										<p th:text="${allStats.description}"></p>
+									</td>
+									<td>
+										<p th:text="${allStats.value}"></p>
+									</td>
+									<td>
+										<p th:text="${allStats.date}"></p>
+									</td>
+								</tr>
+							</th:block>
+						</table>
+					</div>
+				</th:block>
+
+				<th:block th:switch="${mailpage}">
+					<div th:case="inboxPage">
+						<div class="card h-100 w-100">
+							<div class="card-body" style="padding-top: 24px;">
+								<div class="card"
+									style="width: fit-content; height: fit-content; float: left">
+									<table class="uniTableForm">
+										<tr>
+											<td colspan="4" style="background-color: #D3D3D3;"><h2>Inbox</h2></td>
+											<td colspan="1"><button class="buttonSearchUser"
+													type="button"
+													th:onclick="'location.href=\'' + @{/searchButton} + '\''">Go
+													Back</button></td>
+										</tr>
+										<tr>
+											<td colspan="5"><h4>Username:</h4>
+												<p th:text="${searchedUser.username}"></p></td>
+										</tr>
+										<tr>
+											<td style="background-color: #89CFF0">Sender</td>
+											<td style="background-color: #89CFF0">Receiver</td>
+											<td style="background-color: #89CFF0">Subject</td>
+											<td style="background-color: #89CFF0">Content</td>
+											<td style="background-color: #89CFF0">Date</td>
+										</tr>
+										<th:block th:each="inbox: ${inbox}">
+											<tr>
+												<td><p th:text="${inbox.sender}"></p></td>
+												<td><p th:text="${inbox.receiverName}"></p></td>
+												<td><p th:text="${inbox.subject}"></p></td>
+												<td><p th:text="${inbox.content}"></p></td>
+												<td><p th:text="${inbox.msgDate}"></p></td>
+											</tr>
+										</th:block>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div th:case="outboxPage">
+						<div class="card h-100 w-100">
+							<div class="card-body" style="padding-top: 24px;">
+								<div class="card"
+									style="width: fit-content; height: fit-content; float: left">
+									<table class="uniTableForm">
+										<tr>
+											<td colspan="4" style="background-color: #D3D3D3;"><h2>Outbox</h2></td>
+											<td colspan="1"><button class="buttonSearchUser"
+													type="button"
+													th:onclick="'location.href=\'' + @{/searchButton} + '\''">Go
+													Back</button></td>
+										</tr>
+										<tr>
+											<td colspan="5"><h4>Username:</h4>
+												<p th:text="${searchedUser.username}"></p></td>
+										</tr>
+										<tr>
+											<td style="background-color: #89CFF0">Sender</td>
+											<td style="background-color: #89CFF0">Receiver</td>
+											<td style="background-color: #89CFF0">Subject</td>
+											<td style="background-color: #89CFF0">Content</td>
+											<td style="background-color: #89CFF0">Date</td>
+										</tr>
+										<th:block th:each="outbox: ${outbox}">
+											<tr>
+												<td><p th:text="${outbox.sender}"></p></td>
+												<td><p th:text="${outbox.receiverName}"></p></td>
+												<td><p th:text="${outbox.subject}"></p></td>
+												<td><p th:text="${outbox.content}"></p></td>
+												<td><p th:text="${outbox.msgDate}"></p></td>
+											</tr>
+										</th:block>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div th:case="trashPage">
+						<div class="card h-100 w-100">
+							<div class="card-body" style="padding-top: 24px;">
+								<div class="card"
+									style="width: fit-content; height: fit-content; float: left">
+									<table class="uniTableForm">
+										<tr>
+											<td colspan="4" style="background-color: #D3D3D3;"><h2>Trash</h2></td>
+											<td colspan="1"><button class="buttonSearchUser"
+													type="button"
+													th:onclick="'location.href=\'' + @{/searchButton} + '\''">Go
+													Back</button></td>
+										</tr>
+										<tr>
+											<td colspan="5"><h4>Username:</h4>
+												<p th:text="${searchedUser.username}"></p></td>
+										</tr>
+										<tr>
+											<td style="background-color: #89CFF0">Sender</td>
+											<td style="background-color: #89CFF0">Receiver</td>
+											<td style="background-color: #89CFF0">Subject</td>
+											<td style="background-color: #89CFF0">Content</td>
+											<td style="background-color: #89CFF0">Date</td>
+										</tr>
+										<th:block th:each="trash: ${trash}">
+											<tr>
+												<td><p th:text="${trash.sender}"></p></td>
+												<td><p th:text="${trash.receiverName}"></p></td>
+												<td><p th:text="${trash.subject}"></p></td>
+												<td><p th:text="${trash.content}"></p></td>
+												<td><p th:text="${trash.msgDate}"></p></td>
+											</tr>
+										</th:block>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- single market listing view -->
+					<div th:case="searchMarketListing">
+						<form
+							th:action="@{/viewMarketListing/deleteListingAdmin/{listing-id}(listing-id=${searchedMarkets.id})}"
+							method="post" action="#">
+							<div class="card my-4 mx-4">
+								<div class="card-body" style="padding-top: 24px;">
+									<div class="card" style="height: fit-content;">
+										<div class="card-header">
+											<h2>Listing Info</h2>
+										</div>
+										<table class="table">
+											<!-- table headers -->
+											<thead>
+												<tr>
+													<th scope="col"><h5>ID</h5></th>
+													<th scope="col"><h5>Name</h5></th>
+													<th scope="col"><h5>Description</h5></th>
+													<th scope="col"><h5>Category</h5></th>
+													<th scope="col"><h5>Seller Username</h5></th>
+													<th scope="col"><h5>Market ID</h5></th>
+													<th scope="col"><h5>Quantity</h5></th>
+													<th scope="col"><h5>Price</h5></th>
+												</tr>
+											</thead>
+											<!-- table data -->
+											<tbody>
+												<tr>
+													<th:block th:each="searchedWidgets: ${searchedWidgets}">
+														<td><p th:text="${searchedWidgets.id}"></p></td>
+														<td><p th:text="${searchedWidgets.name}"></p></td>
+														<td><p th:text="${searchedWidgets.description}"></p></td>
+														<td><p th:text="${widgetCategory}"></p></td>
+													</th:block>
+													<th:block th:each="sellers: ${sellers}">
+														<td><p th:text="${sellers.username}"></p></td>
+													</th:block>
+													<th:block th:each="searchedMarkets: ${searchedMarkets}">
+														<td><p th:text="${searchedMarkets.id}"></p></td>
+														<td><p th:text="${searchedMarkets.qtyAvailable}"></p></td>
+														<td><p th:text="${searchedMarkets.pricePerItem}"></p></td>
+													</th:block>
+												</tr>
+											</tbody>
+										</table>
+										<div
+											style="display: flex; justify-content: space-between; margin-left: 5%; margin-right: 5%;">
+											<!-- view listing page -->
+											<div class="d-flex justify-content-center">
+												<a class="btn btn-outline-primary"
+													th:href="@{/viewMarketListing/{id}(id=${searchedMarkets.id})}"
+													style="height: 80%;"> View Listing Page </a>
+											</div>
+											<!-- delete listing button -->
+											<div
+												style="display: flex; justify-content: center; margin-bottom: 1%;">
+												<a class="btn btn-outline-danger" data-bs-toggle="modal"
+													data-bs-target="#deleteListingModal" value="Delete Listing">Delete
+													Listing</a>
+											</div>
+											<!-- delete modal -->
+											<div class="modal fade" id="deleteListingModal" tabindex="-1"
+												role="dialog" aria-labelledby="deleteListingModalLabel"
+												aria-hidden="true">
+												<div class="modal-dialog" role="document">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title" id="deleteListingModalLabel">Confirm
+																Deletion</h5>
+															<button type="button" class="btn-close"
+																data-bs-dismiss="modal" aria-label="Close"></button>
+														</div>
+														<div class="modal-body">
+															<p>Are you sure you want to delete this listing?</p>
+															<div class="form-group">
+																<label for="reason">Reason for Deletion:</label>
+																<!-- input field for reason -->
+																<input type="text" class="form-control" id="reason"
+																	name="reason" placeholder="Enter reason" required>
+															</div>
+														</div>
+														<div class="modal-footer">
+															<!-- cancel button -->
+															<button type="button" class="btn btn-outline-secondary"
+																data-bs-dismiss="modal">Cancel</button>
+															<!-- confirm delete button -->
+															<input type="submit" class="btn btn-outline-danger"
+																value="Delete Listing" />
+														</div>
+													</div>
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+
+				</th:block>
+
+			</div>
+		</th:block>
+	</div>
+	<th:block></th:block>
+</body>
+</html>

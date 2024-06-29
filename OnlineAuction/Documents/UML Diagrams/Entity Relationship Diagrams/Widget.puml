@@ -1,0 +1,46 @@
+@startuml
+class Widget [[java:edu.sru.cpsc.webshopping.domain.widgets.Widget]] {
+	-id: long
+	-name: String
+	-description: String
+	-category: Category
+	-widgetAttributes: Set<WidgetAttribute>
+}
+
+class Category [[java:edu.sru.cpsc.webshopping.domain.widgets.Category]] {
+    -id: long
+    -name: String
+    -parent: Category
+    -attributes: List<AttributeReccomendation>
+}
+
+class WidgetAttribute [[java:edu.sru.cpsc.webshopping.domain.widgets.WidgetAttribute]] {
+	-id: long
+	-attributeKey: String
+	-value: String
+	-widget: Widget
+	-attribute: Attribute
+}
+
+class AttributeRecommendation [[java:edu.sru.cpsc.webshopping.domain.widgets.AttributeRecommendation]] {
+	-id: long
+	-attribute: Attribute
+	-category: Category
+	-recommendation: Integer
+}
+
+class Attribute [[java:edu.sru.cpsc.webshopping.domain.widgets.Attribute]] {
+	-id: long
+	-attributeKey: String
+	-dataType: AttributeDataType
+	-categories: List<AttributeRecommendation>
+}
+
+Widget "1" *-- "0..*" WidgetAttribute
+Widget "0..*" *-- "1" Category
+Category "1" *-- "0..*" AttributeRecommendation
+Category "0..*" *-- "1" Category
+AttributeRecommendation "1" *-- "0..*" Attribute
+WidgetAttribute "1" *-- "1" Attribute
+
+@enduml

@@ -1,0 +1,29 @@
+@startuml
+
+object "Root Category 1" as R1
+
+object "Root Category 2" as R2
+
+object "Subcategory 1.1" as S11
+object "Subcategory 1.2" as S12
+object "Subcategory 1.3" as S13
+
+object "Subcategory 2.1" as S21
+object "Subcategory 2.2" as S22
+
+object "Sub-subcategory 1.1.1" as SS111
+object "Sub-subcategory 1.1.2" as SS112
+
+R1 <|-- S11 : has parent
+R1 <|-- S12 : has parent
+R1 <|-- S13 : has parent
+
+R2 <|-- S21 : has parent
+R2 <|-- S22 : has parent
+
+S11 <|-- SS111 : has parent
+S11 <|-- SS112 : has parent
+
+note "Category Stack Example: \nSS111 > S11 > R1" as stackNote
+
+@enduml
